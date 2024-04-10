@@ -1,0 +1,49 @@
+.how-to {
+  padding: var(--defaultIndent) var(--defaultIndent) 0;
+  background: linear-gradient(#fffbec 16.57%, var(--backgroundColor) 47.35%);
+  margin-bottom: 50px;
+}
+
+.how-to__header {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 40px;
+  font-weight: 500;
+}
+
+.how-to__steps {
+  margin-top: 37px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 170px;
+}
+
+.how-to__step-image {
+  width: 180px;
+  height: 290px;
+  border-radius: 120px;
+  object-fit: cover;
+}
+
+.how-to__step p {
+  text-align: center;
+  font-size: 20px;
+}
+
+.how-to__step::before {
+  content: '';
+  display: block;
+  width: 79px;
+  height: 38px;
+  background: url('../../assets/Arrow.svg');
+  transform: translate(-170%, 400%);
+}
+
+.how-to__step:first-child::before {
+  content: none;
+}
+
+.how-to__step:first-child {
+  margin-top: 38px;
+}

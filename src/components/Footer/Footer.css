@@ -1,0 +1,13 @@
+footer {
+  padding: 77px var(--defaultIndent);
+  display: flex;
+  justify-content: space-between;
+  background-color: #fffbec;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.footer__link {
+  display: block;
+  max-width: 300px;
+}
