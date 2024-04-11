@@ -1,12 +1,15 @@
 footer {
-  margin: auto;
   padding: 77px var(--defaultIndent);
+  background-color: #fffbec;
+}
+
+.footer__wrapper {
+  margin: auto;
   max-width: var(--maxContentWidth);
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 30px;
-  background-color: #fffbec;
 }
 
 .footer__link {

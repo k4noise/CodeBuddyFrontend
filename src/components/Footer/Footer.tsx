@@ -5,14 +5,16 @@ import './Footer.css';
 const Footer = () => {
   return (
     <footer>
-      <Logo />
-      <a href="/" className="footer__link">
-        Политика конфиденциальности
-      </a>
-      <a href="/" className="footer__link">
-        Соглашение на обработку персональных данных
-      </a>
-      <SocialIcons />
+      <div className="footer__wrapper">
+        <Logo />
+        <a href="/" className="footer__link">
+          Политика конфиденциальности
+        </a>
+        <a href="/" className="footer__link">
+          Соглашение на обработку персональных данных
+        </a>
+        <SocialIcons />
+      </div>
     </footer>
   );
 };
