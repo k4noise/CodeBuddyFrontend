@@ -13,7 +13,7 @@ const SOCIAL_ICONS: SocialIcon[] = [
   { src: YoutubeIcon, alt: 'Youtube', url: 'https://youtube.com' },
   { src: FacebookIcon, alt: 'Facebook', url: 'https://facebook.com' },
   { src: TwitterIcon, alt: 'Twitter', url: 'https://twitter.com' },
-];
+] as const;
 
 const SocialIcons = () => {
   return (

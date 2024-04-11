@@ -1,13 +1,15 @@
 footer {
+  margin: auto;
   padding: 77px var(--defaultIndent);
+  max-width: var(--maxContentWidth);
   display: flex;
   justify-content: space-between;
-  background-color: #fffbec;
   flex-wrap: wrap;
   gap: 30px;
+  background-color: #fffbec;
 }
 
 .footer__link {
-  display: block;
   max-width: 300px;
+  display: block;
 }

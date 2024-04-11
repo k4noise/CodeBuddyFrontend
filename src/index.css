@@ -7,7 +7,9 @@
   --defaultFontSize: 20px;
   --defaultIndent: 120px;
   --maxContentWidth: 1250px;
+
   font-family: 'Montserrat', serif;
+  font-weight: 500;
   font-size: var(--defaultFontSize);
 
   color: var(--textColor);
@@ -32,6 +34,10 @@ a {
 
 a:visited {
   color: var(--textColor);
+}
+
+.logo {
+  display: contents;
 }
 
 button {

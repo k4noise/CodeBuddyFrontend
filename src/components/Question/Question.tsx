@@ -1,6 +1,6 @@
 import './Question.css';
-import CommentImage from '../../assets/comment.svg';
-import LikeImage from '../../assets/like.svg';
+import CommentIcon from '../../assets/comment.svg';
+import LikeIcon from '../../assets/like.svg';
 
 interface QuestionComment {
   avatar: string;
@@ -9,6 +9,7 @@ interface QuestionComment {
   comment: string;
   isMine?: boolean;
 }
+
 interface QuestionProps {
   avatar: string;
   authorName: string;
@@ -37,11 +38,11 @@ const Question = (props: QuestionProps) => {
       </div>
       <div className="question__reactions">
         <span className="question__reactions-comments question__reactions-active">
-          <img src={CommentImage} alt="comments count" />
+          <img src={CommentIcon} alt="comments count" />
           {props.comments.length}
         </span>
         <span className="question__reactions-likes">
-          <img src={LikeImage} alt="likes count" />
+          <img src={LikeIcon} alt="likes count" />
           {props.likes}
         </span>
       </div>
@@ -98,3 +99,4 @@ const Question = (props: QuestionProps) => {
 };
 
 export default Question;
+export type { QuestionProps };

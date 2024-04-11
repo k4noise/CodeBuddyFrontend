@@ -1,14 +1,15 @@
 .main {
-  padding: 45px var(--defaultIndent) 0;
+  padding: 0 var(--defaultIndent);
   height: calc(100vh - 45px);
+  max-height: 850px;
   background: linear-gradient(
-    var(--backgroundColor) 96%,
+    var(--backgroundColor) 68.96%,
     rgba(255, 233, 156, 0.195) 98.35%,
     rgba(255, 233, 156, 0.195) 98.35%
   );
 }
 
-.main__intro-wrapper {
+.main__intro {
   max-width: var(--maxContentWidth);
   margin: 75px auto 0;
   display: grid;
@@ -24,13 +25,12 @@ h1 {
 
 .main__intro-subheader {
   width: 90%;
-  font-family: 'Montserrat', serif;
   font-size: 30px;
   line-height: 45px;
   margin-top: 60px;
 }
 
-.main__man-image {
+.main__intro-man {
   grid-column: 2;
   width: 100%;
   max-width: 550px;
@@ -41,7 +41,7 @@ p {
   font-size: 14px;
 }
 
-.main__social {
+.main__intro-social {
   margin-top: 60px;
 }
 

@@ -1,7 +1,8 @@
 .question {
-  width: 50vw;
   margin: auto;
   padding: 30px 40px;
+  width: 50vw;
+  max-width: var(--maxContentWidth);
 }
 
 .question__author {
@@ -11,29 +12,28 @@
 }
 
 .question__author-name {
-  font-weight: 700;
-  border: 2px solid var(--accentColor);
   padding: 2px 25px;
   margin-top: 10px;
+  font-weight: 700;
+  border: 2px solid var(--accentColor);
   border-radius: 25px;
   box-shadow: 0px 4px 2px 0px #d9d9d9;
 }
 
 .question__text {
-  width: 70%;
   margin: 30px auto 0;
+  width: 70%;
   font-size: 20px;
-  font-weight: 500;
 }
 
 .question__images {
+  margin: auto;
+  margin-top: 25px;
+  padding-bottom: 20px;
   width: 80%;
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin: auto;
-  margin-top: 25px;
-  padding-bottom: 20px;
   border-bottom: 1px solid #ecf6ff;
 }
 
@@ -59,13 +59,12 @@
 }
 
 .question__reactions span {
+  padding: 5px 22px;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 22px;
   border: 1px solid var(--accentColor);
   border-radius: 60px;
-  font-weight: 500;
 }
 
 .question__reactions img {
@@ -78,10 +77,10 @@
 }
 
 .question__comments {
-  width: 90%;
   border-bottom: 1px solid #ecf6ff;
   border-top: 1px solid #ecf6ff;
   padding: 5px 30px 20px;
+  width: 90%;
 }
 
 .question__comments-mine .question__comments-user {
@@ -89,9 +88,9 @@
 }
 
 .question__comments-mine .question__comments-text {
-  text-align: right;
   margin-right: 40px;
   margin-left: auto;
+  text-align: right;
 }
 
 .question__comments-mine .question__comments-user-avatar {
@@ -111,7 +110,6 @@
 
 .question__comments-user span {
   font-size: 10px;
-  font-weight: 500;
 }
 
 .question__comments-user-name {
@@ -123,13 +121,12 @@
 }
 
 .question__comments-text {
-  box-shadow: 0px 4px 10px 0px #d9d9d9;
   padding: 6px 13px;
-  border-radius: 25px;
-  font-weight: 500;
-  width: fit-content;
   margin-top: 0;
   margin-left: 40px;
+  width: fit-content;
+  border-radius: 25px;
+  box-shadow: 0px 4px 10px 0px #d9d9d9;
 }
 
 .question__comments-delete {
@@ -141,12 +138,12 @@
 }
 
 .question__comments-show {
-  display: block;
-  font-size: 10px;
-  color: var(--accentColor);
-  font-weight: 700;
   padding: 8px 15px;
   margin: 22px auto;
+  display: block;
+  color: var(--accentColor);
+  font-size: 10px;
+  font-weight: 700;
   background-color: var(--backgroundColor);
   border: none;
   border-radius: 20px;

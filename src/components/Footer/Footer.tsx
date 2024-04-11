@@ -1,15 +1,15 @@
-import LogoIcon from '../../assets/Logo.svg';
 import SocialIcons from '../SocialIcons/SocialIcons';
+import Logo from '../Logo/Logo';
 import './Footer.css';
 
 const Footer = () => {
   return (
     <footer>
-      <img src={LogoIcon} alt="logo" />
-      <a href="#" className="footer__link">
+      <Logo />
+      <a href="/" className="footer__link">
         Политика конфиденциальности
       </a>
-      <a href="#" className="footer__link">
+      <a href="/" className="footer__link">
         Соглашение на обработку персональных данных
       </a>
       <SocialIcons />
