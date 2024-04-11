@@ -1,0 +1,35 @@
+nav {
+  padding: 45px var(--defaultIndent) 0;
+  margin: auto;
+  max-width: var(--maxContentWidth);
+  display: flex;
+  justify-content: space-between;
+  gap: 80px;
+}
+
+.nav__items-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 55px;
+}
+
+.nav__register-wrapper {
+  width: 280px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 35px;
+}
+
+.nav__button {
+  padding: 0 30px;
+  height: 55px;
+  background-color: var(--accentColor);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 20px;
+  font-family: 'Montserrat', serif;
+}
