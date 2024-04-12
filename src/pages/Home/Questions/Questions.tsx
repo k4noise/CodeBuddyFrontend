@@ -7,6 +7,7 @@ import Pic2Image from '../../../assets/pic2.png';
 import Pic3Image from '../../../assets/pic3.jpg';
 import Pic4Image from '../../../assets/pic4.jpg';
 import Question, { QuestionProps } from '../../../components/Question/Question';
+import TextArea from '../../../components/TextArea/TextArea';
 
 const QUESTIONS: QuestionProps[] = [
   {
@@ -68,7 +69,7 @@ const Questions = () => {
             alt="user avatar"
             className="questions__form-avatar"
           />
-          <textarea
+          <TextArea
             placeholder="Какой у вас вопрос?"
             className="questions__form-question"
           />

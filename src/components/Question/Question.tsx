@@ -1,6 +1,7 @@
 import './Question.css';
 import CommentIcon from '../../assets/comment.svg';
 import LikeIcon from '../../assets/like.svg';
+import TextArea from '../TextArea/TextArea';
 
 interface QuestionComment {
   avatar: string;
@@ -88,11 +89,10 @@ const Question = (props: QuestionProps) => {
             {props.comments[1].username}
           </span>
         </div>
-        <textarea
-          rows={1}
+        <TextArea
           placeholder="Напишите комментарий"
           className="question__comments-form-comment"
-        ></textarea>
+        />
       </form>
     </div>
   );
