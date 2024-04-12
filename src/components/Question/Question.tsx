@@ -80,12 +80,12 @@ const Question = (props: QuestionProps) => {
       <form className="question__comments-form">
         <div className="question__comments-form-user">
           <img
-            src={props.avatar}
+            src={props.comments[1].avatar}
             alt="avatar"
             className="question__comments-form-avatar"
           />
           <span className="question__comments-form-name">
-            {props.authorName}
+            {props.comments[1].username}
           </span>
         </div>
         <textarea

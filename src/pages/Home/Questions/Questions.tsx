@@ -12,8 +12,8 @@ const QUESTIONS: QuestionProps[] = [
   {
     avatar: Avatar2Image,
     authorName: 'Мария Иванова',
-    question:
-      'У меня возник вопрос, как выполнить такую задачу не могу решить такую проблему, подскажите пути решения?',
+    question: `У меня возник вопрос, как выполнить такую задачу
+не могу решить такую проблему, подскажите пути решения?`,
     images: [Pic1Image, Pic2Image, Pic3Image],
     likes: 2,
     comments: [
@@ -35,8 +35,8 @@ const QUESTIONS: QuestionProps[] = [
   {
     avatar: Avatar2Image,
     authorName: 'Мария Иванова',
-    question:
-      'У меня возник вопрос, как выполнить такую задачу не могу решить такую проблему, подскажите пути решения?',
+    question: `У меня возник вопрос, как выполнить такую задачу
+не могу решить такую проблему, подскажите пути решения?`,
     images: [Pic4Image, Pic1Image, Pic3Image],
     likes: 2,
     comments: [

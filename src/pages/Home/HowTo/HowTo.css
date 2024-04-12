@@ -25,6 +25,8 @@
   height: 290px;
   border-radius: 120px;
   object-fit: cover;
+  display: block;
+  margin: auto;
 }
 
 .how-to__step p {
