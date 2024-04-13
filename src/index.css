@@ -43,3 +43,9 @@ a:visited {
 button {
   cursor: pointer;
 }
+
+textarea {
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}

@@ -5,11 +5,18 @@
 }
 
 .how-to__header {
-  margin-top: 0;
-  text-align: center;
+  margin: 0 auto;
   text-transform: uppercase;
   font-size: 40px;
   font-weight: 500;
+  width: 460px;
+}
+
+.how-to__header::after {
+  content: '|';
+  font-family: serif;
+  margin-top: -3px;
+  position: absolute;
 }
 
 .how-to__steps {
@@ -25,6 +32,8 @@
   height: 290px;
   border-radius: 120px;
   object-fit: cover;
+  display: block;
+  margin: auto;
 }
 
 .how-to__step p {

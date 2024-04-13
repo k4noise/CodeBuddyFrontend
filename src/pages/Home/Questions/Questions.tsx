@@ -7,13 +7,14 @@ import Pic2Image from '../../../assets/pic2.png';
 import Pic3Image from '../../../assets/pic3.jpg';
 import Pic4Image from '../../../assets/pic4.jpg';
 import Question, { QuestionProps } from '../../../components/Question/Question';
+import TextArea from '../../../components/TextArea/TextArea';
 
 const QUESTIONS: QuestionProps[] = [
   {
     avatar: Avatar2Image,
     authorName: 'Мария Иванова',
-    question:
-      'У меня возник вопрос, как выполнить такую задачу не могу решить такую проблему, подскажите пути решения?',
+    question: `У меня возник вопрос, как выполнить такую задачу
+не могу решить такую проблему, подскажите пути решения?`,
     images: [Pic1Image, Pic2Image, Pic3Image],
     likes: 2,
     comments: [
@@ -35,8 +36,8 @@ const QUESTIONS: QuestionProps[] = [
   {
     avatar: Avatar2Image,
     authorName: 'Мария Иванова',
-    question:
-      'У меня возник вопрос, как выполнить такую задачу не могу решить такую проблему, подскажите пути решения?',
+    question: `У меня возник вопрос, как выполнить такую задачу
+не могу решить такую проблему, подскажите пути решения?`,
     images: [Pic4Image, Pic1Image, Pic3Image],
     likes: 2,
     comments: [
@@ -57,7 +58,17 @@ const QUESTIONS: QuestionProps[] = [
   },
 ];
 
-const Questions = () => {
+/**
+ * Questions component
+ * Shows questions (Question component) with form to upload new question
+ * @component
+ * @example
+ * ```
+ * <Questions />
+ * ```
+ * @returns {JSX.Element}
+ */
+const Questions = (): JSX.Element => {
   return (
     <section className="questions">
       <h2 className="questions__header">Напиши свой вопрос и получи ответ</h2>
@@ -68,7 +79,7 @@ const Questions = () => {
             alt="user avatar"
             className="questions__form-avatar"
           />
-          <textarea
+          <TextArea
             placeholder="Какой у вас вопрос?"
             className="questions__form-question"
           />
