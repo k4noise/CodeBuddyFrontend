@@ -1,0 +1,18 @@
+footer {
+  padding: 77px var(--defaultIndent);
+  background-color: #fffbec;
+}
+
+.footer__wrapper {
+  margin: auto;
+  max-width: var(--maxContentWidth);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.footer__link {
+  max-width: 300px;
+  display: block;
+}
