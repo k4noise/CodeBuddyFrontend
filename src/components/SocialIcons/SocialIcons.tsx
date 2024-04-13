@@ -15,6 +15,17 @@ const SOCIAL_ICONS: SocialIcon[] = [
   { src: TwitterIcon, alt: 'Twitter', url: 'https://twitter.com' },
 ] as const;
 
+/**
+ * Social icons component
+ * Shows link with social icon
+ * @component
+ * @example
+ * ```
+ * <SocialIcons />
+ * ```
+ * @returns {JSX.Element} Social icons
+ */
+
 const SocialIcons = () => {
   return (
     <div className="social-icons">
@@ -28,3 +39,4 @@ const SocialIcons = () => {
 };
 
 export default SocialIcons;
+export { SOCIAL_ICONS };

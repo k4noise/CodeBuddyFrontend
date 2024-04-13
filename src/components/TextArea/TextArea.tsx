@@ -1,5 +1,19 @@
+/**
+ * TextArea component
+ * Default <textarea> component with auto-resize height
+ * @component
+ * @example
+ * ```
+ * <TextArea className="question__textarea" placeholder="Какой у вас вопрос?" />
+ * ```
+ * @param {string} className additional class name for textarea
+ * @param {string} placeholder custom placeholder text
+ * @returns {JSX.Element} TextArea
+ */
 interface TextAreaProps {
+  /** additional class name for textarea **/
   className: string;
+  /** custom placeholder text **/
   placeholder: string;
 }
 

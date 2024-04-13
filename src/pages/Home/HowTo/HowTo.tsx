@@ -15,7 +15,17 @@ const STEPS: Step[] = [
   { image: ThirdStepImage, title: 'Получи ответ сразу' },
 ] as const;
 
-const HowTo = () => {
+/**
+ * Step component by main page
+ * Shows animate header, steps by use our service
+ * @component
+ * @example
+ * ```
+ * <HowTo />
+ * ```
+ * @returns {JSX.Element} HowTo
+ */
+const HowTo = (): JSX.Element => {
   const textToAnimation = 'работает?';
   const [text, setCurrentText] = useState('');
   const [index, setCurrentIndex] = useState(0);
@@ -56,3 +66,4 @@ const HowTo = () => {
 };
 
 export default HowTo;
+export { STEPS };

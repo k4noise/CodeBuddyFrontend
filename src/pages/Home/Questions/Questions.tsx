@@ -58,7 +58,17 @@ const QUESTIONS: QuestionProps[] = [
   },
 ];
 
-const Questions = () => {
+/**
+ * Questions component
+ * Shows questions (Question component) with form to upload new question
+ * @component
+ * @example
+ * ```
+ * <Questions />
+ * ```
+ * @returns {JSX.Element}
+ */
+const Questions = (): JSX.Element => {
   return (
     <section className="questions">
       <h2 className="questions__header">Напиши свой вопрос и получи ответ</h2>

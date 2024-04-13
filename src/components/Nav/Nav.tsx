@@ -1,13 +1,30 @@
 import Logo from '../Logo/Logo';
 import './Nav.css';
 
+/**
+ * Nav component
+ * Shows logo, links and buttons for auth if is required
+ *
+ * @component
+ * @example
+ * ```
+ * <Nav links={[{ text: 'Главная', href: '/' }, { text: 'Вопросы', href: '/questions' }]} hasAuthButtons={true} />
+ * ```
+ * @param {NavLink[]} links navigate links
+ * @param {boolean} hasAuthButtons flag is required show auth buttons
+ * @returns {JSX.Element} Nav
+ */
 interface NavLink {
+  /** link text */
   text: string;
+  /** link url */
   href: string;
 }
 
 interface NavProps {
+  /** links array */
   links: NavLink[];
+  /** flag is need show auth buttons */
   hasAuthButtons: boolean;
 }
 

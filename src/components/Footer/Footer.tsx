@@ -2,7 +2,17 @@ import SocialIcons from '../SocialIcons/SocialIcons';
 import Logo from '../Logo/Logo';
 import './Footer.css';
 
-const Footer = () => {
+/**
+ * Footer component
+ * Shows footer with logo, links and social icons
+ * @component
+ * @example
+ * ```
+ * <Footer />
+ * ```
+ * @returns {JSX.Element} Footer
+ */
+const Footer = (): JSX.Element => {
   return (
     <footer>
       <div className="footer__wrapper">
