@@ -2,6 +2,7 @@ nav {
   padding: 45px var(--defaultIndent) 0;
   margin: auto;
   max-width: var(--maxContentWidth);
+  height: 55px;
   display: flex;
   justify-content: space-between;
   gap: 80px;
