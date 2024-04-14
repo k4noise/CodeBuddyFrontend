@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import LogoIcon from '../../assets/Logo.svg';
 
 /**
@@ -12,10 +13,10 @@ import LogoIcon from '../../assets/Logo.svg';
  */
 const Logo = (): JSX.Element => {
   return (
-    <a href="/" className="logo">
+    <Link to="/" className="logo">
       <img src={LogoIcon} alt="logo" />
-    </a>
+    </Link>
   );
 };
 
-export default Logo;
+export default Logo; 
