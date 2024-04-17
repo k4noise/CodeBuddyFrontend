@@ -49,3 +49,8 @@ textarea {
   overflow: hidden;
   box-sizing: border-box;
 }
+
+.zod-error {
+  color: var(--accentColor);
+  margin: 0;
+}
