@@ -1,3 +1,4 @@
+import { Link, useLocation } from 'react-router-dom';
 import Logo from '../Logo/Logo';
 import './Nav.css';
 
@@ -29,22 +30,28 @@ interface NavProps {
 }
 
 const Nav = ({ links, hasAuthButtons }: NavProps) => {
+  const location = useLocation();
+  const inHomePage = location.pathname === '/';
   return (
     <nav>
       <Logo />
-      <div className="nav__items-wrapper">
-        {links.map((link) => (
-          <a href={link.href} key={link.text} className="nav__items-link">
-            {link.text}
-          </a>
-        ))}
-      </div>
-      {hasAuthButtons && (
+      {inHomePage && (
+        <div className="nav__items-wrapper">
+          {links.map((link) => (
+            <Link to={link.href} key={link.text} className="nav__items-link">
+              {link.text}
+            </Link>
+          ))}
+        </div>
+      )}
+      {hasAuthButtons && inHomePage && (
         <div className="nav__register-wrapper">
-          <a className="nav__items-link" href="/">
+          <Link to="register" className="nav__items-link">
             Регистрация
-          </a>
-          <button className="nav__button">Вход</button>
+          </Link>
+          <Link to="login">
+            <button className="nav__button">Вход</button>
+          </Link>
         </div>
       )}
     </nav>
