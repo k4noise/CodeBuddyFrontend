@@ -23,6 +23,12 @@ const RegisterSchema = zod
     message: 'Необходимо согласиться с условиями политики конфиденциальности',
     path: ['isAgree'],
   });
+
+/**
+ * Register component
+ * Register form with validation, fields look at `RegisterSchema` object
+ * @returns {JSX.Element} Register form
+ */
 const Register = () => {
   const {
     register,
