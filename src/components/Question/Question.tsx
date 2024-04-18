@@ -53,7 +53,7 @@ interface QuestionProps {
 
 const Question = (props: QuestionProps) => {
   return (
-    <div className="question">
+    <div className="question" data-testid="question">
       <div className="question__author">
         <img
           src={props.avatar}
