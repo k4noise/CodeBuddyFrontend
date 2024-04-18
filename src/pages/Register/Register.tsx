@@ -12,7 +12,7 @@ const RegisterSchema = zod
     surname: zod.string().min(2, 'Не менее 2 символов'),
     email: zod.string().email('Некорректный email'),
     password: zod.string().min(8, 'Не менее 8 символов'),
-    passwordRepeat: zod.string().min(8, 'Не менее 8 символов'),
+    passwordRepeat: zod.string(),
     isAgree: zod.boolean(),
   })
   .refine((data) => data.password === data.passwordRepeat, {
@@ -23,6 +23,12 @@ const RegisterSchema = zod
     message: 'Необходимо согласиться с условиями политики конфиденциальности',
     path: ['isAgree'],
   });
+
+/**
+ * Register component
+ * Register form with validation, fields look at `RegisterSchema` object
+ * @returns {JSX.Element} Register form
+ */
 const Register = () => {
   const {
     register,

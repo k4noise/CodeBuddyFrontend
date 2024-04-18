@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { test, expect, describe, beforeEach } from 'vitest';
 import Nav from './Nav';
+import { MemoryRouter } from 'react-router-dom';
 
 const LINKS = [
   { text: 'link1', href: '/link1' },
@@ -11,11 +12,15 @@ const BUTTONS_TEXTS = ['Регистрация', 'Вход'];
 
 describe('Test nav with auth buttons', () => {
   beforeEach(() => {
-    render(<Nav links={LINKS} hasAuthButtons={true} />);
+    render(
+      <MemoryRouter>
+        <Nav links={LINKS} hasAuthButtons={true} />
+      </MemoryRouter>
+    );
   });
 
   test('Logo exists', () => {
-    const logoElement = screen.getByAltText('logo');
+    const logoElement = screen.getByTestId('logo');
     expect(logoElement).to.exist;
   });
 
@@ -38,11 +43,15 @@ describe('Test nav with auth buttons', () => {
 
 describe('Test nav without auth buttons', () => {
   beforeEach(() => {
-    render(<Nav links={LINKS} hasAuthButtons={false} />);
+    render(
+      <MemoryRouter>
+        <Nav links={LINKS} hasAuthButtons={false} />
+      </MemoryRouter>
+    );
   });
 
   test('Logo exists', () => {
-    const logoElement = screen.getByAltText('logo');
+    const logoElement = screen.getByTestId('logo');
     expect(logoElement).to.exist;
   });
 

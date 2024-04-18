@@ -1,10 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import { test, expect, describe, beforeEach } from 'vitest';
 import Logo from './Logo';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Test logo', () => {
   beforeEach(() => {
-    render(<Logo />);
+    render(
+      <MemoryRouter>
+        <Logo />
+      </MemoryRouter>
+    );
   });
 
   test('Logo exists', () => {

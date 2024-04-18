@@ -11,6 +11,11 @@ const LoginSchema = zod.object({
   password: zod.string().min(8, 'Не менее 8 символов'),
 });
 
+/**
+ * Login component
+ * Login form with validation, fields look at `LoginSchema` object
+ * @returns {JSX.Element} Login form
+ */
 const Login = () => {
   const {
     register,

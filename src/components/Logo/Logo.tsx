@@ -13,10 +13,10 @@ import LogoIcon from '../../assets/Logo.svg';
  */
 const Logo = (): JSX.Element => {
   return (
-    <Link to="/" className="logo">
+    <Link to="/" className="logo" data-testid="logo">
       <img src={LogoIcon} alt="logo" />
     </Link>
   );
 };
 
-export default Logo; 
+export default Logo;

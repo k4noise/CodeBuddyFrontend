@@ -12,8 +12,8 @@ describe('Test questions', () => {
   });
 
   test('Questions exists', () => {
-    const { container } = render(<Questions />);
-    const questions = container.getElementsByClassName('question');
+    render(<Questions />);
+    const questions = screen.getAllByTestId('question');
     expect(questions.length).toEqual(2);
   });
 });

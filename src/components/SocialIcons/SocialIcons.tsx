@@ -28,7 +28,7 @@ const SOCIAL_ICONS: SocialIcon[] = [
 
 const SocialIcons = () => {
   return (
-    <div className="social-icons">
+    <div className="social-icons" data-testid="socialIcons">
       {SOCIAL_ICONS.map((icon) => (
         <a href={icon.url} key={icon.url}>
           <img src={icon.src} alt={icon.alt} />
