@@ -24,6 +24,10 @@
   gap: 20px;
 }
 
+.questions__form-wrapper img {
+  width: 85px;
+}
+
 .questions__form-question {
   padding: 25px 17px;
   margin-top: 10px;

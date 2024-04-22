@@ -15,9 +15,18 @@ interface TextAreaProps {
   className: string;
   /** custom placeholder text **/
   placeholder: string;
+  /** is possible edit text **/
+  readonly?: boolean;
+  /** text in textarea **/
+  value?: string;
 }
 
-const TextArea = ({ className, placeholder }: TextAreaProps) => {
+const TextArea = ({
+  className,
+  placeholder,
+  readonly = false,
+  value,
+}: TextAreaProps) => {
   const resize = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = event.currentTarget;
     textarea.style.height = 'auto';
@@ -29,7 +38,9 @@ const TextArea = ({ className, placeholder }: TextAreaProps) => {
       className={className}
       placeholder={placeholder}
       onInput={resize}
+      readOnly={readonly}
       rows={1}
+      defaultValue={value}
     ></textarea>
   );
 };
