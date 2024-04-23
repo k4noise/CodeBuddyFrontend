@@ -96,12 +96,13 @@
 
 .profile__form-label {
   padding: 7px 20px;
-  width: 415px;
+  width: 450px;
   height: 40px;
   color: black;
   user-select: none;
   display: grid;
   grid-template-columns: auto auto;
+  justify-content: start;
   gap: 10px;
   align-items: center;
   border: 1px solid transparent;
@@ -109,7 +110,7 @@
 }
 
 .profile__form-label-active {
-  grid-template-columns: auto auto 20px;
+  grid-template-columns: auto 1fr 20px;
   background-color: #fffcf0;
   border: 1px solid black;
   border-radius: 20px;
@@ -174,6 +175,7 @@
   width: 20px;
   height: 20px;
   background: url('../../assets/pencil.png');
+  justify-self: end;
   background-size: 100%;
   object-fit: cover;
   border: none;

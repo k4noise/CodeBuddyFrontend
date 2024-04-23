@@ -1,4 +1,6 @@
 import TextArea from '../../components/TextArea/TextArea';
+import InputField from './InputField';
+import PasswordField from './PasswordField';
 import './Profile.css';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -26,6 +28,7 @@ interface ProfileProps {
 
 const Profile = (props: ProfileProps) => {
   const navigate = useNavigate();
+  const hasEdit = !!(props.isMine && props.isEdit);
 
   return (
     <section className="profile">
@@ -43,7 +46,7 @@ const Profile = (props: ProfileProps) => {
                 type="button"
               ></Link>
             )}
-            {props.isMine && props?.isEdit && (
+            {hasEdit && (
               <button
                 type="button"
                 onClick={() => navigate(-1)}
@@ -63,107 +66,26 @@ const Profile = (props: ProfileProps) => {
                 className="profile__form-input"
               />
             </label>
-            <label
-              className={`profile__form-label${
-                props.isMine && props?.isEdit
-                  ? ' profile__form-label-active'
-                  : ''
-              }`}
-            >
-              Почта :
-              <input
-                type="text"
-                readOnly
-                value={props.email}
-                className="profile__form-input"
-              />
-              {props.isMine && props?.isEdit && (
-                <button
-                  type="button"
-                  className="profile__form-input-edit"
-                ></button>
-              )}
-            </label>
-            <label
-              className={`profile__form-label${
-                props.isMine && props?.isEdit
-                  ? ' profile__form-label-active'
-                  : ''
-              }`}
-            >
-              Телеграмм :
-              <input
-                type="text"
-                readOnly
-                value={props.tgId}
-                className="profile__form-input"
-              />
-              {props.isMine && props?.isEdit && (
-                <button
-                  type="button"
-                  className="profile__form-input-edit"
-                ></button>
-              )}
-            </label>
+            <InputField isEdit={hasEdit} label="Почта :" value={props.email} />
+
+            <InputField
+              isEdit={hasEdit}
+              label="Телеграмм :"
+              value={props.tgId}
+            />
           </div>
           {props.isMine && (
             <div className="profile__form-section">
               <h3>Безопасность :</h3>
-              <label
-                className={`profile__form-label${
-                  props.isMine && props?.isEdit
-                    ? ' profile__form-label-active'
-                    : ''
-                }`}
-              >
-                Логин :
-                <input
-                  type="text"
-                  readOnly
-                  value={props.login}
-                  className="profile__form-input"
-                />
-                {props.isMine && props?.isEdit && (
-                  <button
-                    type="button"
-                    className="profile__form-input-edit"
-                  ></button>
-                )}
-              </label>
+              <InputField
+                isEdit={hasEdit}
+                label="Логин :"
+                value={props.login}
+              />
               {props.isMine && props?.isEdit && (
                 <>
-                  <label
-                    className={`profile__form-label  profile__form-label-active`}
-                  >
-                    Пароль :
-                    <input
-                      type="password"
-                      readOnly
-                      className="profile__form-input"
-                    />
-                    {props.isMine && props?.isEdit && (
-                      <button
-                        type="button"
-                        className="profile__form-input-view"
-                      ></button>
-                    )}
-                  </label>
-                  <label
-                    className={`profile__form-label  profile__form-label-active`}
-                  >
-                    Новый пароль :
-                    <input
-                      type="password"
-                      readOnly
-                      className="profile__form-input"
-                    />
-                    {props.isMine && props?.isEdit && (
-                      <button
-                        type="button"
-                        className="profile__form-input-view"
-                      ></button>
-                    )}
-                  </label>
+                  <PasswordField label="Пароль :" />
+                  <PasswordField label="Новый пароль :" />
                 </>
               )}
             </div>
