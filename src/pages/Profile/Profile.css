@@ -174,11 +174,17 @@
 .profile__form-input-edit {
   width: 20px;
   height: 20px;
-  background: url('../../assets/pencil.png');
+  background: url('../../assets/pencil.png') no-repeat;
   justify-self: end;
   background-size: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border: none;
+}
+
+.profile__form-input-edit-active {
+  background: url('../../assets/mark.png') no-repeat;
+  background-size: 100%;
+  object-fit: cover;
 }
 
 .profile__form-input-view {
@@ -188,4 +194,10 @@
   background-size: 100%;
   object-fit: cover;
   border: none;
+}
+
+.profile__form-input-view-active {
+  background: url('../../assets/hide.png') no-repeat;
+  background-size: 100%;
+  object-fit: cover;
 }

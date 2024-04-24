@@ -1,6 +1,6 @@
 import TextArea from '../../components/TextArea/TextArea';
-import InputField from './InputField';
-import PasswordField from './PasswordField';
+import InputField from '../../components/InputField/InputField';
+import PasswordField from '../../components/PasswordField/PasswordField';
 import './Profile.css';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -66,12 +66,20 @@ const Profile = (props: ProfileProps) => {
                 className="profile__form-input"
               />
             </label>
-            <InputField isEdit={hasEdit} label="Почта :" value={props.email} />
+            <InputField
+              isEdit={hasEdit}
+              label="Почта :"
+              value={props.email}
+              labelClassName="profile__form-label"
+              inputClassName="profile__form-input"
+            />
 
             <InputField
               isEdit={hasEdit}
               label="Телеграмм :"
               value={props.tgId}
+              labelClassName="profile__form-label"
+              inputClassName="profile__form-input"
             />
           </div>
           {props.isMine && (
@@ -81,11 +89,21 @@ const Profile = (props: ProfileProps) => {
                 isEdit={hasEdit}
                 label="Логин :"
                 value={props.login}
+                labelClassName="profile__form-label"
+                inputClassName="profile__form-input"
               />
               {props.isMine && props?.isEdit && (
                 <>
-                  <PasswordField label="Пароль :" />
-                  <PasswordField label="Новый пароль :" />
+                  <PasswordField
+                    label="Пароль :"
+                    labelClassName="profile__form-label"
+                    inputClassName="profile__form-input"
+                  />
+                  <PasswordField
+                    label="Новый пароль :"
+                    labelClassName="profile__form-label"
+                    inputClassName="profile__form-input"
+                  />
                 </>
               )}
             </div>
