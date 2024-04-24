@@ -66,21 +66,45 @@ const Profile = (props: ProfileProps) => {
                 className="profile__form-input"
               />
             </label>
-            <InputField
-              isEdit={hasEdit}
-              label="Почта :"
-              value={props.email}
-              labelClassName="profile__form-label"
-              inputClassName="profile__form-input"
-            />
+            {!hasEdit ? (
+              <Link to={`mailto:${props.email}`}>
+                <InputField
+                  isEdit={hasEdit}
+                  label="Почта :"
+                  value={props.email}
+                  labelClassName="profile__form-label"
+                  inputClassName="profile__form-input"
+                />
+              </Link>
+            ) : (
+              <InputField
+                isEdit={hasEdit}
+                label="Почта :"
+                value={props.email}
+                labelClassName="profile__form-label"
+                inputClassName="profile__form-input"
+              />
+            )}
 
-            <InputField
-              isEdit={hasEdit}
-              label="Телеграмм :"
-              value={props.tgId}
-              labelClassName="profile__form-label"
-              inputClassName="profile__form-input"
-            />
+            {!hasEdit ? (
+              <Link to={`https://t.me/${props.tgId.slice(1)}`}>
+                <InputField
+                  isEdit={hasEdit}
+                  label="Телеграмм :"
+                  value={props.tgId}
+                  labelClassName="profile__form-label"
+                  inputClassName="profile__form-input"
+                />
+              </Link>
+            ) : (
+              <InputField
+                isEdit={hasEdit}
+                label="Телеграмм :"
+                value={props.tgId}
+                labelClassName="profile__form-label"
+                inputClassName="profile__form-input"
+              />
+            )}
           </div>
           {props.isMine && (
             <div className="profile__form-section">

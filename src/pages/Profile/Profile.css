@@ -123,6 +123,10 @@
   border: none;
 }
 
+a .profile__form-input {
+  cursor: pointer;
+}
+
 .profile__form-label-active .profile__form-input {
   background-color: #fffcf0;
 }
