@@ -1,21 +1,34 @@
 import { useNavigate } from 'react-router-dom';
 import ProfileForm from './ProfileForm';
-import { ProfileType, User } from '../../types';
+import { Mentor, ProfileType, User } from '../../types';
 import './Profile.css';
 
 interface ProfileProps {
+  /* [STUDENT, MENTOR] profile type*/
   type: ProfileType;
+  /* Flag to show edit button */
   isMine: boolean;
+  /* Flag to show save button */
   isEdit?: boolean;
-  userInfo: User;
+  /* Describe to user data */
+  userInfo: User | Mentor;
 }
 
+/**
+ * Profile page
+ * Shows all user data with avatar
+ * @param {ProfileType} type [STUDENT, MENTOR] Look at ProfileType enum
+ * @param {boolean} isMine Flag to show edit button
+ * @param {boolean} isEdit Flag to show save button
+ * @param {Student | Mentor} userInfo User information
+ * @returns {React.FC} Profile component
+ */
 const Profile: React.FC<ProfileProps> = ({
   type,
   isMine,
   isEdit = false,
   userInfo,
-}) => {
+}: ProfileProps) => {
   const navigate = useNavigate();
 
   const handleSave = () => {

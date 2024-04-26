@@ -5,16 +5,51 @@ import ProfileHeader from './ProfileHeader';
 import ProfileSection from './ProfileSection';
 import { Mentor, ProfileType, User } from '../../types';
 import { possibleTagColors, getRandomItem } from '../../utils';
+import { Link } from 'react-router-dom';
 
 interface ProfileFormProps {
+  /* [STUDENT, MENTOR] profile type*/
   type: ProfileType;
+  /* Flag to show edit button */
   isMine: boolean;
+  /* Flag to show save button */
   isEdit: boolean;
+  /* Describe to user data */
   userInfo: User | Mentor;
+  /* Callback to save button click */
   onSave: () => void;
+  /* Callback to save button click */
   onEditClick: () => void;
 }
 
+/**
+ * Profile form component
+ * Shows all information about user and allow change it
+ * @component
+ * @example
+ * ```
+ * <ProfileForm
+ *  type=ProfileType.STUDENT
+ *  isMine=false
+ *  userInfo={
+ *    login: 'ivan.ivanov@mail.ru',
+ *    username: 'Иван Иванов',
+ *    avatar: AvatarImage,
+ *    email: 'ivan.ivanov@mail.ru',
+ *    tgId: '@ivan_ivanov',
+ *  }
+ *  onSave=() => console.log('save')
+ *  onEdit=() => console.log('edit')
+ * />
+ * ```
+ * @param {ProfileType} type [STUDENT, MENTOR] Look at ProfileType enum
+ * @param {boolean} isMine Flag to show edit button
+ * @param {boolean} isEdit Flag to show save button
+ * @param {Student | Mentor} userInfo User information
+ * @param {function} onSave Callback to save button click
+ * @param {function} onEditClick Callback to edit button click
+ * @returns {React.FC} Profile form component
+ */
 const ProfileForm: React.FC<ProfileFormProps> = ({
   type,
   isMine,
@@ -22,7 +57,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   userInfo,
   onSave,
   onEditClick,
-}) => {
+}: ProfileFormProps) => {
   const hasEdit = isMine && isEdit;
 
   return (
@@ -45,20 +80,52 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
             className="profile__form-input"
           />
         </label>
-        <InputField
-          isEdit={hasEdit}
-          label="Почта:"
-          value={userInfo.email}
-          labelClassName="profile__form-label"
-          inputClassName="profile__form-input"
-        />
-        <InputField
-          isEdit={hasEdit}
-          label="Телеграмм:"
-          value={userInfo.tgId}
-          labelClassName="profile__form-label"
-          inputClassName="profile__form-input"
-        />
+        {!isEdit ? (
+          <Link
+            to={`mailto:${userInfo.email}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <InputField
+              isEdit={hasEdit}
+              label="Почта :"
+              value={userInfo.email}
+              labelClassName="profile__form-label"
+              inputClassName="profile__form-input"
+            />
+          </Link>
+        ) : (
+          <InputField
+            isEdit={hasEdit}
+            label="Почта :"
+            value={userInfo.email}
+            labelClassName="profile__form-label"
+            inputClassName="profile__form-input"
+          />
+        )}
+        {!hasEdit ? (
+          <Link
+            to={`https://t.me/${userInfo.tgId.slice(1)} `}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <InputField
+              isEdit={hasEdit}
+              label="Телеграмм:"
+              value={userInfo.tgId}
+              labelClassName="profile__form-label"
+              inputClassName="profile__form-input"
+            />
+          </Link>
+        ) : (
+          <InputField
+            isEdit={hasEdit}
+            label="Телеграмм:"
+            value={userInfo.tgId}
+            labelClassName="profile__form-label"
+            inputClassName="profile__form-input"
+          />
+        )}
       </ProfileSection>
 
       {isMine && (
