@@ -21,7 +21,7 @@ interface InputFieldProps {
  * @param {string} value initial input value
  * @param {string} labelClassName label css classname
  * @param {string} inputClassName input css classname
- * @returns {React.FC} Input field
+ * @returns {JSX.Element} Input field
  */
 const InputField = ({
   isEdit,

@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { test, expect, describe, beforeEach } from 'vitest';
 import Nav from './Nav';
 import { MemoryRouter } from 'react-router-dom';
+import '@testing-library/jest-dom';
 
 const LINKS = [
   { text: 'link1', href: '/link1' },
@@ -21,14 +22,14 @@ describe('Test nav with auth buttons', () => {
 
   test('Logo exists', () => {
     const logoElement = screen.getByTestId('logo');
-    expect(logoElement).to.exist;
+    expect(logoElement).toBeInTheDocument();
   });
 
   test('Links exists', () => {
     LINKS.forEach(({ text, href }) => {
-      const linkElement = screen.getByText(text);
-      const trimmedUrl = linkElement?.href.replace(/^(?:\/\/|[^/]+)*\//, '/');
-      expect(linkElement).to.exist;
+      const linkElement: HTMLLinkElement = screen.getByText(text);
+      const trimmedUrl = linkElement.href.replace(/^(?:\/\/|[^/]+)*\//, '/');
+      expect(linkElement).toBeInTheDocument();
       expect(trimmedUrl).toEqual(href);
     });
   });
@@ -36,7 +37,7 @@ describe('Test nav with auth buttons', () => {
   test('Buttons exists', () => {
     BUTTONS_TEXTS.forEach((text) => {
       const buttonElement = screen.getByText(text);
-      expect(buttonElement).to.exist;
+      expect(buttonElement).toBeInTheDocument();
     });
   });
 });
@@ -52,14 +53,14 @@ describe('Test nav without auth buttons', () => {
 
   test('Logo exists', () => {
     const logoElement = screen.getByTestId('logo');
-    expect(logoElement).to.exist;
+    expect(logoElement).toBeInTheDocument();
   });
 
   test('Links exists', () => {
     LINKS.forEach(({ text, href }) => {
-      const linkElement = screen.getByText(text);
-      const trimmedUrl = linkElement?.href.replace(/^(?:\/\/|[^/]+)*\//, '/');
-      expect(linkElement).to.exist;
+      const linkElement: HTMLLinkElement = screen.getByText(text);
+      const trimmedUrl = linkElement.href.replace(/^(?:\/\/|[^/]+)*\//, '/');
+      expect(linkElement).toBeInTheDocument();
       expect(trimmedUrl).toEqual(href);
     });
   });
@@ -67,7 +68,7 @@ describe('Test nav without auth buttons', () => {
   test('Buttons not exists', () => {
     BUTTONS_TEXTS.forEach((text) => {
       const buttonElement = screen.queryByText(text);
-      expect(buttonElement).not.to.exist;
+      expect(buttonElement).not.toBeInTheDocument();
     });
   });
 });

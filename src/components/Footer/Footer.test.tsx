@@ -14,23 +14,24 @@ describe('Test footer', () => {
 
   test('Logo exists', () => {
     const logoElement = screen.getByTestId('logo');
-    expect(logoElement).to.exist;
+    expect(logoElement).toBeInTheDocument();
   });
 
   test('Privacy link exists', () => {
     const privacyLink = screen.getByText('Политика конфиденциальности');
-    expect(privacyLink).to.exist;
+    expect(privacyLink).toBeInTheDocument();
   });
 
   test('Data agreement link exists', () => {
     const dataAgreementLink = screen.getByText(
       'Соглашение на обработку персональных данных'
     );
-    expect(dataAgreementLink).to.exist;
+    expect(dataAgreementLink).toBeInTheDocument();
   });
 
   test('Social icons exists', () => {
-    const iconsWrapper = screen.getAllByTestId('socialIcons');
-    expect(iconsWrapper).to.exist;
+    const iconsWrapper = screen.getByTestId('socialIcons');
+    console.log(iconsWrapper);
+    expect(iconsWrapper).toBeInTheDocument();
   });
 });

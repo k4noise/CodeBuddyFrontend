@@ -1,7 +1,6 @@
 import InputField from '../../components/InputField/InputField';
 import PasswordField from '../../components/PasswordField/PasswordField';
 import TextArea from '../../components/TextArea/TextArea';
-import ProfileHeader from './ProfileHeader';
 import ProfileSection from './ProfileSection';
 import { Mentor, ProfileType, User } from '../../types';
 import { possibleTagColors, getRandomItem } from '../../utils';
@@ -62,14 +61,27 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
 
   return (
     <form className="profile__form">
-      <ProfileHeader
-        username={userInfo.username}
-        isMine={isMine}
-        isEdit={isEdit}
-        onSave={onSave}
-        onEditClick={onEditClick}
-      />
-
+      <div className="profile__form-common">
+        <span className="profile__username">{userInfo.username}</span>
+        {isMine && !isEdit && (
+          <button
+            className="profile__form-edit"
+            type="button"
+            data-testid="edit"
+            onClick={onEditClick}
+          ></button>
+        )}
+        {hasEdit && (
+          <button
+            type="button"
+            onClick={onSave}
+            data-testid="save"
+            className="profile__form-save"
+          >
+            Сохранить
+          </button>
+        )}
+      </div>
       <ProfileSection>
         <label className="profile__form-label">
           Роль:

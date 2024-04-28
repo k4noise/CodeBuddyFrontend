@@ -7,10 +7,10 @@ describe('Test how to', () => {
     render(<HowTo />);
     STEPS.forEach(({ title }) => {
       const imageElement = screen.findByAltText(title);
-      expect(imageElement).to.exist;
+      expect(imageElement).toBeInTheDocument();
 
-      const textElement = screen.findAllByText(title);
-      expect(textElement).to.exist;
+      const textElement = screen.findByText(title);
+      expect(textElement).toBeInTheDocument();
     });
   });
 });
