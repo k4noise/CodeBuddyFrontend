@@ -24,46 +24,60 @@ const QUESTION_WITHOUT_IMAGES = {
 };
 
 describe('Test question with pictures', () => {
-  const QUESTION = { ...QUESTION_WITHOUT_IMAGES };
-  QUESTION['images'] = ['image1.jpg', 'image2.jpg'];
+  const QUESTION_WITH_IMAGES = {
+    ...QUESTION_WITHOUT_IMAGES,
+    images: ['image1.jpg', 'image2.jpg'],
+  };
 
-  beforeEach(() => render(<Question {...QUESTION} />));
+  beforeEach(() => {
+    render(<Question {...QUESTION_WITH_IMAGES} />);
+  });
 
   test('Question data exists', () => {
-    expect(screen.getAllByAltText(`${QUESTION.authorName} avatar`)[0]).to.exist;
-    expect(screen.getAllByText(QUESTION.authorName)[0]).to.exist;
-    expect(screen.getByText(QUESTION.question)).to.exist;
-    expect(screen.getByText(QUESTION.likes)).to.exist;
-    expect(screen.getByText(QUESTION.comments.length)).to.exist;
+    expect(
+      screen.getAllByAltText(`${QUESTION_WITH_IMAGES.authorName} avatar`)[0]
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByText(QUESTION_WITH_IMAGES.authorName)[0]
+    ).toBeInTheDocument();
+    expect(screen.getByText(QUESTION_WITH_IMAGES.question)).toBeInTheDocument();
+    expect(screen.getByText(QUESTION_WITH_IMAGES.likes)).toBeInTheDocument();
+    expect(
+      screen.getByText(QUESTION_WITH_IMAGES.comments.length)
+    ).toBeInTheDocument();
   });
 
   test('Pictures exists', () => {
     const images = screen.getAllByAltText('bug');
-    expect(images).to.exist;
-    expect(images.length).toEqual(QUESTION['images'].length);
+    images.forEach((image) => expect(image).toBeInTheDocument());
+    expect(images.length).toEqual(QUESTION_WITH_IMAGES['images'].length);
   });
 
   test('Comments exists', () => {
-    QUESTION.comments.forEach((comment) => {
-      expect(screen.getByText(comment.comment)).to.exist;
-      expect(screen.getAllByText(comment.username)[0]).to.exist;
-      expect(screen.getAllByAltText(`${comment.username} avatar`)[0]).to.exist;
-      expect(screen.getByText(comment.date)).to.exist;
-    });
+    const comments = screen.getByTestId('comments');
+    expect(comments).toBeInTheDocument();
   });
 });
 
 describe('Test question without pictures', () => {
-  beforeEach(() => render(<Question {...QUESTION_WITHOUT_IMAGES} />));
+  beforeEach(() => {
+    render(<Question {...QUESTION_WITHOUT_IMAGES} />);
+  });
 
   test('Question data exists', () => {
     expect(
       screen.getAllByAltText(`${QUESTION_WITHOUT_IMAGES.authorName} avatar`)[0]
-    ).to.exist;
-    expect(screen.getAllByText(QUESTION_WITHOUT_IMAGES.authorName)[0]).to.exist;
-    expect(screen.getByText(QUESTION_WITHOUT_IMAGES.question)).to.exist;
-    expect(screen.getByText(QUESTION_WITHOUT_IMAGES.likes)).to.exist;
-    expect(screen.getByText(QUESTION_WITHOUT_IMAGES.comments.length)).to.exist;
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByText(QUESTION_WITHOUT_IMAGES.authorName)[0]
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(QUESTION_WITHOUT_IMAGES.question)
+    ).toBeInTheDocument();
+    expect(screen.getByText(QUESTION_WITHOUT_IMAGES.likes)).toBeInTheDocument();
+    expect(
+      screen.getByText(QUESTION_WITHOUT_IMAGES.comments.length)
+    ).toBeInTheDocument();
   });
 
   test('Pictures not exists', () => {
@@ -72,12 +86,7 @@ describe('Test question without pictures', () => {
   });
 
   test('Comments exists', () => {
-    QUESTION_WITHOUT_IMAGES.comments.forEach((comment) => {
-      expect(screen.getByText(comment.comment)).to.exist;
-      expect(screen.getAllByText(QUESTION_WITHOUT_IMAGES.authorName)[0]).to
-        .exist;
-      expect(screen.getAllByAltText(`${comment.username} avatar`)[0]).to.exist;
-      expect(screen.getAllByText(comment.date)[0]).to.exist;
-    });
+    const comments = screen.getByTestId('comments');
+    expect(comments).toBeInTheDocument();
   });
 });

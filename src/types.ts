@@ -4,6 +4,7 @@ export enum ProfileType {
 }
 
 export interface User {
+  type: ProfileType;
   login: string;
   username: string;
   avatar: string;

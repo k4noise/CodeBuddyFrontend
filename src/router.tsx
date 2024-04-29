@@ -10,7 +10,7 @@ import { Mentor, ProfileType } from './types.ts';
 
 const NAV_LINKS: NavLink[] = [
   { text: 'Все менторы', href: '#' },
-  { text: 'Мой профиль', href: '#' },
+  { text: 'Мой профиль', href: 'profile' },
 ] as const;
 
 const router = createBrowserRouter([

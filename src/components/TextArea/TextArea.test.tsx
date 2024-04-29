@@ -3,9 +3,9 @@ import { test, expect, describe } from 'vitest';
 import TextArea from './TextArea';
 
 describe('Test textarea', () => {
-  test('Textarea exists', () => {
+  test('Textarea exists', async () => {
     render(<TextArea className="a" placeholder="some text" />);
-    const textarea = screen.findByPlaceholderText('some text');
-    expect(textarea).to.exist;
+    const textarea = await screen.findByPlaceholderText('some text');
+    expect(textarea).toBeInTheDocument();
   });
 });

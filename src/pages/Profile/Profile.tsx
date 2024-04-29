@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import ProfileForm from './ProfileForm';
-import { Mentor, ProfileType, User } from '../../types';
+import { Mentor, User } from '../../types';
 import './Profile.css';
 
 interface ProfileProps {
-  /* [STUDENT, MENTOR] profile type*/
-  type: ProfileType;
   /* Flag to show edit button */
   isMine: boolean;
   /* Flag to show save button */
@@ -17,14 +15,25 @@ interface ProfileProps {
 /**
  * Profile page
  * Shows all user data with avatar
- * @param {ProfileType} type [STUDENT, MENTOR] Look at ProfileType enum
+ * @component
+ * @example
+ * ```
+ * <Profile isMine={true} userInfo={{
+ *  type: ProfileType.STUDENT,
+      login: 'john@mail.com',
+      username: 'John Doe',
+      email: 'john@mail.com',
+      avatar: 'avatar.png',
+      tgId: '@id'
+ *   }}
+ * />
+ * ```
  * @param {boolean} isMine Flag to show edit button
  * @param {boolean} isEdit Flag to show save button
  * @param {Student | Mentor} userInfo User information
  * @returns {React.FC} Profile component
  */
 const Profile: React.FC<ProfileProps> = ({
-  type,
   isMine,
   isEdit = false,
   userInfo,
@@ -46,7 +55,6 @@ const Profile: React.FC<ProfileProps> = ({
       </div>
       <div className="profile__form-wrapper">
         <ProfileForm
-          type={type}
           isMine={isMine}
           isEdit={isEdit}
           userInfo={userInfo}

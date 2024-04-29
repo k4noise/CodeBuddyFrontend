@@ -3,14 +3,20 @@ import { test, expect, describe } from 'vitest';
 import HowTo, { STEPS } from './HowTo';
 
 describe('Test how to', () => {
-  test('Image with text exists', () => {
+  test('Exists images', () => {
     render(<HowTo />);
-    STEPS.forEach(({ title }) => {
-      const imageElement = screen.findByAltText(title);
-      expect(imageElement).to.exist;
+    const allImages: HTMLImageElement[] = screen.getAllByRole('img');
+    for (let i = 0; i < STEPS.length; i++) {
+      expect(allImages[i]).toBeInTheDocument();
+      expect(allImages[i].alt).toBe(STEPS[i].title);
+    }
+  });
 
-      const textElement = screen.findAllByText(title);
-      expect(textElement).to.exist;
+  test('Exists titles', () => {
+    render(<HowTo />);
+    STEPS.forEach((step) => {
+      const stepElement = screen.getByText(step.title);
+      expect(stepElement).toBeInTheDocument();
     });
   });
 });
