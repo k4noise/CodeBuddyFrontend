@@ -7,8 +7,6 @@ import { possibleTagColors, getRandomItem } from '../../utils';
 import { Link } from 'react-router-dom';
 
 interface ProfileFormProps {
-  /* [STUDENT, MENTOR] profile type*/
-  type: ProfileType;
   /* Flag to show edit button */
   isMine: boolean;
   /* Flag to show save button */
@@ -29,19 +27,18 @@ interface ProfileFormProps {
  * ```
  * <ProfileForm
  *  type=ProfileType.STUDENT
- *  isMine=false
- *  userInfo={
+ *  isMine={false}
+ *  userInfo={{
  *    login: 'ivan.ivanov@mail.ru',
  *    username: 'Иван Иванов',
  *    avatar: AvatarImage,
  *    email: 'ivan.ivanov@mail.ru',
  *    tgId: '@ivan_ivanov',
- *  }
+ *  }}
  *  onSave=() => console.log('save')
  *  onEdit=() => console.log('edit')
  * />
  * ```
- * @param {ProfileType} type [STUDENT, MENTOR] Look at ProfileType enum
  * @param {boolean} isMine Flag to show edit button
  * @param {boolean} isEdit Flag to show save button
  * @param {Student | Mentor} userInfo User information
@@ -50,7 +47,6 @@ interface ProfileFormProps {
  * @returns {React.FC} Profile form component
  */
 const ProfileForm: React.FC<ProfileFormProps> = ({
-  type,
   isMine,
   isEdit,
   userInfo,
@@ -60,7 +56,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const hasEdit = isMine && isEdit;
 
   return (
-    <form className="profile__form">
+    <form className="profile__form" data-testid="profileForm">
       <div className="profile__form-common">
         <span className="profile__username">{userInfo.username}</span>
         {isMine && !isEdit && (
@@ -88,7 +84,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <input
             type="text"
             readOnly
-            value={type}
+            value={userInfo.type}
             className="profile__form-input"
           />
         </label>
@@ -175,7 +171,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
         />
       </ProfileSection>
 
-      {type === ProfileType.MENTOR && (
+      {userInfo.type === ProfileType.MENTOR && (
         <ProfileSection title="Ключевые слова:">
           <div className="profile__form-tags">
             {(userInfo as Mentor).tags.map((tag) => {

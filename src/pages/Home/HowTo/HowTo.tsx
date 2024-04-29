@@ -27,8 +27,8 @@ const STEPS: Step[] = [
  */
 const HowTo = (): JSX.Element => {
   const textToAnimation = 'работает?';
-  const [text, setCurrentText] = useState('');
-  const [index, setCurrentIndex] = useState(0);
+  const [text, setText] = useState('');
+  const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 
   useEffect(() => {
@@ -37,11 +37,9 @@ const HowTo = (): JSX.Element => {
       const canDeleteChar = index > 1 && direction < 0;
       if (!canAddChar && !canDeleteChar)
         setDirection((oldDirection) => -1 * oldDirection);
-      if (canAddChar)
-        setCurrentText((prevText) => prevText + textToAnimation[index]);
-      else if (canDeleteChar)
-        setCurrentText((prevText) => prevText.slice(0, -1));
-      setCurrentIndex((prevIndex) => prevIndex + direction);
+      if (canAddChar) setText((prevText) => prevText + textToAnimation[index]);
+      else if (canDeleteChar) setText((prevText) => prevText.slice(0, -1));
+      setIndex((prevIndex) => prevIndex + direction);
     }, 300);
 
     return () => clearTimeout(timeout);

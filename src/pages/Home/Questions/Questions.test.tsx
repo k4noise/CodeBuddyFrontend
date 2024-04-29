@@ -5,11 +5,8 @@ import Questions from './Questions';
 describe('Test questions', () => {
   test('Submit form exists', () => {
     const { container } = render(<Questions />);
-    expect(
-      container.getElementsByClassName('questions__form')
-    ).toBeInTheDocument();
-    expect(container.getElementsByClassName('questions__form-question')).to
-      .exist;
+    expect(container.querySelector('.questions__form')).toBeInTheDocument();
+    expect(container.querySelector('.questions__form-question')).to.exist;
     expect(screen.getByText('Отправить')).toBeInTheDocument();
   });
 
