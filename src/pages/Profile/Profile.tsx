@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import ProfileForm from './ProfileForm';
-import { Mentor, User } from '../../types';
+import { Mentor, Student } from '../../types';
 import './Profile.css';
 
 interface ProfileProps {
@@ -9,7 +9,7 @@ interface ProfileProps {
   /* Flag to show save button */
   isEdit?: boolean;
   /* Describe to user data */
-  userInfo: User | Mentor;
+  userInfo: Student | Mentor;
 }
 
 /**
