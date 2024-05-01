@@ -5,6 +5,7 @@ import ProfileSection from './ProfileSection';
 import { Mentor, ProfileType, User } from '../../types';
 import { possibleTagColors, getRandomItem } from '../../utils';
 import { Link } from 'react-router-dom';
+import Tags from '../../components/Tags/Tags';
 
 interface ProfileFormProps {
   /* Flag to show edit button */
@@ -173,23 +174,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
 
       {userInfo.type === ProfileType.MENTOR && (
         <ProfileSection title="Ключевые слова:">
-          <div className="profile__form-tags">
-            {(userInfo as Mentor).tags.map((tag) => {
-              const color = getRandomItem(possibleTagColors);
-              return (
-                <span
-                  key={tag}
-                  className="profile__form-tag"
-                  style={{
-                    borderColor: color,
-                    backgroundColor: `${color}15`,
-                  }}
-                >
-                  {tag}
-                </span>
-              );
-            })}
-          </div>
+          <Tags tags={(userInfo as Mentor).tags} />
         </ProfileSection>
       )}
     </form>

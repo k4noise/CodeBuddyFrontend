@@ -1,0 +1,60 @@
+.mentor-card {
+  padding: 30px 50px;
+  width: 100%;
+  max-width: 870px;
+  display: grid;
+  align-items: start;
+  grid-template-columns: 230px auto 40px;
+  gap: 25px;
+  border-radius: 40px 0px 40px 0px;
+  border: 1px solid #d9d9d933;
+  box-shadow: 0px 4px 10px 0px #00000080;
+}
+
+.mentor-card__avatar {
+  width: 230px;
+}
+
+.mentor-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.mentor-card__username {
+  font-size: 20px;
+  margin: 0;
+}
+
+.mentor-card span {
+  font-size: 15px;
+}
+
+.mentor-card__about {
+  font-size: 15px;
+  line-height: 25px;
+  padding: 30px 50px 30px 25px;
+  min-height: 120px;
+}
+
+.mentor-card__tags {
+  grid-column: 1 / 4;
+}
+
+.mentor-card__tags .tag {
+  width: 120px;
+  height: 30px;
+  font-size: 15px;
+  line-height: 30px;
+}
+
+.mentor-card__submit {
+  width: 145px;
+  position: relative;
+  right: 100px;
+  border: none;
+  background-color: transparent;
+  font-family: 'Montserrat', serif;
+  font-size: 15px;
+  color: black;
+}

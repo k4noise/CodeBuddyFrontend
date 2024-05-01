@@ -6,10 +6,11 @@ import Nav, { NavLink } from './components/Nav/Nav.tsx';
 import Profile from './pages/Profile/Profile.tsx';
 import AvatarImage from './assets/avatar1.png';
 import MentorAvatarImage from './assets/mentor.png';
-import { Mentor, ProfileType } from './types.ts';
+import { Mentor, ProfileType, Student } from './types.ts';
+import Mentors from './pages/Mentors/Mentors.tsx';
 
 const NAV_LINKS: NavLink[] = [
-  { text: 'Все менторы', href: '#' },
+  { text: 'Все менторы', href: 'mentors' },
   { text: 'Мой профиль', href: 'profile' },
 ] as const;
 
@@ -37,19 +38,25 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
+        path: '/mentors',
+        element: <Mentors />,
+      },
+      {
         path: '/profile',
         element: (
           <Profile
-            type={ProfileType.STUDENT}
             isMine={true}
             isEdit={false}
-            userInfo={{
-              login: 'ivan.ivanov@mail.ru',
-              username: 'Иван Иванов',
-              avatar: AvatarImage,
-              email: 'ivan.ivanov@mail.ru',
-              tgId: '@ivan_ivanov',
-            }}
+            userInfo={
+              {
+                type: ProfileType.STUDENT,
+                login: 'ivan.ivanov@mail.ru',
+                username: 'Иван Иванов',
+                avatar: AvatarImage,
+                email: 'ivan.ivanov@mail.ru',
+                tgId: '@ivan_ivanov',
+              } as Student
+            }
           />
         ),
       },
@@ -57,16 +64,18 @@ const router = createBrowserRouter([
         path: '/profile/edit',
         element: (
           <Profile
-            type={ProfileType.STUDENT}
             isMine={true}
             isEdit={true}
-            userInfo={{
-              login: 'ivan.ivanov@mail.ru',
-              username: 'Иван Иванов',
-              avatar: AvatarImage,
-              email: 'ivan.ivanov@mail.ru',
-              tgId: '@ivan_ivanov',
-            }}
+            userInfo={
+              {
+                type: ProfileType.STUDENT,
+                login: 'ivan.ivanov@mail.ru',
+                username: 'Иван Иванов',
+                avatar: AvatarImage,
+                email: 'ivan.ivanov@mail.ru',
+                tgId: '@ivan_ivanov',
+              } as Student
+            }
           />
         ),
       },
@@ -74,16 +83,18 @@ const router = createBrowserRouter([
         path: '/profile/:id',
         element: (
           <Profile
-            type={ProfileType.STUDENT}
             isMine={false}
             isEdit={false}
-            userInfo={{
-              login: 'ivan.ivanov@mail.ru',
-              username: 'Иван Иванов',
-              avatar: AvatarImage,
-              email: 'ivan.ivanov@mail.ru',
-              tgId: '@ivan_ivanov',
-            }}
+            userInfo={
+              {
+                type: ProfileType.STUDENT,
+                login: 'ivan.ivanov@mail.ru',
+                username: 'Иван Иванов',
+                avatar: AvatarImage,
+                email: 'ivan.ivanov@mail.ru',
+                tgId: '@ivan_ivanov',
+              } as Student
+            }
           />
         ),
       },
@@ -91,11 +102,11 @@ const router = createBrowserRouter([
         path: '/profile/mentor',
         element: (
           <Profile
-            type={ProfileType.MENTOR}
             isMine={false}
             isEdit={false}
             userInfo={
               {
+                type: ProfileType.MENTOR,
                 login: 'petr.petrov@mail.ru',
                 username: 'Петр Петров',
                 avatar: MentorAvatarImage,
