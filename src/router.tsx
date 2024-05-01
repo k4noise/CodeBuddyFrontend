@@ -10,7 +10,7 @@ import { Mentor, ProfileType, Student } from './types.ts';
 import Mentors from './pages/Mentors/Mentors.tsx';
 
 const NAV_LINKS: NavLink[] = [
-  { text: 'Все менторы', href: '#' },
+  { text: 'Все менторы', href: 'mentors' },
   { text: 'Мой профиль', href: 'profile' },
 ] as const;
 

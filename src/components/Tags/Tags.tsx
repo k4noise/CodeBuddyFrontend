@@ -4,14 +4,24 @@ import './Tags.css';
 const TAG_COLORS = ['#FFA800', '#1168A7', '#470E8F', '#FF0000'];
 
 interface TagsProps {
+  /* words for quick mentor search */
   tags: string[];
+  /* class name for container */
   className?: string;
 }
 
+/**
+ * Tags component
+ * Shows tags in custom container
+ * @component
+ * @param {string[]} tags words for quick mentor search
+ * @param {string} classNameTagsProps class name for container
+ * @returns {JSX.Element} Tags component
+ */
 const Tags = ({ tags, className }: TagsProps) => {
   const colorGetter = randomColorGetter(TAG_COLORS);
   return (
-    <div className={`tags ${className ?? ''}`}>
+    <div className={`tags ${className ?? ''}`} data-testid="tags">
       {tags.map((tag) => {
         const color = colorGetter();
         return <Tag tag={tag} color={color} key={tag} />;
