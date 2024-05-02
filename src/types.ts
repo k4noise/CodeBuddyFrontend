@@ -18,3 +18,10 @@ export interface Student extends User {}
 export interface Mentor extends User {
   tags: string[];
 }
+
+export enum RequestType {
+  NEW = 'Новый запрос',
+  ACCEPTED = 'Ваш запрос принят',
+  REJECTED = 'Ваш запрос отклонен',
+  SUBMITTED = 'Ваш запрос отправлен',
+}
