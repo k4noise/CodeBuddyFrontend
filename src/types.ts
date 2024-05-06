@@ -25,3 +25,9 @@ export enum RequestType {
   REJECTED = 'Ваш запрос отклонен',
   SUBMITTED = 'Ваш запрос отправлен',
 }
+
+export enum RequestPopupType {
+  STUDENT_VIEW,
+  MENTOR_VIEW,
+  CREATE_VIEW
+}

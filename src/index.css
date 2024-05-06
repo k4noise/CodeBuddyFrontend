@@ -54,3 +54,7 @@ textarea {
   color: var(--accentColor);
   margin: 0;
 }
+
+.hidden {
+  display: none;
+}

@@ -4,6 +4,9 @@ import Footer from '../../components/Footer/Footer';
 import Tags from '../../components/Tags/Tags';
 import HeartManImage from '../../assets/heart-man.png';
 import './Mentors.css';
+import RequestPopup from '../../components/RequestPopup/RequestPopup';
+import { useState } from 'react';
+import { RequestPopupType } from '../../types';
 
 const MENTOR_DATA = {
   username: 'Петр Петров',
@@ -23,6 +26,15 @@ const SERACH_TAGS = [
 ];
 
 const Mentors = () => {
+  const [isShowingRequest, setShowingRequest] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState({});
+
+  const handleCardClick = (card: { username: string }) => {
+    console.log(card);
+    setSelectedRequest(card);
+    setShowingRequest(true);
+  };
+
   return (
     <>
       <main>
@@ -45,12 +57,28 @@ const Mentors = () => {
         </section>
         <section className="mentors">
           <div className="mentors__cards">
-            <MentorCard {...MENTOR_DATA} />
-            <MentorCard {...MENTOR_DATA} />
-            <MentorCard {...MENTOR_DATA} />
+            <MentorCard
+              {...MENTOR_DATA}
+              onClick={() => handleCardClick(MENTOR_DATA)}
+            />
+            <MentorCard
+              {...MENTOR_DATA}
+              onClick={() => handleCardClick(MENTOR_DATA)}
+            />
+            <MentorCard
+              {...MENTOR_DATA}
+              onClick={() => handleCardClick(MENTOR_DATA)}
+            />
           </div>
         </section>
       </main>
+      {isShowingRequest && (
+        <RequestPopup
+          header="Оставить заявку на ментора"
+          popupType={RequestPopupType.CREATE_VIEW}
+          close={() => setShowingRequest(false)}
+        />
+      )}
       <Footer />
     </>
   );

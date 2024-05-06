@@ -10,6 +10,7 @@ interface RequestProps {
   avatarUrl: string;
   /* request status */
   status: RequestType;
+  onClick: React.MouseEventHandler;
 }
 /**
  * Request component
@@ -27,9 +28,10 @@ const Request = ({
   username,
   avatarUrl,
   status,
+  onClick,
 }: RequestProps) => {
   return (
-    <div className="request">
+    <div className="request" onClick={onClick}>
       <img
         src={avatarUrl}
         alt={`${username} avatar`}
@@ -48,12 +50,21 @@ const Request = ({
               data-testid="profileLink"
             ></Link>
           )}
-          <button className="request__button request__cancel" data-testid="cancel"></button>
+          <button
+            className="request__button request__cancel"
+            data-testid="cancel"
+          ></button>
         </div>
       ) : (
         <div className="request__buttons">
-          <button className="request__button request__accept" data-testid="accept"></button>
-          <button className="request__button request__reject" data-testid="reject"></button>
+          <button
+            className="request__button request__accept"
+            data-testid="accept"
+          ></button>
+          <button
+            className="request__button request__reject"
+            data-testid="reject"
+          ></button>
         </div>
       )}
     </div>

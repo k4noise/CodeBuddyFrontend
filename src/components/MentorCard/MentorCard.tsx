@@ -1,3 +1,4 @@
+import React from 'react';
 import Tags from '../Tags/Tags';
 import TextArea from '../TextArea/TextArea';
 import './MentorCard.css';
@@ -11,6 +12,7 @@ interface MentorCardProps {
   about: string;
   /* mentor quick words */
   tags: string[];
+  onClick: React.MouseEventHandler;
 }
 
 /**
@@ -23,7 +25,13 @@ interface MentorCardProps {
  * @param {string[]} tags mentor quick words
  * @returns {JSX.Element} Mentor card component
  */
-const MentorCard = ({ username, avatarUrl, about, tags }: MentorCardProps) => {
+const MentorCard = ({
+  username,
+  avatarUrl,
+  about,
+  tags,
+  onClick,
+}: MentorCardProps) => {
   return (
     <div className="mentor-card" data-testid="mentorCard">
       <img
@@ -41,7 +49,9 @@ const MentorCard = ({ username, avatarUrl, about, tags }: MentorCardProps) => {
           value={about}
         />
       </div>
-      <button className="mentor-card__submit">Оставить заявку</button>
+      <button className="mentor-card__submit" onClick={onClick}>
+        Оставить заявку
+      </button>
       <Tags className="mentor-card__tags" tags={tags} />
     </div>
   );
