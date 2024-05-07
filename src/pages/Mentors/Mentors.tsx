@@ -27,13 +27,8 @@ const SERACH_TAGS = [
 
 const Mentors = () => {
   const [isShowingRequest, setShowingRequest] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState({});
 
-  const handleCardClick = (card: { username: string }) => {
-    console.log(card);
-    setSelectedRequest(card);
-    setShowingRequest(true);
-  };
+  const handleCardClick = () => setShowingRequest(true);
 
   return (
     <>
@@ -57,18 +52,9 @@ const Mentors = () => {
         </section>
         <section className="mentors">
           <div className="mentors__cards">
-            <MentorCard
-              {...MENTOR_DATA}
-              onClick={() => handleCardClick(MENTOR_DATA)}
-            />
-            <MentorCard
-              {...MENTOR_DATA}
-              onClick={() => handleCardClick(MENTOR_DATA)}
-            />
-            <MentorCard
-              {...MENTOR_DATA}
-              onClick={() => handleCardClick(MENTOR_DATA)}
-            />
+            <MentorCard {...MENTOR_DATA} onClick={() => handleCardClick()} />
+            <MentorCard {...MENTOR_DATA} onClick={() => handleCardClick()} />
+            <MentorCard {...MENTOR_DATA} onClick={() => handleCardClick()} />
           </div>
         </section>
       </main>

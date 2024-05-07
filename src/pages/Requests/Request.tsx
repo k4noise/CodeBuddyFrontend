@@ -10,6 +10,7 @@ interface RequestProps {
   avatarUrl: string;
   /* request status */
   status: RequestType;
+  /* callback to call when modal closing */
   onClick: React.MouseEventHandler;
 }
 /**
@@ -20,6 +21,7 @@ interface RequestProps {
  * @param {string} username user display name
  * @param {string} avatarUrl avatar url
  * @param {RequestType} status request status
+ * @param {React.MouseEventHandler} onClick callback to call when modal closing
  * @returns {JSX.Element} Request component
  */
 

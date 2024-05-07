@@ -12,6 +12,7 @@ interface MentorCardProps {
   about: string;
   /* mentor quick words */
   tags: string[];
+  /* callback to call when modal closing */
   onClick: React.MouseEventHandler;
 }
 
@@ -23,6 +24,7 @@ interface MentorCardProps {
  * @param {string} avatarUrl mentor avatar url
  * @param {string} about mentor bio
  * @param {string[]} tags mentor quick words
+ * @param {React.MouseEventHandler} onClick callback to call when modal closing
  * @returns {JSX.Element} Mentor card component
  */
 const MentorCard = ({

@@ -52,7 +52,6 @@ const Requests = ({ profileType }: RequestsProps) => {
   const [selectedRequest, setSelectedRequest] = useState({});
 
   const handleCardClick = (card: any) => {
-    console.log(card);
     setSelectedRequest(card);
     setShowingRequest(true);
   };
