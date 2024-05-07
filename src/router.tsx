@@ -8,6 +8,7 @@ import AvatarImage from './assets/avatar1.png';
 import MentorAvatarImage from './assets/mentor.png';
 import { Mentor, ProfileType, Student } from './types.ts';
 import Mentors from './pages/Mentors/Mentors.tsx';
+import Requests from './pages/Requests/Requests.tsx';
 
 const NAV_LINKS: NavLink[] = [
   { text: 'Все менторы', href: 'mentors' },
@@ -40,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: '/mentors',
         element: <Mentors />,
+      },
+      {
+        path: '/requests',
+        element: <Requests profileType={ProfileType.STUDENT} />,
+      },
+      {
+        path: '/requests/mentor',
+        element: <Requests profileType={ProfileType.MENTOR} />,
       },
       {
         path: '/profile',

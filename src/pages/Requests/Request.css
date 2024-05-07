@@ -1,0 +1,83 @@
+.requests {
+  min-height: calc(100vh - 450px);
+}
+
+.requests__header {
+  margin-top: 130px;
+  margin-bottom: 115px;
+  text-align: center;
+  font-size: 85px;
+  font-weight: normal;
+  color: black;
+}
+
+.requests__wrapper {
+  padding: 0 var(--defaultIndent) 50px;
+  margin: auto;
+  max-width: 1100px;
+  gap: 20px;
+}
+
+.request {
+  padding: 10px 50px 20px 90px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: grid;
+  align-items: center;
+  gap: 25px;
+  grid-template-columns: 100px 1fr auto;
+  background-color: #fffaee;
+  border: 1px solid #eadabb;
+  border-radius: 20px;
+  box-shadow: 0px 4px 4px 0px #d9d9d9;
+}
+
+.request__avatar {
+  width: 90px;
+}
+
+.request__username {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.request__status {
+  font-size: 15px;
+}
+
+.request__buttons {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.request__button {
+  width: 75px;
+  height: 75px;
+  border: none;
+  background: center no-repeat;
+}
+
+.request__link {
+  width: 80px;
+  height: 80px;
+  display: block;
+  background: center no-repeat;
+}
+
+.request__view {
+  background-image: url('../../assets/profile.png');
+}
+
+.request__cancel {
+  background-image: url('../../assets/trash.png');
+}
+
+.request__accept {
+  background-image: url('../../assets/accept.png');
+}
+
+.request__reject {
+  background-image: url('../../assets/cancel.png');
+}

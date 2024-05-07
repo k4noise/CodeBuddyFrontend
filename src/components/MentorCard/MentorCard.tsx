@@ -1,3 +1,4 @@
+import React from 'react';
 import Tags from '../Tags/Tags';
 import TextArea from '../TextArea/TextArea';
 import './MentorCard.css';
@@ -11,6 +12,8 @@ interface MentorCardProps {
   about: string;
   /* mentor quick words */
   tags: string[];
+  /* callback to call when modal closing */
+  onClick: React.MouseEventHandler;
 }
 
 /**
@@ -21,9 +24,16 @@ interface MentorCardProps {
  * @param {string} avatarUrl mentor avatar url
  * @param {string} about mentor bio
  * @param {string[]} tags mentor quick words
+ * @param {React.MouseEventHandler} onClick callback to call when modal closing
  * @returns {JSX.Element} Mentor card component
  */
-const MentorCard = ({ username, avatarUrl, about, tags }: MentorCardProps) => {
+const MentorCard = ({
+  username,
+  avatarUrl,
+  about,
+  tags,
+  onClick,
+}: MentorCardProps) => {
   return (
     <div className="mentor-card" data-testid="mentorCard">
       <img
@@ -41,7 +51,9 @@ const MentorCard = ({ username, avatarUrl, about, tags }: MentorCardProps) => {
           value={about}
         />
       </div>
-      <button className="mentor-card__submit">Оставить заявку</button>
+      <button className="mentor-card__submit" onClick={onClick}>
+        Оставить заявку
+      </button>
       <Tags className="mentor-card__tags" tags={tags} />
     </div>
   );
