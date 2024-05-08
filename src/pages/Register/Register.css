@@ -126,6 +126,12 @@
   border-radius: 20px;
   font-size: 20px;
   font-weight: 500;
+  transition: 0.3s;
+}
+
+.register__form-send:disabled {
+  cursor: not-allowed;
+  background-color: gray;
 }
 
 .register__form-field + .zod-error {

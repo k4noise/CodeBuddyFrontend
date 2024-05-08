@@ -4,6 +4,7 @@ import './Register.css';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
+import { useState } from 'react';
 
 const RegisterSchema = zod
   .object({
@@ -30,6 +31,7 @@ const RegisterSchema = zod
  * @returns {JSX.Element} Register form
  */
 const Register = () => {
+  const [isAgree, setIsAgree] = useState(false);
   const {
     register,
     handleSubmit,
@@ -109,13 +111,15 @@ const Register = () => {
             <p className="zod-error">{errors.passwordRepeat?.message}</p>
           )}
           <label className="register__form-policy">
-            <input type="checkbox" {...register('isAgree')} />Я согласен с
-            условиями политики конфиденциальности
+            <input
+              type="checkbox"
+              onClick={() => setIsAgree((prev) => !prev)}
+            />
+            Я согласен с условиями политики конфиденциальности
           </label>
-          {errors.isAgree?.message && (
-            <p className="zod-error">{errors.isAgree?.message}</p>
-          )}
-          <button className="register__form-send">Зарегестрироваться</button>
+          <button className="register__form-send" disabled={!isAgree}>
+            Зарегестрироваться
+          </button>
         </form>
       </div>
     </div>

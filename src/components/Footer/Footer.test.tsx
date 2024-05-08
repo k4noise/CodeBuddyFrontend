@@ -31,7 +31,6 @@ describe('Test footer', () => {
 
   test('Social icons exists', () => {
     const iconsWrapper = screen.getByTestId('socialIcons');
-    console.log(iconsWrapper);
     expect(iconsWrapper).toBeInTheDocument();
   });
 });

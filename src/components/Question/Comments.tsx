@@ -1,4 +1,5 @@
 import TextArea from '../TextArea/TextArea';
+import { useId } from 'react';
 
 interface CommentData {
   /** commentator avatar **/
@@ -49,14 +50,14 @@ const Comment = ({ avatar, username, date, comment, isMine }: CommentData) => (
  * Comments component
  * Shows group of comments with form to comment
  * @param {CommentData[]} comments comments data, look at interface
- * @returns {React.FC} Comments component
+ * @returns {JSX.Element} Comments component
  */
-const Comments: React.FC<{ comments: CommentData[] }> = ({ comments }) => {
+const Comments = ({ comments }: { comments: CommentData[] }) => {
   return (
     <>
       <div className="question__comments" data-testid="comments">
         {comments.map((comment) => (
-          <Comment {...comment} />
+          <Comment {...comment} key={useId()} />
         ))}
       </div>
       <button className="question__comments-show">
