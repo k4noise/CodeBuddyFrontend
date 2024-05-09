@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
+import './PasswordField.css';
 
 interface PasswordFieldProps {
   /* caption text, visible always */
@@ -7,6 +9,8 @@ interface PasswordFieldProps {
   labelClassName: string;
   /* css class for input styling */
   inputClassName: string;
+  /* zod register('field') object */
+  validationOptions?: UseFormRegisterReturn;
   /* caption text, visible only for empty input */
   placeholder?: string;
 }
@@ -22,19 +26,18 @@ const PasswordField = (props: PasswordFieldProps) => {
   const [isShowing, setShowing] = useState(false);
 
   return (
-    <label className={`${props.labelClassName} ${props.labelClassName}-active`}>
+    <label className={`${props.labelClassName} password__label`}>
       {props.label}
       <input
         type={isShowing ? 'text' : 'password'}
         placeholder={props.placeholder}
-        className={props.inputClassName}
+        className={`password__input  ${props.inputClassName}`}
+        {...props?.validationOptions}
       />
       <button
         type="button"
         onClick={() => setShowing((isShowed) => !isShowed)}
-        className={`${props.inputClassName}-view${
-          isShowing ? ` ${props.inputClassName}-view-active` : ''
-        }`}
+        className={`password__view${isShowing ? ` password__view-active` : ''}`}
       ></button>
     </label>
   );

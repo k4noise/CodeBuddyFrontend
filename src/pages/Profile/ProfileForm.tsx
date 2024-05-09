@@ -3,7 +3,6 @@ import PasswordField from '../../components/PasswordField/PasswordField';
 import TextArea from '../../components/TextArea/TextArea';
 import ProfileSection from './ProfileSection';
 import { Mentor, ProfileType, User } from '../../types';
-import { possibleTagColors, getRandomItem } from '../../utils';
 import { Link } from 'react-router-dom';
 import Tags from '../../components/Tags/Tags';
 
