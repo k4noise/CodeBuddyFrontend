@@ -48,9 +48,7 @@ describe('Test question with pictures', () => {
   });
 
   test('Pictures exists', () => {
-    const images = screen.getAllByAltText('bug');
-    images.forEach((image) => expect(image).toBeInTheDocument());
-    expect(images.length).toEqual(QUESTION_WITH_IMAGES['images'].length);
+    expect(screen.getByTestId('image-gallery')).toBeInTheDocument();
   });
 
   test('Comments exists', () => {
@@ -61,7 +59,7 @@ describe('Test question with pictures', () => {
 
 describe('Test question without pictures', () => {
   beforeEach(() => {
-    render(<Question {...QUESTION_WITHOUT_IMAGES} />);
+    render(<Question {...QUESTION_WITHOUT_IMAGES} images={[]} />);
   });
 
   test('Question data exists', () => {

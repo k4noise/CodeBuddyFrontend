@@ -4,12 +4,25 @@ import TextArea from '../TextArea/TextArea';
 import './RequestPopup.css';
 
 interface RequestPopupProps {
+  /* main popup header */
   header: string;
+  /* look at interface */
   popupType: RequestPopupType;
+  /* text if exists */
   about?: string;
+  /* parent callback to close popup */
   close: React.MouseEventHandler;
 }
 
+/**
+ * Request popup component
+ * Shows popup with credintals of request
+ * @param {React.MouseEventHandler} close parent callback to close popup
+ * @param {string} header main popup header
+ * @param {RequestPopupType} popupType look at interface
+ * @param {string?} about text if exists
+ * @returns {JSX.Element}
+ */
 const RequestPopup = ({
   close,
   header,

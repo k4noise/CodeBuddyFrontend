@@ -16,8 +16,12 @@ describe('Test login', () => {
   test('wrong name input', async () => {
     const nameInput = screen.getByPlaceholderText('Имя');
     const submitButton = screen.getByText('Зарегестрироваться');
+    const isAgreeCheck = screen.getByText(
+      'Я согласен с условиями политики конфиденциальности'
+    );
 
     userEvent.type(nameInput, '1');
+    userEvent.click(isAgreeCheck);
     userEvent.click(submitButton);
 
     expect(await screen.findByText('Некорректный email')).toBeInTheDocument();
@@ -26,8 +30,12 @@ describe('Test login', () => {
   test('wrong surname input', async () => {
     const surnameInput = screen.getByPlaceholderText('Фамилия');
     const submitButton = screen.getByText('Зарегестрироваться');
+    const isAgreeCheck = screen.getByText(
+      'Я согласен с условиями политики конфиденциальности'
+    );
 
     userEvent.type(surnameInput, '1');
+    userEvent.click(isAgreeCheck);
     userEvent.click(submitButton);
 
     expect(await screen.findByText('Некорректный email')).toBeInTheDocument();
@@ -36,8 +44,12 @@ describe('Test login', () => {
   test('wrong email input', async () => {
     const emailInput = screen.getByPlaceholderText('Почта');
     const submitButton = screen.getByText('Зарегестрироваться');
+    const isAgreeCheck = screen.getByText(
+      'Я согласен с условиями политики конфиденциальности'
+    );
 
     userEvent.type(emailInput, 'invalid email');
+    userEvent.click(isAgreeCheck);
     userEvent.click(submitButton);
 
     expect(await screen.findByText('Некорректный email')).toBeInTheDocument();
@@ -46,8 +58,12 @@ describe('Test login', () => {
   test('wrong password input', async () => {
     const passwordInput = screen.getByPlaceholderText('Пароль');
     const submitButton = screen.getByText('Зарегестрироваться');
+    const isAgreeCheck = screen.getByText(
+      'Я согласен с условиями политики конфиденциальности'
+    );
 
     userEvent.type(passwordInput, 'short');
+    userEvent.click(isAgreeCheck);
     userEvent.click(submitButton);
     expect(await screen.findByText('Не менее 8 символов')).toBeInTheDocument();
   });

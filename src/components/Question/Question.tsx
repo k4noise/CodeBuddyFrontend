@@ -2,6 +2,7 @@ import './Question.css';
 import CommentIcon from '../../assets/comment.svg';
 import LikeIcon from '../../assets/like.svg';
 import Comments, { CommentData } from './Comments';
+import ImageGallery from '../../pages/Home/ImageGallery/ImageGallery';
 
 /**
  * Question component
@@ -35,8 +36,8 @@ interface QuestionProps {
   likes: number;
   /** question comments */
   comments: CommentData[];
-  /** question images [not required] **/
-  images?: string[];
+  /** question images, put empty if no images **/
+  images: string[];
 }
 
 const Question = (props: QuestionProps) => {
@@ -51,11 +52,7 @@ const Question = (props: QuestionProps) => {
         <span className="question__author-name">{props.authorName}</span>
       </div>
       <p className="question__text">{props.question}</p>
-      <div className="question__images">
-        {props?.images?.map((image) => (
-          <img src={image} alt="bug" key={image} className="question__image" />
-        ))}
-      </div>
+      <ImageGallery images={props.images} editMode={false} />
       <div className="question__reactions">
         <span className="question__reactions-comments question__reactions-active">
           <img src={CommentIcon} alt="comments count" />

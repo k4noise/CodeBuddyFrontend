@@ -31,14 +31,14 @@ describe('Test password field', () => {
     );
 
     expect(inputElement).toHaveAttribute('type', 'password');
-    expect(buttonElement).toHaveClass(`${props.inputClassName}-view`);
+    expect(buttonElement).toHaveClass(`password__view`);
 
     fireEvent.click(buttonElement);
     expect(inputElement).toHaveAttribute('type', 'text');
-    expect(buttonElement).toHaveClass(`${props.inputClassName}-view-active`);
+    expect(buttonElement).toHaveClass(`password__view-active`);
 
     fireEvent.click(buttonElement);
     expect(inputElement).toHaveAttribute('type', 'password');
-    expect(buttonElement).toHaveClass(`${props.inputClassName}-view`);
+    expect(buttonElement).toHaveClass(`password__view`);
   });
 });
