@@ -42,9 +42,11 @@
 
 .login__form-field {
   margin: 10px 0;
+  padding: 0 25px;
   box-shadow: none;
   background: #f7f5ec80;
   border: 1px solid #00000080;
+  box-sizing: border-box;
 }
 
 .login__form-field::placeholder {
@@ -73,3 +75,14 @@
 .login__form-link:visited {
   color: var(--accentColor);
 }
+
+.login__form-label {
+  margin: 10px 0;
+  border-radius: 10px;
+  grid-template-columns: 1fr 20px;
+  padding: 0 25px;
+  background: #f7f5ec80;
+  border: 1px solid #00000080;
+}
+
+

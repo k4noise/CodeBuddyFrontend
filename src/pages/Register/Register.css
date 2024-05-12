@@ -82,18 +82,22 @@
   border-radius: 50%;
 }
 
-.register__form-field,
-.form__field {
+.register__form-field {
   padding: 0 25px;
   margin: 20px 0;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  box-sizing: border-box;
+  display: block;
+}
+
+.form__field {
   width: 100%;
   font-family: 'Montserrat', serif;
   font-size: 20px;
   line-height: 45px;
   border-radius: 10px;
   border: none;
-  box-shadow: 0px 4px 4px 0px #00000040;
-  box-sizing: border-box;
+  display: inline;
 }
 
 .register__form-field::placeholder,
@@ -126,8 +130,32 @@
   border-radius: 20px;
   font-size: 20px;
   font-weight: 500;
+  transition: 0.3s;
+}
+
+.register__form-send:disabled {
+  cursor: not-allowed;
+  background-color: gray;
 }
 
 .register__form-field + .zod-error {
   margin: -9px 0;
+}
+
+.register__form-label + .zod-error {
+  margin: -9px 0;
+}
+
+.register__form-label {
+  display: block;
+  margin: 20px 0;
+  border-radius: 10px;
+  grid-template-columns: 1fr 20px;
+  padding: 0 25px;
+  border: none;
+  box-shadow: 0px 4px 4px 0px #00000040;
+}
+
+.register__form-password-input {
+  border: none;
 }

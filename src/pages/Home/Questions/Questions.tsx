@@ -8,6 +8,8 @@ import Pic3Image from '../../../assets/pic3.jpg';
 import Pic4Image from '../../../assets/pic4.jpg';
 import Question, { QuestionProps } from '../../../components/Question/Question';
 import TextArea from '../../../components/TextArea/TextArea';
+import { useState } from 'react';
+import ImageGallery from '../ImageGallery/ImageGallery';
 
 const QUESTIONS: QuestionProps[] = [
   {
@@ -61,6 +63,7 @@ const QUESTIONS: QuestionProps[] = [
 /**
  * Questions component
  * Shows questions (Question component) with form to upload new question
+ * About form: files can be uploaded again after they have been uploaded
  * @component
  * @example
  * ```
@@ -69,6 +72,32 @@ const QUESTIONS: QuestionProps[] = [
  * @returns {JSX.Element}
  */
 const Questions = (): JSX.Element => {
+  const [images, setImages] = useState([]);
+
+  const handleUpload = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const inputFiles: FileList = event.target.files;
+    const filesArray: File[] = Array.from(inputFiles);
+
+    Promise.all(
+      filesArray.map((file: File) => {
+        return new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(file);
+        });
+      })
+    ).then((imagesArray: string[]) => {
+      setImages((oldImages) => [...oldImages, ...imagesArray]);
+      event.target.value = '';
+    });
+  };
+
+  const handleDeleteImage = (imageId: number) => {
+    setImages((prevImages) =>
+      prevImages.filter((_, index) => index !== imageId)
+    );
+  };
+
   return (
     <section className="questions">
       <h2 className="questions__header">Напиши свой вопрос и получи ответ</h2>
@@ -84,6 +113,12 @@ const Questions = (): JSX.Element => {
             className="questions__form-question"
           />
         </div>
+        <ImageGallery
+          images={images}
+          editMode={true}
+          onDeleteClick={handleDeleteImage}
+        />
+
         <div className="questions__form-buttons">
           <button type="button" className="questions__form-buttons-upload">
             <input
@@ -91,6 +126,7 @@ const Questions = (): JSX.Element => {
               multiple
               accept="image/png, image/jpg, image/jpeg"
               className="questions__form-images"
+              onChange={handleUpload}
             />
           </button>
           <button type="submit" className="questions__form-submit">

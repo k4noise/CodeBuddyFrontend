@@ -4,6 +4,8 @@ import './Register.css';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
+import { useState } from 'react';
+import PasswordField from '../../components/PasswordField/PasswordField';
 
 const RegisterSchema = zod
   .object({
@@ -13,15 +15,10 @@ const RegisterSchema = zod
     email: zod.string().email('Некорректный email'),
     password: zod.string().min(8, 'Не менее 8 символов'),
     passwordRepeat: zod.string(),
-    isAgree: zod.boolean(),
   })
   .refine((data) => data.password === data.passwordRepeat, {
     message: 'Пароли не совпадают',
     path: ['passwordRepeat'],
-  })
-  .refine((data) => !data.isAgree, {
-    message: 'Необходимо согласиться с условиями политики конфиденциальности',
-    path: ['isAgree'],
   });
 
 /**
@@ -30,6 +27,7 @@ const RegisterSchema = zod
  * @returns {JSX.Element} Register form
  */
 const Register = () => {
+  const [isAgree, setIsAgree] = useState(false);
   const {
     register,
     handleSubmit,
@@ -65,7 +63,7 @@ const Register = () => {
           <input
             type="text"
             placeholder="Имя"
-            className="register__form-field"
+            className="form__field register__form-field"
             {...register('name')}
           />
           {errors.name?.message && (
@@ -74,7 +72,7 @@ const Register = () => {
           <input
             type="text"
             placeholder="Фамилия"
-            className="register__form-field"
+            className="form__field register__form-field"
             {...register('surname')}
           />
           {errors.surname?.message && (
@@ -84,38 +82,42 @@ const Register = () => {
             type="text"
             inputMode="email"
             placeholder="Почта"
-            className="register__form-field"
+            className="form__field register__form-field"
             {...register('email')}
           />
           {errors.email?.message && (
             <p className="zod-error">{errors.email?.message}</p>
           )}
-          <input
-            type="password"
+          <PasswordField
+            label=""
+            labelClassName="register__form-label"
+            inputClassName="register__form-password-input form__field"
+            validationOptions={register('password')}
             placeholder="Пароль"
-            className="register__form-field"
-            {...register('password')}
           />
           {errors.password?.message && (
             <p className="zod-error">{errors.password?.message}</p>
           )}
-          <input
-            type="password"
+          <PasswordField
+            label=""
+            labelClassName="register__form-label"
+            inputClassName="register__form-password-input form__field"
+            validationOptions={register('passwordRepeat')}
             placeholder="Пароль еще раз"
-            className="register__form-field"
-            {...register('passwordRepeat')}
           />
           {errors.passwordRepeat?.message && (
             <p className="zod-error">{errors.passwordRepeat?.message}</p>
           )}
           <label className="register__form-policy">
-            <input type="checkbox" {...register('isAgree')} />Я согласен с
-            условиями политики конфиденциальности
+            <input
+              type="checkbox"
+              onClick={() => setIsAgree((prev) => !prev)}
+            />
+            Я согласен с условиями политики конфиденциальности
           </label>
-          {errors.isAgree?.message && (
-            <p className="zod-error">{errors.isAgree?.message}</p>
-          )}
-          <button className="register__form-send">Зарегестрироваться</button>
+          <button className="register__form-send" disabled={!isAgree}>
+            Зарегестрироваться
+          </button>
         </form>
       </div>
     </div>

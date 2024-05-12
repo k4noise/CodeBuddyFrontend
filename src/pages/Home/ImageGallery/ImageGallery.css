@@ -1,0 +1,56 @@
+.gallery__images {
+  margin: auto;
+  margin-top: 25px;
+  padding-bottom: 20px;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.gallery__image-wrapper {
+  height: 125px;
+  width: 155px;
+}
+
+.gallery__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  box-shadow: 0px 4px 35px 0px #d9d9d9;
+}
+
+.gallery__image-wrapper:first-child .gallery__image {
+  border-radius: 20px 0px 0px 20px;
+}
+
+.gallery__image-wrapper:nth-last-child(2) .gallery__image {
+  border-radius: 0px 20px 20px 0px;
+}
+
+.gallery__image-delete {
+  width: 20px;
+  height: 22px;
+  background: #ffffff80 url('../../../assets/trash.png') center no-repeat;
+  background-size: 100% auto;
+  transform: translate(650%, -550%);
+  border-radius: 5px;
+  border: none;
+}
+
+.gallery__dialog {
+  max-width: 80vw;
+  max-height: 80vh;
+  overflow: hidden;
+  border: none;
+}
+
+.gallery__dialog:focus-visible {
+  outline: none;
+}
+
+.gallery__dialog img {
+  max-width: 80vw;
+  max-height: 80vh;
+  object-fit: contain;
+}

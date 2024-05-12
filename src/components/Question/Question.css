@@ -35,36 +35,11 @@
   white-space: pre-wrap;
 }
 
-.question__images {
-  margin: auto;
-  margin-top: 25px;
-  padding-bottom: 20px;
-  width: 80%;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  border-bottom: 1px solid #ecf6ff;
-}
-
-.question__image {
-  height: 125px;
-  width: 155px;
-  object-fit: cover;
-  box-shadow: 0px 4px 35px 0px #d9d9d9;
-}
-
-.question__image:first-child {
-  border-radius: 20px 0px 0px 20px;
-}
-
-.question__image:last-child {
-  border-radius: 0px 20px 20px 0px;
-}
-
 .question__reactions {
   padding: 15px 40px;
   display: flex;
   gap: 8px;
+  border-top: 1px solid #ecf6ff;
 }
 
 .question__reactions span {

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
+import PasswordField from '../../components/PasswordField/PasswordField';
 
 const LoginSchema = zod.object({
   type: zod.union([zod.literal('student'), zod.literal('mentor')]),
@@ -58,11 +59,12 @@ const Login = () => {
           {errors.email?.message && (
             <p className="zod-error">{errors.email?.message}</p>
           )}
-          <input
-            type="password"
+          <PasswordField
+            label=""
+            labelClassName="login__form-label"
+            inputClassName="login__form-password-input form__field"
+            validationOptions={register('password')}
             placeholder="Пароль"
-            className="login__form-field form__field"
-            {...register('password')}
           />
           {errors.password?.message && (
             <p className="zod-error">{errors.password?.message}</p>
