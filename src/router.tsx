@@ -12,14 +12,20 @@ import Requests from './pages/Requests/Requests.tsx';
 
 const NAV_LINKS: NavLink[] = [
   { text: 'Все менторы', href: 'mentors' },
+] as const;
+
+const NAV_SUBLINKS: NavLink[] = [
   { text: 'Мой профиль', href: 'profile' },
+  { text: 'Мои заявки', href: 'requests' },
+  { text: 'Настройки', href: 'profile/settings' },
+  { text: 'Выход', href: 'logout' },
 ] as const;
 
 const router = createBrowserRouter([
   {
     element: (
       <>
-        <Nav links={NAV_LINKS} hasAuthButtons={true} />
+        <Nav links={NAV_LINKS} sublinks={NAV_SUBLINKS} hasAuthButtons={true} />
         <div>
           <Outlet />
         </div>

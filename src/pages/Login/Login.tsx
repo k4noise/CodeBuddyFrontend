@@ -1,14 +1,16 @@
 import './Login.css';
 import ManWithLaptopImage from '../../assets/man-with-laptop.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import PasswordField from '../../components/PasswordField/PasswordField';
+import { loginUser } from '../../actions/auth';
+import { LoginUser } from '../../actions/dto/user';
 
 const LoginSchema = zod.object({
   type: zod.union([zod.literal('student'), zod.literal('mentor')]),
-  email: zod.string().email('Некорректный email'),
+  login: zod.string().email('Некорректный email'),
   password: zod.string().min(8, 'Не менее 8 символов'),
 });
 
@@ -18,6 +20,7 @@ const LoginSchema = zod.object({
  * @returns {JSX.Element} Login form
  */
 const Login = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -32,7 +35,10 @@ const Login = () => {
         <img src={ManWithLaptopImage} alt="man with laptop" />
         <form
           className="login__form"
-          onSubmit={handleSubmit((d) => console.log(d))}
+          onSubmit={handleSubmit(async (data) => {
+            await loginUser(data as LoginUser);
+            navigate('/');
+          })}
         >
           <fieldset className="login__form-fieldset form__fieldset">
             <label>
@@ -54,10 +60,10 @@ const Login = () => {
             inputMode="email"
             placeholder="Почта"
             className="login__form-field form__field"
-            {...register('email')}
+            {...register('login')}
           />
-          {errors.email?.message && (
-            <p className="zod-error">{errors.email?.message}</p>
+          {errors.login?.message && (
+            <p className="zod-error">{errors.login?.message}</p>
           )}
           <PasswordField
             label=""
