@@ -1,12 +1,15 @@
 import './Login.css';
 import ManWithLaptopImage from '../../assets/man-with-laptop.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import PasswordField from '../../components/PasswordField/PasswordField';
 import { loginUser } from '../../actions/auth';
 import { LoginUser } from '../../actions/dto/user';
+import { ProfileType } from '../../types';
+import { useAuth } from '../../AuthProvider';
+import { toast } from 'react-toastify';
 
 const LoginSchema = zod.object({
   type: zod.union([zod.literal('student'), zod.literal('mentor')]),
@@ -21,6 +24,7 @@ const LoginSchema = zod.object({
  */
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -29,17 +33,26 @@ const Login = () => {
     resolver: zodResolver(LoginSchema),
   });
 
+  const onFormSend = async (data: FieldValues) => {
+    const profileType: ProfileType =
+      data.type === 'mentor' ? ProfileType.MENTOR : ProfileType.STUDENT;
+    try {
+      await loginUser(data as LoginUser, profileType);
+      login();
+      toast('Успешный вход', { type: 'success' });
+      navigate('/');
+    } catch (error) {
+      toast(error.message, {
+        type: 'error',
+      });
+    }
+  };
+
   return (
     <div className="login">
       <div className="login__wrapper">
         <img src={ManWithLaptopImage} alt="man with laptop" />
-        <form
-          className="login__form"
-          onSubmit={handleSubmit(async (data) => {
-            await loginUser(data as LoginUser);
-            navigate('/');
-          })}
-        >
+        <form className="login__form" onSubmit={handleSubmit(onFormSend)}>
           <fieldset className="login__form-fieldset form__fieldset">
             <label>
               <input

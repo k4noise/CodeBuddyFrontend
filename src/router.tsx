@@ -25,7 +25,7 @@ const router = createBrowserRouter([
   {
     element: (
       <>
-        <Nav links={NAV_LINKS} sublinks={NAV_SUBLINKS} hasAuthButtons={true} />
+        <Nav links={NAV_LINKS} sublinks={NAV_SUBLINKS} />
         <div>
           <Outlet />
         </div>

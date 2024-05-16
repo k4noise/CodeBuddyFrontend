@@ -10,6 +10,8 @@ import { ProfileType } from '../../types';
 import { CreateUser } from '../../actions/dto/user';
 import { registerUser } from '../../actions/auth';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../AuthProvider';
+import { toast } from 'react-toastify';
 
 const RegisterSchema = zod
   .object({
@@ -42,6 +44,7 @@ const RegisterSchema = zod
 const Register = () => {
   const [isAgree, setIsAgree] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -50,19 +53,24 @@ const Register = () => {
     resolver: zodResolver(RegisterSchema),
   });
 
+  const onFormSend = async (data: FieldValues) => {
+    const profileType: ProfileType =
+      data.type === 'mentor' ? ProfileType.MENTOR : ProfileType.STUDENT;
+    try {
+      await registerUser(data as CreateUser, profileType);
+      login();
+      toast('Успешная регистрация', { type: 'success' });
+      navigate('/');
+    } catch (error) {
+      toast('Произошла ошибка, попробуйте еще раз', { type: 'error' });
+    }
+  };
+
   return (
     <div className="register">
       <div className="register__wrapper">
         <img src={LeaningManImage} alt="leaning man" />
-        <form
-          className="register__form"
-          onSubmit={handleSubmit(async (data: FieldValues) => {
-            const profileType: ProfileType =
-              data.type === 'mentor' ? ProfileType.MENTOR : ProfileType.STUDENT;
-            await registerUser(data as CreateUser, profileType);
-            navigate('/');
-          })}
-        >
+        <form className="register__form" onSubmit={handleSubmit(onFormSend)}>
           <h2 className="register__form-header">Регистрация</h2>
           <fieldset className="register__form-fieldset">
             <label>

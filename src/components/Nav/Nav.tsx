@@ -1,8 +1,10 @@
+import { useState } from 'react';
+import { useAuth } from '../../AuthProvider';
 import { Link, useLocation } from 'react-router-dom';
 import AvatarImage from '../../assets/avatar1.png';
 import Logo from '../Logo/Logo';
 import './Nav.css';
-import { useState } from 'react';
+import { logoutUser } from '../../actions/auth';
 
 /**
  * Nav component
@@ -19,9 +21,9 @@ import { useState } from 'react';
  * @returns {JSX.Element} Nav
  */
 interface NavLink {
-  /** link text */
+  /* link text */
   text: string;
-  /** link url */
+  /* link url */
   href: string;
 }
 
@@ -30,15 +32,13 @@ interface NavProps {
   links: NavLink[];
   /* hidden links array */
   sublinks: NavLink[];
-  /* flag is need show auth buttons */
-  hasAuthButtons: boolean;
 }
 
-const Nav = ({ links, sublinks, hasAuthButtons }: NavProps) => {
+const Nav = ({ links, sublinks }: NavProps) => {
   const location = useLocation();
   const inHomePage = location.pathname === '/';
   const [isOpenSubnav, setIsOpenSubnav] = useState(false);
-
+  const { auth, logout } = useAuth();
   return (
     <nav className="nav">
       <Logo />
@@ -51,7 +51,7 @@ const Nav = ({ links, sublinks, hasAuthButtons }: NavProps) => {
           ))}
         </div>
       )}
-      {hasAuthButtons && inHomePage && (
+      {!auth && inHomePage && (
         <div className="nav__register-wrapper">
           <Link to="register" className="nav__items-link">
             Регистрация
@@ -61,7 +61,7 @@ const Nav = ({ links, sublinks, hasAuthButtons }: NavProps) => {
           </Link>
         </div>
       )}
-      {!hasAuthButtons && (
+      {auth && (
         <div className="subnav-wrapper">
           <div className="subnav__avatar-wrapper">
             <img src={AvatarImage} alt="Avatar" className="subnav__avatar" />
@@ -78,11 +78,23 @@ const Nav = ({ links, sublinks, hasAuthButtons }: NavProps) => {
         className={`subnav${isOpenSubnav ? '' : ' unvisible'}`}
         onClick={() => setIsOpenSubnav((prev) => !prev)}
       >
-        {sublinks.map((sublink) => (
-          <Link to={sublink.href} key={sublink.text}>
-            {sublink.text}
-          </Link>
-        ))}
+        {sublinks.map((sublink) =>
+          sublink.href === 'logout' ? (
+            <span
+              key={sublink.text}
+              onClick={() => {
+                logoutUser();
+                logout();
+              }}
+            >
+              {sublink.text}
+            </span>
+          ) : (
+            <Link to={sublink.href} key={sublink.text}>
+              {sublink.text}
+            </Link>
+          )
+        )}
       </nav>
     </nav>
   );

@@ -36,10 +36,6 @@ a:visited {
   color: var(--textColor);
 }
 
-.logo {
-  width: 100%;
-}
-
 button {
   cursor: pointer;
 }

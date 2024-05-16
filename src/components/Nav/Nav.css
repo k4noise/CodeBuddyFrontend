@@ -8,6 +8,10 @@
   gap: 80px;
 }
 
+.nav .logo {
+  width: 100%;
+}
+
 .nav__items-wrapper {
   width: 100%;
   display: flex;

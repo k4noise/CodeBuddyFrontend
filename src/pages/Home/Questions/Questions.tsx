@@ -73,6 +73,9 @@ const QUESTIONS: QuestionProps[] = [
  */
 const Questions = (): JSX.Element => {
   const [images, setImages] = useState([]);
+  let userAvatar = sessionStorage.getItem('avatarUrl');
+  userAvatar =
+    userAvatar !== null && userAvatar !== 'null' ? userAvatar : Avatar1Image;
 
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const inputFiles: FileList = event.target.files;
@@ -104,7 +107,7 @@ const Questions = (): JSX.Element => {
       <form className="questions__form" encType="multipart/form-data">
         <div className="questions__form-wrapper">
           <img
-            src={Avatar1Image}
+            src={userAvatar}
             alt="user avatar"
             className="questions__form-avatar"
           />
