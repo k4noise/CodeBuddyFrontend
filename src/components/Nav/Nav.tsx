@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../AuthProvider';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AvatarImage from '../../assets/avatar1.png';
 import Logo from '../Logo/Logo';
 import './Nav.css';
@@ -36,6 +36,7 @@ interface NavProps {
 
 const Nav = ({ links, sublinks }: NavProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const inHomePage = location.pathname === '/';
   const [isOpenSubnav, setIsOpenSubnav] = useState(false);
   const { auth, logout } = useAuth();
@@ -63,9 +64,9 @@ const Nav = ({ links, sublinks }: NavProps) => {
       )}
       {auth && (
         <div className="subnav-wrapper">
-          <div className="subnav__avatar-wrapper">
+          <Link to="profile" className="subnav__avatar-wrapper">
             <img src={AvatarImage} alt="Avatar" className="subnav__avatar" />
-          </div>
+          </Link>
           <button
             className="subnav__button"
             onClick={() => setIsOpenSubnav((prev) => !prev)}
@@ -85,6 +86,7 @@ const Nav = ({ links, sublinks }: NavProps) => {
               onClick={() => {
                 logoutUser();
                 logout();
+                navigate('/');
               }}
             >
               {sublink.text}

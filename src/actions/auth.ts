@@ -47,12 +47,11 @@ export const loginUser = async (
       userCredintals,
       { withCredentials: true }
     );
-    const { data: userData } = await getUserData(profileType);
+    const data = await getUserData(profileType);
 
-    if (typeof userData === 'string')
-      throw new Error('Неверный логин или пароль');
+    if (typeof data === 'string') throw new Error('Неверный логин или пароль');
 
-    saveUserData(userData, profileType);
+    saveUserData(data, profileType);
   } catch (error) {
     if (error.name === 'AxiosError') {
       throw new Error('Неверный тип профиля');
@@ -82,7 +81,14 @@ export const getUserData = async (profileType: ProfileType) => {
     profileType === ProfileType.STUDENT
       ? `${import.meta.env.VITE_API_BASE_URL}/students/accounts`
       : `${import.meta.env.VITE_API_BASE_URL}/mentors/accounts`;
-  return await axios.get(PROFILE_URL, { withCredentials: true });
+  try {
+    const { data } = await axios.get(PROFILE_URL, { withCredentials: true });
+    return data;
+  } catch (error) {
+    if (error?.request?.status === 302) {
+      return JSON.parse(error.request.response);
+    }
+  }
 };
 
 /**

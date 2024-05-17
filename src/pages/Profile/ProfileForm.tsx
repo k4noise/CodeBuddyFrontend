@@ -2,17 +2,20 @@ import InputField from '../../components/InputField/InputField';
 import PasswordField from '../../components/PasswordField/PasswordField';
 import TextArea from '../../components/TextArea/TextArea';
 import ProfileSection from './ProfileSection';
-import { Mentor, ProfileType, User } from '../../types';
-import { Link } from 'react-router-dom';
 import Tags from '../../components/Tags/Tags';
+import { ProfileType } from '../../types';
+import { Link } from 'react-router-dom';
+import { UserData } from '../../actions/dto/user';
 
 interface ProfileFormProps {
   /* Flag to show edit button */
   isMine: boolean;
   /* Flag to show save button */
   isEdit: boolean;
+  /* student or mentor */
+  profileType: ProfileType;
   /* Describe to user data */
-  userInfo: User | Mentor;
+  userInfo: UserData;
   /* Callback to save button click */
   onSave: () => void;
   /* Callback to save button click */
@@ -49,6 +52,7 @@ interface ProfileFormProps {
 const ProfileForm: React.FC<ProfileFormProps> = ({
   isMine,
   isEdit,
+  profileType,
   userInfo,
   onSave,
   onEditClick,
@@ -58,7 +62,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   return (
     <form className="profile__form" data-testid="profileForm">
       <div className="profile__form-common">
-        <span className="profile__username">{userInfo.username}</span>
+        <span className="profile__username">{`${userInfo?.firstName ?? ''} ${
+          userInfo?.lastName ?? ''
+        }`}</span>
         {isMine && !isEdit && (
           <button
             className="profile__form-edit"
@@ -84,20 +90,20 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <input
             type="text"
             readOnly
-            value={userInfo.type}
+            value={profileType}
             className="profile__form-input"
           />
         </label>
-        {!isEdit ? (
+        {!isEdit && userInfo?.email ? (
           <Link
-            to={`mailto:${userInfo.email}`}
+            to={`mailto:${userInfo?.email}`}
             target="_blank"
             rel="noopener noreferrer"
           >
             <InputField
               isEdit={hasEdit}
               label="Почта :"
-              value={userInfo.email}
+              value={userInfo?.email}
               labelClassName="profile__form-label"
               inputClassName="profile__form-input"
             />
@@ -106,21 +112,21 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <InputField
             isEdit={hasEdit}
             label="Почта :"
-            value={userInfo.email}
+            value={userInfo?.email ?? 'Скрыта'}
             labelClassName="profile__form-label"
             inputClassName="profile__form-input"
           />
         )}
-        {!hasEdit ? (
+        {!hasEdit && userInfo?.telegram ? (
           <Link
-            to={`https://t.me/${userInfo.tgId.slice(1)} `}
+            to={`https://t.me/${userInfo?.telegram?.slice(1)}`}
             target="_blank"
             rel="noopener noreferrer"
           >
             <InputField
               isEdit={hasEdit}
               label="Телеграмм:"
-              value={userInfo.tgId}
+              value={userInfo?.telegram}
               labelClassName="profile__form-label"
               inputClassName="profile__form-input"
             />
@@ -129,7 +135,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <InputField
             isEdit={hasEdit}
             label="Телеграмм:"
-            value={userInfo.tgId}
+            value={userInfo?.telegram ?? 'Не указан'}
             labelClassName="profile__form-label"
             inputClassName="profile__form-input"
           />
@@ -141,7 +147,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <InputField
             isEdit={hasEdit}
             label="Логин:"
-            value={userInfo.login}
+            value={userInfo?.email}
             labelClassName="profile__form-label"
             inputClassName="profile__form-input"
           />
@@ -167,13 +173,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           className="profile__form-textarea"
           placeholder={hasEdit ? 'Введите текст' : ''}
           readonly={!hasEdit}
-          value={userInfo.bio ?? ''}
+          value={userInfo?.description ?? ''}
         />
       </ProfileSection>
 
-      {userInfo.type === ProfileType.MENTOR && (
+      {profileType === ProfileType.MENTOR && (
         <ProfileSection title="Ключевые слова:">
-          <Tags tags={(userInfo as Mentor).tags} />
+          <Tags tags={userInfo?.tags ?? []} />
         </ProfileSection>
       )}
     </form>

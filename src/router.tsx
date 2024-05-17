@@ -4,11 +4,12 @@ import Register from './pages/Register/Register.tsx';
 import Login from './pages/Login/Login.tsx';
 import Nav, { NavLink } from './components/Nav/Nav.tsx';
 import Profile from './pages/Profile/Profile.tsx';
-import AvatarImage from './assets/avatar1.png';
-import MentorAvatarImage from './assets/mentor.png';
-import { Mentor, ProfileType, Student } from './types.ts';
+import { ProfileType } from './types.ts';
 import Mentors from './pages/Mentors/Mentors.tsx';
 import Requests from './pages/Requests/Requests.tsx';
+import Page404 from './pages/404.tsx';
+import Page401 from './pages/401.tsx';
+import Page403 from './pages/403.tsx';
 
 const NAV_LINKS: NavLink[] = [
   { text: 'Все менторы', href: 'mentors' },
@@ -17,7 +18,7 @@ const NAV_LINKS: NavLink[] = [
 const NAV_SUBLINKS: NavLink[] = [
   { text: 'Мой профиль', href: 'profile' },
   { text: 'Мои заявки', href: 'requests' },
-  { text: 'Настройки', href: 'profile/settings' },
+  { text: 'Настройки', href: 'profile/edit' },
   { text: 'Выход', href: 'logout' },
 ] as const;
 
@@ -62,16 +63,7 @@ const router = createBrowserRouter([
           <Profile
             isMine={true}
             isEdit={false}
-            userInfo={
-              {
-                type: ProfileType.STUDENT,
-                login: 'ivan.ivanov@mail.ru',
-                username: 'Иван Иванов',
-                avatar: AvatarImage,
-                email: 'ivan.ivanov@mail.ru',
-                tgId: '@ivan_ivanov',
-              } as Student
-            }
+            profileType={sessionStorage.getItem('profileType') as ProfileType}
           />
         ),
       },
@@ -81,57 +73,45 @@ const router = createBrowserRouter([
           <Profile
             isMine={true}
             isEdit={true}
-            userInfo={
-              {
-                type: ProfileType.STUDENT,
-                login: 'ivan.ivanov@mail.ru',
-                username: 'Иван Иванов',
-                avatar: AvatarImage,
-                email: 'ivan.ivanov@mail.ru',
-                tgId: '@ivan_ivanov',
-              } as Student
-            }
+            profileType={sessionStorage.getItem('profileType') as ProfileType}
           />
         ),
       },
       {
-        path: '/profile/:id',
+        path: '/profile/student/:id',
         element: (
           <Profile
             isMine={false}
             isEdit={false}
-            userInfo={
-              {
-                type: ProfileType.STUDENT,
-                login: 'ivan.ivanov@mail.ru',
-                username: 'Иван Иванов',
-                avatar: AvatarImage,
-                email: 'ivan.ivanov@mail.ru',
-                tgId: '@ivan_ivanov',
-              } as Student
-            }
+            profileType={ProfileType.STUDENT}
           />
         ),
       },
       {
-        path: '/profile/mentor',
+        path: '/profile/mentor/:id',
         element: (
           <Profile
             isMine={false}
             isEdit={false}
-            userInfo={
-              {
-                type: ProfileType.MENTOR,
-                login: 'petr.petrov@mail.ru',
-                username: 'Петр Петров',
-                avatar: MentorAvatarImage,
-                email: 'petr.petrov@mail.ru',
-                tgId: '@petttt_',
-                tags: ['ментор', 'опыт 5 лет', 'джава', 'языки'],
-              } as Mentor
-            }
+            profileType={ProfileType.MENTOR}
           />
         ),
+      },
+      {
+        path: '/401',
+        element: <Page401 />,
+      },
+      {
+        path: '/403',
+        element: <Page403 />,
+      },
+      {
+        path: '/404',
+        element: <Page404 />,
+      },
+      {
+        path: '*',
+        element: <Page404 />,
       },
     ],
   },

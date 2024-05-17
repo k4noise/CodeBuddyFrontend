@@ -54,3 +54,26 @@ textarea {
 .hidden {
   display: none;
 }
+
+.error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.error h2 {
+  margin: 0;
+  font-size: 100px;
+  color: var(--accentColor);
+  text-align: center;
+}
+
+.error h3 {
+  text-align: center;
+}
+
+.error a {
+  text-decoration: underline;
+  color: var(--accentColor);
+}
