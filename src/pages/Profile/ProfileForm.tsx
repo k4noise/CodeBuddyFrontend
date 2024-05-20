@@ -112,7 +112,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <InputField
             isEdit={hasEdit}
             label="Почта :"
-            value={userInfo?.email ?? 'Скрыта'}
+            value={isMine ? userInfo?.email : 'Скрыта'}
             labelClassName="profile__form-label"
             inputClassName="profile__form-input"
           />
@@ -135,7 +135,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <InputField
             isEdit={hasEdit}
             label="Телеграмм:"
-            value={userInfo?.telegram ?? 'Не указан'}
+            value={userInfo?.telegram ?? isMine ? 'Не указан' : 'Скрыт'}
             labelClassName="profile__form-label"
             inputClassName="profile__form-input"
           />

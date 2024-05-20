@@ -57,13 +57,15 @@ const Register = () => {
     const profileType: ProfileType =
       data.type === 'mentor' ? ProfileType.MENTOR : ProfileType.STUDENT;
     try {
-      await registerUser(data as CreateUser, profileType);
-      login();
-      toast('Успешная регистрация', { type: 'success' });
-      navigate('/');
-    } catch (error) {
-      toast('Произошла ошибка, попробуйте еще раз', { type: 'error' });
-    }
+      const { error } = await registerUser(data as CreateUser, profileType);
+      if (error) {
+        toast('Произошла ошибка, попробуйте еще раз', { type: 'error' });
+      } else {
+        login();
+        toast('Успешная регистрация', { type: 'success' });
+        navigate('/');
+      }
+    } catch (error) {}
   };
 
   return (

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { getProfileData } from '../../actions/profile';
 import { UserData } from '../../actions/dto/user';
 import defaultAvatarImage from '../../assets/avatar1.png';
+import { handleError } from '../../actions/sendRequest';
 
 interface ProfileProps {
   /* Flag to show edit button */
@@ -52,19 +53,15 @@ const Profile: React.FC<ProfileProps> = ({
       : defaultAvatarImage;
 
   const getData = async () => {
-    try {
-      const data = await getProfileData(isMine, profileType, Number(id));
-      if (typeof data === 'string') navigate('401');
-      setUser(data);
-    } catch (error) {
-      if (
-        error?.message == 401 ||
-        error?.message == 403 ||
-        error?.message == 404
-      )
-        navigate('/' + error?.message);
-      else navigate('/404');
+    const { data, error } = await getProfileData(
+      isMine,
+      profileType,
+      Number(id)
+    );
+    if (error) {
+      handleError(error, navigate);
     }
+    if (data) setUser(data);
   };
 
   useEffect(() => {
@@ -89,7 +86,7 @@ const Profile: React.FC<ProfileProps> = ({
           isMine={isMine}
           isEdit={isEdit}
           profileType={profileType}
-          userInfo={user}
+          userInfo={user as UserData}
           onSave={handleSave}
           onEditClick={handleEditClick}
         />

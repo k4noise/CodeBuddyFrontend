@@ -1,32 +1,36 @@
 import { ProfileType } from '../types';
 import { CreateUser, LoginUser, UserData } from './dto/user';
-import axios from 'axios';
+import { AxiosMethod, sendRequest } from './sendRequest';
 
 /**
  * Register user to server
  * If success, login user
  * @param {CreateUser} userDto user data, look at interface
  * @param {ProfileType} profileType mentor or student
- * @returns {void}
+ * @returns {ResponseData<UserData>}
  */
 export const registerUser = async (
   userDto: CreateUser,
   profileType: ProfileType
 ) => {
-  const REGISTER_URL =
+  const registerUrl =
     profileType === ProfileType.STUDENT
       ? `${import.meta.env.VITE_API_BASE_URL}/students`
       : `${import.meta.env.VITE_API_BASE_URL}/mentors`;
-  try {
-    await axios.post(REGISTER_URL, userDto, { withCredentials: true });
-    await loginUser(
+  const { data, error } = await sendRequest<UserData>(
+    registerUrl,
+    AxiosMethod.POST,
+    false,
+    userDto
+  );
+  if (!error && data) {
+    const request = await loginUser(
       { login: userDto.email, password: userDto.password },
       profileType
     );
-  } catch (error) {
-    console.error(error);
-    throw error;
+    return request;
   }
+  return { data, error };
 };
 
 /**
@@ -34,41 +38,40 @@ export const registerUser = async (
  * If success, save user data to sessionStorage and receive JSESSIONID cookie from server
  * @param {LoginUser} loginDto login and password
  * @param {ProfileType} profileType mentor or student
- * @returns {void}
+ * @returns {ResponseData<UserData>}
  */
 export const loginUser = async (
   loginDto: LoginUser,
   profileType: ProfileType
 ) => {
+  const loginUrl = `${import.meta.env.VITE_API_BASE_URL}/login`;
   const userCredintals = `username=${loginDto.login}&password=${loginDto.password}`;
-  try {
-    await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/login`,
-      userCredintals,
-      { withCredentials: true }
-    );
-    const data = await getUserData(profileType);
+  const loginResponse = await sendRequest<UserData>(
+    loginUrl,
+    AxiosMethod.POST,
+    true,
+    userCredintals
+  );
 
-    if (typeof data === 'string') throw new Error('Неверный логин или пароль');
-
-    saveUserData(data, profileType);
-  } catch (error) {
-    if (error.name === 'AxiosError') {
-      throw new Error('Неверный тип профиля');
-    }
-    console.error(error);
-    throw error;
+  if (!loginResponse.error && loginResponse.data) {
+    const profileResponse = await getUserData(profileType);
+    if (!profileResponse.error)
+      saveUserData(profileResponse.data as UserData, profileType);
+    return profileResponse;
   }
+
+  return loginResponse;
 };
 
 /**
  * Logout user
  * Remove all user data from sessionStorage and remove cookie
- * @returns {void}
+ * @returns {ResponseData<void>}
  */
-export const logoutUser = async (): Promise<void> => {
-  await axios.get(`${import.meta.env.VITE_API_BASE_URL}/logout`);
-  deleteUserData();
+export const logoutUser = async () => {
+  const logoutUrl = `${import.meta.env.VITE_API_BASE_URL}/logout`;
+  const { error } = await sendRequest<void>(logoutUrl, AxiosMethod.POST, false);
+  if (!error) deleteUserData();
 };
 /**
  * Get user data from server
@@ -77,18 +80,11 @@ export const logoutUser = async (): Promise<void> => {
  */
 
 export const getUserData = async (profileType: ProfileType) => {
-  const PROFILE_URL =
-    profileType === ProfileType.STUDENT
+  const profileUrl =
+    profileType == ProfileType.STUDENT
       ? `${import.meta.env.VITE_API_BASE_URL}/students/accounts`
       : `${import.meta.env.VITE_API_BASE_URL}/mentors/accounts`;
-  try {
-    const { data } = await axios.get(PROFILE_URL, { withCredentials: true });
-    return data;
-  } catch (error) {
-    if (error?.request?.status === 302) {
-      return JSON.parse(error.request.response);
-    }
-  }
+  return await sendRequest<UserData>(profileUrl, AxiosMethod.GET, true);
 };
 
 /**

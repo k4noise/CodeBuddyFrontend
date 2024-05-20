@@ -7,9 +7,9 @@ import Profile from './pages/Profile/Profile.tsx';
 import { ProfileType } from './types.ts';
 import Mentors from './pages/Mentors/Mentors.tsx';
 import Requests from './pages/Requests/Requests.tsx';
-import Page404 from './pages/404.tsx';
-import Page401 from './pages/401.tsx';
-import Page403 from './pages/403.tsx';
+import Page404 from './pages/ErrorPages/404.tsx';
+import Page401 from './pages/ErrorPages/401.tsx';
+import Page403 from './pages/ErrorPages/403.tsx';
 
 const NAV_LINKS: NavLink[] = [
   { text: 'Все менторы', href: 'mentors' },

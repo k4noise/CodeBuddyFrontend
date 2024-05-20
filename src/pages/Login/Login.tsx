@@ -10,6 +10,7 @@ import { LoginUser } from '../../actions/dto/user';
 import { ProfileType } from '../../types';
 import { useAuth } from '../../AuthProvider';
 import { toast } from 'react-toastify';
+import { handleError } from '../../actions/sendRequest';
 
 const LoginSchema = zod.object({
   type: zod.union([zod.literal('student'), zod.literal('mentor')]),
@@ -36,15 +37,15 @@ const Login = () => {
   const onFormSend = async (data: FieldValues) => {
     const profileType: ProfileType =
       data.type === 'mentor' ? ProfileType.MENTOR : ProfileType.STUDENT;
-    try {
-      await loginUser(data as LoginUser, profileType);
+    const { error } = await loginUser(data as LoginUser, profileType);
+    if (error) {
+      if (error === 404) {
+        toast('Неверный логин, пароль или тип профиля', { type: 'error' });
+      }
+    } else {
       login();
       toast('Успешный вход', { type: 'success' });
       navigate('/');
-    } catch (error) {
-      toast(error.message, {
-        type: 'error',
-      });
     }
   };
 
