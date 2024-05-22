@@ -13,6 +13,9 @@
 
 .mentor-card__avatar {
   width: 230px;
+  max-height: 230px;
+  object-fit: contain;
+  border-radius: 50%;
 }
 
 .mentor-card__info {

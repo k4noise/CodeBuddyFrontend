@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { ProfileType } from '../types';
 import { getUserData } from './auth';
 import { UserData } from './dto/user';

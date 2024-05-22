@@ -7,6 +7,7 @@ import { getProfileData } from '../../actions/profile';
 import { UserData } from '../../actions/dto/user';
 import defaultAvatarImage from '../../assets/avatar1.png';
 import { handleError } from '../../actions/sendRequest';
+import { getAvatar } from '../../actions/util';
 
 interface ProfileProps {
   /* Flag to show edit button */
@@ -46,11 +47,7 @@ const Profile: React.FC<ProfileProps> = ({
   const { id } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState<UserData | null>(null);
-  let userAvatar = user?.photoUrl;
-  userAvatar =
-    userAvatar !== null && userAvatar !== 'null'
-      ? userAvatar
-      : defaultAvatarImage;
+  let userAvatar = getAvatar(user?.photoUrl, profileType);
 
   const getData = async () => {
     const { data, error } = await getProfileData(
@@ -58,6 +55,7 @@ const Profile: React.FC<ProfileProps> = ({
       profileType,
       Number(id)
     );
+
     if (error) {
       handleError(error, navigate);
     }

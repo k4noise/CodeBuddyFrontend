@@ -1,17 +1,20 @@
 import React from 'react';
 import Tags from '../Tags/Tags';
 import TextArea from '../TextArea/TextArea';
+import MentorDefaultAvatarImage from '../../assets/mentor.png';
 import './MentorCard.css';
 
 interface MentorCardProps {
-  /* mentor display name */
-  username: string;
+  /* mentor name */
+  firstName: string;
+  /* mentor surname */
+  lastName: string;
   /* mentor avatar url */
-  avatarUrl: string;
+  photoUrl: string;
   /* mentor bio */
-  about: string;
+  description: string;
   /* mentor quick words */
-  tags: string[];
+  keywords: string[];
   /* callback to call when modal closing */
   onClick: React.MouseEventHandler;
 }
@@ -20,24 +23,27 @@ interface MentorCardProps {
  * Mentor card component
  * Shows card with mentor info
  * @component
- * @param {string} username mentor display name
- * @param {string} avatarUrl mentor avatar url
- * @param {string} about mentor bio
- * @param {string[]} tags mentor quick words
+ * @param {string} firstName mentor name
+ * @param {string} lastName mentor surname
+ * @param {string | null} photoUrl mentor avatar url
+ * @param {string} description mentor bio
+ * @param {string[]} keywords mentor quick words
  * @param {React.MouseEventHandler} onClick callback to call when modal closing
  * @returns {JSX.Element} Mentor card component
  */
 const MentorCard = ({
-  username,
-  avatarUrl,
-  about,
-  tags,
+  firstName,
+  lastName,
+  photoUrl,
+  description,
+  keywords: tags,
   onClick,
 }: MentorCardProps) => {
+  const username = `${firstName} ${lastName}`;
   return (
     <div className="mentor-card" data-testid="mentorCard">
       <img
-        src={avatarUrl}
+        src={photoUrl ?? MentorDefaultAvatarImage}
         alt={`${username} avatar`}
         className="mentor-card__avatar"
       />
@@ -48,7 +54,7 @@ const MentorCard = ({
           className="profile__form-textarea mentor-card__about"
           placeholder=""
           readonly={true}
-          value={about}
+          value={description}
         />
       </div>
       <button className="mentor-card__submit" onClick={onClick}>

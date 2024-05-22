@@ -50,7 +50,7 @@ const sendRequest = async <ResType>(
 };
 
 const handleError = (error: number, navigate: NavigateFunction) => {
-  if (error in ERROR_PAGES) {
+  if (ERROR_PAGES.includes(error)) {
     navigate(`/${error}`);
   }
 };

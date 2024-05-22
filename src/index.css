@@ -46,6 +46,10 @@ textarea {
   box-sizing: border-box;
 }
 
+textarea:read-only {
+  outline: none;
+}
+
 .zod-error {
   color: var(--accentColor);
   margin: 0;
@@ -73,7 +77,8 @@ textarea {
   text-align: center;
 }
 
-.error a {
+.error a,
+.message a {
   text-decoration: underline;
   color: var(--accentColor);
 }

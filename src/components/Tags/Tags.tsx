@@ -22,9 +22,9 @@ const Tags = ({ tags, className }: TagsProps) => {
   const colorGetter = randomColorGetter(TAG_COLORS);
   return (
     <div className={`tags ${className ?? ''}`} data-testid="tags">
-      {tags.map((tag) => {
+      {tags?.map((tag) => {
         const color = colorGetter();
-        return <Tag tag={tag} color={color} key={tag} />;
+        return <Tag tag={tag?.keyword} color={color} key={tag?.keyword} />;
       })}
     </div>
   );

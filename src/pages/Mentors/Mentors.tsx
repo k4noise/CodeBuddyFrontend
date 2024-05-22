@@ -5,15 +5,14 @@ import Tags from '../../components/Tags/Tags';
 import HeartManImage from '../../assets/heart-man.png';
 import './Mentors.css';
 import RequestPopup from '../../components/RequestPopup/RequestPopup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RequestPopupType } from '../../types';
-
-const MENTOR_DATA = {
-  username: 'Петр Петров',
-  avatarUrl: MentorAvatar,
-  about: 'Я ментор уже на протяжении 5 лет, помогаю в решении любых вопросов',
-  tags: ['ментор', 'опыт 5 лет', 'джава', 'языки'],
-};
+import { MentorData } from '../../actions/dto/user';
+import { getMentors } from '../../actions/mentors';
+import { Link, useNavigate } from 'react-router-dom';
+import { handleError } from '../../actions/sendRequest';
+import { getImageFromGoogleDrive } from '../../actions/profile';
+import { spawn } from 'child_process';
 
 const SERACH_TAGS = [
   'ментор',
@@ -26,9 +25,25 @@ const SERACH_TAGS = [
 ];
 
 const Mentors = () => {
-  const [isShowingRequest, setShowingRequest] = useState(false);
+  const navigate = useNavigate();
+  const [mentors, setMentors] = useState<MentorData[]>([]);
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [isShowingRequest, setIsShowingRequest] = useState(false);
 
-  const handleCardClick = () => setShowingRequest(true);
+  const handleCardClick = () => setIsShowingRequest(true);
+  const getData = async () => {
+    const { data, error } = await getMentors();
+
+    if (error) handleError(error, navigate);
+    if (data) {
+      setMentors(data.mentors);
+    }
+    if (keywords) setKeywords(data?.keywords);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <>
@@ -44,7 +59,7 @@ const Mentors = () => {
                 placeholder="Поиск по ключевому слову"
               />
             </label>
-            <Tags className="about-mentors__tags" tags={SERACH_TAGS} />
+            <Tags className="about-mentors__tags" tags={keywords} />
           </div>
           <div className="about-mentors__image">
             <img src={HeartManImage} alt="heart man" />
@@ -52,9 +67,20 @@ const Mentors = () => {
         </section>
         <section className="mentors">
           <div className="mentors__cards">
-            <MentorCard {...MENTOR_DATA} onClick={() => handleCardClick()} />
-            <MentorCard {...MENTOR_DATA} onClick={() => handleCardClick()} />
-            <MentorCard {...MENTOR_DATA} onClick={() => handleCardClick()} />
+            {mentors.length ? (
+              mentors?.map((mentor) => (
+                <MentorCard
+                  {...mentor}
+                  onClick={() => handleCardClick()}
+                  key={mentor.id}
+                />
+              ))
+            ) : (
+              <span className="message">
+                Менторов еще пока нет, но вы <Link to="/register">можете</Link>{' '}
+                стать первым!
+              </span>
+            )}
           </div>
         </section>
       </main>
@@ -62,7 +88,7 @@ const Mentors = () => {
         <RequestPopup
           header="Оставить заявку на ментора"
           popupType={RequestPopupType.CREATE_VIEW}
-          close={() => setShowingRequest(false)}
+          close={() => setIsShowingRequest(false)}
         />
       )}
       <Footer />

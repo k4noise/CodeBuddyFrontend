@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useAuth } from '../../AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import AvatarImage from '../../assets/avatar1.png';
+import DefaultStudentAvatarImage from '../../assets/avatar1.png';
+import DefaultMentorAvatarImage from '../../assets/mentor.png';
 import Logo from '../Logo/Logo';
 import './Nav.css';
 import { logoutUser } from '../../actions/auth';
+import { ProfileType } from '../../types';
+import { getAvatar } from '../../actions/util';
 
 /**
  * Nav component
@@ -65,7 +68,14 @@ const Nav = ({ links, sublinks }: NavProps) => {
       {auth && (
         <div className="subnav-wrapper">
           <Link to="profile" className="subnav__avatar-wrapper">
-            <img src={AvatarImage} alt="Avatar" className="subnav__avatar" />
+            <img
+              src={getAvatar(
+                sessionStorage.getItem('avatarUrl'),
+                sessionStorage.getItem('profileType') as ProfileType
+              )}
+              alt="Avatar"
+              className="subnav__avatar"
+            />
           </Link>
           <button
             className="subnav__button"
