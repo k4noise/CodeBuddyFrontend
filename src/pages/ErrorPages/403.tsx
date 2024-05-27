@@ -4,7 +4,7 @@
  */
 const Page403 = () => {
   return (
-    <div className="error">
+    <div className="error-page">
       <h2>403</h2>
       <h3>Вы не можете просматривать данную страницу</h3>
     </div>

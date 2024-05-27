@@ -4,7 +4,7 @@
  */
 const Page404 = () => {
   return (
-    <div className="error">
+    <div className="error-page">
       <h2>404</h2>
       <h3>Не найдено</h3>
     </div>

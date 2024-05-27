@@ -119,12 +119,12 @@ const Requests = ({ profileType }: RequestsProps) => {
       {isShowingRequest && (
         <RequestPopup
           header={
-            profileType === ProfileType.STUDENT
+            profileType == ProfileType.STUDENT
               ? 'Моя заявка'
               : `Заявка от ${selectedRequest?.username}`
           }
           popupType={
-            profileType === ProfileType.STUDENT
+            profileType == ProfileType.STUDENT
               ? RequestPopupType.STUDENT_VIEW
               : RequestPopupType.MENTOR_VIEW
           }

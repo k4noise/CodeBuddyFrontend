@@ -59,43 +59,19 @@ const router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: (
-          <Profile
-            isMine={true}
-            isEdit={false}
-            profileType={sessionStorage.getItem('profileType') as ProfileType}
-          />
-        ),
+        element: <Profile isMine={true} />,
       },
       {
         path: '/profile/edit',
-        element: (
-          <Profile
-            isMine={true}
-            isEdit={true}
-            profileType={sessionStorage.getItem('profileType') as ProfileType}
-          />
-        ),
+        element: <Profile isMine={true} />,
       },
       {
         path: '/profile/student/:id',
-        element: (
-          <Profile
-            isMine={false}
-            isEdit={false}
-            profileType={ProfileType.STUDENT}
-          />
-        ),
+        element: <Profile isMine={false} profileType={ProfileType.STUDENT} />,
       },
       {
         path: '/profile/mentor/:id',
-        element: (
-          <Profile
-            isMine={false}
-            isEdit={false}
-            profileType={ProfileType.MENTOR}
-          />
-        ),
+        element: <Profile isMine={false} profileType={ProfileType.MENTOR} />,
       },
       {
         path: '/401',

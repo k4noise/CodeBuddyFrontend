@@ -1,8 +1,10 @@
 interface TagProps {
   /* quick mentor property */
-  tag: string;
+  tag?: string;
   /* tag border color */
   color: string;
+  isEdit: boolean;
+  onEnter?: (tagValue: string) => void;
 }
 
 /**
@@ -13,8 +15,16 @@ interface TagProps {
  * @param {any} color tag border color
  * @returns {JSX.Element}
  */
-const Tag = ({ tag, color }: TagProps) => {
-  return (
+const Tag = ({ tag, color, isEdit, onEnter }: TagProps) => {
+  return isEdit ? (
+    <input
+      type="text"
+      className="tag"
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') onEnter(event.target.value);
+      }}
+    />
+  ) : (
     <span
       key={tag}
       className="tag"

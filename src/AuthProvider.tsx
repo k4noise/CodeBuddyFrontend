@@ -4,6 +4,8 @@ interface AuthContextType {
   auth: boolean;
   login: () => void;
   logout: () => void;
+  avatar: string | null;
+  changeAvatar: (avatarUrl: string) => void;
 }
 
 export const useAuth = () => {
@@ -18,11 +20,13 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(!!sessionStorage.getItem('profileType'));
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   const login = () => setAuth(true);
   const logout = () => setAuth(false);
+  const changeAvatar = (avatar: string) => setAvatar(avatar);
 
-  const value = { auth, login, logout };
+  const value = { auth, login, logout, changeAvatar, avatar };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

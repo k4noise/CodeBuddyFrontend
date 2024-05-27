@@ -1,5 +1,4 @@
 import MentorCard from '../../components/MentorCard/MentorCard';
-import MentorAvatar from '../../assets/mentor.png';
 import Footer from '../../components/Footer/Footer';
 import Tags from '../../components/Tags/Tags';
 import HeartManImage from '../../assets/heart-man.png';
@@ -11,18 +10,6 @@ import { MentorData } from '../../actions/dto/user';
 import { getMentors } from '../../actions/mentors';
 import { Link, useNavigate } from 'react-router-dom';
 import { handleError } from '../../actions/sendRequest';
-import { getImageFromGoogleDrive } from '../../actions/profile';
-import { spawn } from 'child_process';
-
-const SERACH_TAGS = [
-  'ментор',
-  'опыт 5 лет',
-  'джава',
-  'дизайн',
-  'языки',
-  'фронт',
-  'онлайн',
-];
 
 const Mentors = () => {
   const navigate = useNavigate();
@@ -51,14 +38,14 @@ const Mentors = () => {
         <section className="about-mentors">
           <div className="about-mentors__info">
             <h2 className="about-mentors__header">Наши менторы </h2>
-            <label className="about-mentors__search">
+            <form className="about-mentors__search">
               <button className="about-mentors__search-button"></button>
               <input
                 type="search"
                 className="about-mentors__search-input"
                 placeholder="Поиск по ключевому слову"
               />
-            </label>
+            </form>
             <Tags className="about-mentors__tags" tags={keywords} />
           </div>
           <div className="about-mentors__image">

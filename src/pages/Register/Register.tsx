@@ -44,7 +44,7 @@ const RegisterSchema = zod
 const Register = () => {
   const [isAgree, setIsAgree] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, changeAvatar } = useAuth();
   const {
     register,
     handleSubmit,
@@ -62,6 +62,7 @@ const Register = () => {
         toast('Произошла ошибка, попробуйте еще раз', { type: 'error' });
       } else {
         login();
+        changeAvatar(sessionStorage.getItem('avatarUrl') as string);
         toast('Успешная регистрация', { type: 'success' });
         navigate('/');
       }

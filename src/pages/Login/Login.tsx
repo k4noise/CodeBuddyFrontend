@@ -10,7 +10,6 @@ import { LoginUser } from '../../actions/dto/user';
 import { ProfileType } from '../../types';
 import { useAuth } from '../../AuthProvider';
 import { toast } from 'react-toastify';
-import { handleError } from '../../actions/sendRequest';
 
 const LoginSchema = zod.object({
   type: zod.union([zod.literal('student'), zod.literal('mentor')]),
@@ -25,7 +24,7 @@ const LoginSchema = zod.object({
  */
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, setAvatar } = useAuth();
   const {
     register,
     handleSubmit,
@@ -44,6 +43,7 @@ const Login = () => {
       }
     } else {
       login();
+      setAvatar(sessionStorage.getItem('avatarUrl'));
       toast('Успешный вход', { type: 'success' });
       navigate('/');
     }

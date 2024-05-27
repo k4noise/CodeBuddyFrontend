@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { NavigateFunction } from 'react-router-dom';
+import { logoutUser } from './auth';
 
 const ERROR_PAGES = [401, 403, 404];
 
@@ -29,16 +30,21 @@ const sendRequest = async <ResType>(
 
   try {
     let response;
-    const config: AxiosRequestConfig = {};
+    const config: AxiosRequestConfig = {
+      validateStatus(status) {
+        return status >= 200 && status < 303;
+      },
+    };
     if (needAuth) {
       config.withCredentials = true;
     }
 
     if (method === 'get') response = await axios[method](url, config);
     else response = await axios[method](url, body, config);
-
     data = response.data;
   } catch (err) {
+    if (err.response?.status === 401 && sessionStorage.getItem('profileType'))
+      logoutUser();
     if (axios.isAxiosError(err)) {
       const axiosError: AxiosError = err;
       console.error(axiosError);

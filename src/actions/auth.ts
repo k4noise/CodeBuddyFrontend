@@ -14,7 +14,7 @@ export const registerUser = async (
   profileType: ProfileType
 ) => {
   const registerUrl =
-    profileType === ProfileType.STUDENT
+    profileType == ProfileType.STUDENT
       ? `${import.meta.env.VITE_API_BASE_URL}/students`
       : `${import.meta.env.VITE_API_BASE_URL}/mentors`;
   const { data, error } = await sendRequest<UserData>(

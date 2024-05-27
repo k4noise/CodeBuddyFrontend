@@ -43,7 +43,7 @@ const Request = ({
         <p className="request__username">{username}</p>
         <p className="request__status">{status}</p>
       </div>
-      {profileType === ProfileType.STUDENT ? (
+      {profileType == ProfileType.STUDENT ? (
         <div className="request__buttons">
           {status === RequestType.ACCEPTED && (
             <Link

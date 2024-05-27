@@ -10,9 +10,10 @@ export interface UserData {
   firstName: string;
   lastName: string;
   email: string;
-  telegram: string;
   description: string;
   photoUrl: string;
+  telegram?: string;
+  keywords?: string[];
 }
 
 export interface LoginUser {
@@ -27,4 +28,15 @@ export interface MentorData {
   description: string;
   photoUrl: string;
   keywords: string[];
+}
+
+export interface UpdateSettingsData {
+  telegram?: string;
+  description?: string;
+}
+
+export interface UpdateSecurityData {
+  email?: string;
+  password?: string;
+  newPassword?: string;
 }

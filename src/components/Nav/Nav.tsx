@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import DefaultStudentAvatarImage from '../../assets/avatar1.png';
-import DefaultMentorAvatarImage from '../../assets/mentor.png';
 import Logo from '../Logo/Logo';
 import './Nav.css';
 import { logoutUser } from '../../actions/auth';
@@ -42,7 +40,9 @@ const Nav = ({ links, sublinks }: NavProps) => {
   const navigate = useNavigate();
   const inHomePage = location.pathname === '/';
   const [isOpenSubnav, setIsOpenSubnav] = useState(false);
-  const { auth, logout } = useAuth();
+  const { auth, logout, avatar, changeAvatar } = useAuth();
+  if (!avatar) changeAvatar(sessionStorage.getItem('avatarUrl') as string);
+
   return (
     <nav className="nav">
       <Logo />
@@ -70,7 +70,7 @@ const Nav = ({ links, sublinks }: NavProps) => {
           <Link to="profile" className="subnav__avatar-wrapper">
             <img
               src={getAvatar(
-                sessionStorage.getItem('avatarUrl'),
+                avatar,
                 sessionStorage.getItem('profileType') as ProfileType
               )}
               alt="Avatar"
