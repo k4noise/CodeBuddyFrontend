@@ -1,3 +1,5 @@
+import { UseFormRegisterReturn } from 'react-hook-form';
+
 /**
  * TextArea component
  * Default <textarea> component with auto-resize height
@@ -19,6 +21,7 @@ interface TextAreaProps {
   readonly?: boolean;
   /** text in textarea **/
   value?: string;
+  validationOptions?: UseFormRegisterReturn;
 }
 
 const TextArea = ({
@@ -26,6 +29,7 @@ const TextArea = ({
   placeholder,
   readonly = false,
   value,
+  validationOptions,
 }: TextAreaProps) => {
   const resize = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = event.currentTarget;
@@ -35,6 +39,7 @@ const TextArea = ({
 
   return (
     <textarea
+      {...validationOptions}
       className={className}
       placeholder={placeholder}
       onInput={resize}

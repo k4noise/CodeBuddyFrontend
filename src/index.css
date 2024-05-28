@@ -36,10 +36,6 @@ a:visited {
   color: var(--textColor);
 }
 
-.logo {
-  display: contents;
-}
-
 button {
   cursor: pointer;
 }
@@ -50,6 +46,10 @@ textarea {
   box-sizing: border-box;
 }
 
+textarea:read-only {
+  outline: none;
+}
+
 .zod-error {
   color: var(--accentColor);
   margin: 0;
@@ -57,4 +57,33 @@ textarea {
 
 .hidden {
   display: none;
+}
+
+.error-page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.error-page h2 {
+  margin: 0;
+  font-size: 100px;
+  color: var(--accentColor);
+  text-align: center;
+}
+
+.error-page h3 {
+  text-align: center;
+}
+
+.error-page a,
+.message a {
+  text-decoration: underline;
+  color: var(--accentColor);
+}
+
+.load-error {
+  padding-top: 50px;
+  padding-left: var(--defaultIndent);
 }

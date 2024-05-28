@@ -10,6 +10,7 @@ import Question, { QuestionProps } from '../../../components/Question/Question';
 import TextArea from '../../../components/TextArea/TextArea';
 import { useState } from 'react';
 import ImageGallery from '../ImageGallery/ImageGallery';
+import { useAuth } from '../../../AuthProvider';
 
 const QUESTIONS: QuestionProps[] = [
   {
@@ -72,7 +73,11 @@ const QUESTIONS: QuestionProps[] = [
  * @returns {JSX.Element}
  */
 const Questions = (): JSX.Element => {
+  const { avatar } = useAuth();
   const [images, setImages] = useState([]);
+  let userAvatar = avatar;
+  userAvatar =
+    userAvatar !== null && userAvatar !== 'null' ? userAvatar : Avatar1Image;
 
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const inputFiles: FileList = event.target.files;
@@ -104,7 +109,7 @@ const Questions = (): JSX.Element => {
       <form className="questions__form" encType="multipart/form-data">
         <div className="questions__form-wrapper">
           <img
-            src={Avatar1Image}
+            src={userAvatar}
             alt="user avatar"
             className="questions__form-avatar"
           />

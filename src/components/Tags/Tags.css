@@ -11,6 +11,20 @@
 
 .tags {
   display: flex;
+  align-items: center;
   gap: 15px;
   flex-wrap: wrap;
+}
+
+.tags__button {
+  padding: 10px 20px;
+  height: 40px;
+  background-color: #fffae9;
+  color: black;
+  font-size: 20px;
+  font-family: 'Montserrat', serif;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0px 4px 4px 0px #d9d9d9;
+  cursor: pointer;
 }

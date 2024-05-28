@@ -1,6 +1,11 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuth } from '../../AuthProvider';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../Logo/Logo';
 import './Nav.css';
+import { logoutUser } from '../../actions/auth';
+import { ProfileType } from '../../types';
+import { getAvatar } from '../../actions/util';
 
 /**
  * Nav component
@@ -11,29 +16,35 @@ import './Nav.css';
  * ```
  * <Nav links={[{ text: 'Главная', href: '/' }, { text: 'Вопросы', href: '/questions' }]} hasAuthButtons={true} />
  * ```
- * @param {NavLink[]} links navigate links
+ * @param {NavLink[]} links visible navigate links
+ * @param {NavLink[]} sublinks hidden navigate links
  * @param {boolean} hasAuthButtons flag is required show auth buttons
  * @returns {JSX.Element} Nav
  */
 interface NavLink {
-  /** link text */
+  /* link text */
   text: string;
-  /** link url */
+  /* link url */
   href: string;
 }
 
 interface NavProps {
-  /** links array */
+  /* visible links array */
   links: NavLink[];
-  /** flag is need show auth buttons */
-  hasAuthButtons: boolean;
+  /* hidden links array */
+  sublinks: NavLink[];
 }
 
-const Nav = ({ links, hasAuthButtons }: NavProps) => {
+const Nav = ({ links, sublinks }: NavProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const inHomePage = location.pathname === '/';
+  const [isOpenSubnav, setIsOpenSubnav] = useState(false);
+  const { auth, logout, avatar, changeAvatar } = useAuth();
+  if (!avatar) changeAvatar(sessionStorage.getItem('avatarUrl') as string);
+
   return (
-    <nav>
+    <nav className="nav">
       <Logo />
       {inHomePage && (
         <div className="nav__items-wrapper">
@@ -44,7 +55,7 @@ const Nav = ({ links, hasAuthButtons }: NavProps) => {
           ))}
         </div>
       )}
-      {hasAuthButtons && inHomePage && (
+      {!auth && inHomePage && (
         <div className="nav__register-wrapper">
           <Link to="register" className="nav__items-link">
             Регистрация
@@ -54,6 +65,49 @@ const Nav = ({ links, hasAuthButtons }: NavProps) => {
           </Link>
         </div>
       )}
+      {auth && (
+        <div className="subnav-wrapper">
+          <Link to="profile" className="subnav__avatar-wrapper">
+            <img
+              src={getAvatar(
+                avatar,
+                sessionStorage.getItem('profileType') as ProfileType
+              )}
+              alt="Avatar"
+              className="subnav__avatar"
+            />
+          </Link>
+          <button
+            className="subnav__button"
+            onClick={() => setIsOpenSubnav((prev) => !prev)}
+          >
+            ≡
+          </button>
+        </div>
+      )}
+      <nav
+        className={`subnav${isOpenSubnav ? '' : ' unvisible'}`}
+        onClick={() => setIsOpenSubnav((prev) => !prev)}
+      >
+        {sublinks.map((sublink) =>
+          sublink.href === 'logout' ? (
+            <span
+              key={sublink.text}
+              onClick={() => {
+                logoutUser();
+                logout();
+                navigate('/');
+              }}
+            >
+              {sublink.text}
+            </span>
+          ) : (
+            <Link to={sublink.href} key={sublink.text}>
+              {sublink.text}
+            </Link>
+          )
+        )}
+      </nav>
     </nav>
   );
 };

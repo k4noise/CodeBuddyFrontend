@@ -1,5 +1,6 @@
 import TextArea from '../TextArea/TextArea';
 import { useId } from 'react';
+import defaultAvatarImage from '../../assets/avatar1.png';
 
 interface CommentData {
   /** commentator avatar **/
@@ -53,6 +54,11 @@ const Comment = ({ avatar, username, date, comment, isMine }: CommentData) => (
  * @returns {JSX.Element} Comments component
  */
 const Comments = ({ comments }: { comments: CommentData[] }) => {
+  let userAvatar = sessionStorage.getItem('avatarUrl');
+  userAvatar =
+    userAvatar !== null && userAvatar !== 'null'
+      ? userAvatar
+      : defaultAvatarImage;
   return (
     <>
       <div className="question__comments" data-testid="comments">
@@ -66,12 +72,16 @@ const Comments = ({ comments }: { comments: CommentData[] }) => {
       <form className="question__comments-form" data-testid="sendComment">
         <div className="question__comments-form-user">
           <img
-            src={comments[1].avatar}
+            src={userAvatar}
             alt="avatar"
             className="question__comments-form-avatar"
           />
           <span className="question__comments-form-name">
-            {comments[1].username}
+            {sessionStorage.getItem('firstName')
+              ? `${sessionStorage.getItem(
+                  'firstName'
+                )} ${sessionStorage.getItem('lastName')}`
+              : 'Иван Иванов'}
           </span>
         </div>
         <TextArea

@@ -1,14 +1,19 @@
 import './Login.css';
 import ManWithLaptopImage from '../../assets/man-with-laptop.png';
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { FieldValues, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import PasswordField from '../../components/PasswordField/PasswordField';
+import { loginUser } from '../../actions/auth';
+import { LoginUser } from '../../actions/dto/user';
+import { ProfileType } from '../../types';
+import { useAuth } from '../../AuthProvider';
+import { toast } from 'react-toastify';
 
 const LoginSchema = zod.object({
   type: zod.union([zod.literal('student'), zod.literal('mentor')]),
-  email: zod.string().email('Некорректный email'),
+  login: zod.string().email('Некорректный email'),
   password: zod.string().min(8, 'Не менее 8 символов'),
 });
 
@@ -18,6 +23,8 @@ const LoginSchema = zod.object({
  * @returns {JSX.Element} Login form
  */
 const Login = () => {
+  const navigate = useNavigate();
+  const { login, setAvatar } = useAuth();
   const {
     register,
     handleSubmit,
@@ -26,14 +33,27 @@ const Login = () => {
     resolver: zodResolver(LoginSchema),
   });
 
+  const onFormSend = async (data: FieldValues) => {
+    const profileType: ProfileType =
+      data.type === 'mentor' ? ProfileType.MENTOR : ProfileType.STUDENT;
+    const { error } = await loginUser(data as LoginUser, profileType);
+    if (error) {
+      if (error === 404) {
+        toast('Неверный логин, пароль или тип профиля', { type: 'error' });
+      }
+    } else {
+      login();
+      setAvatar(sessionStorage.getItem('avatarUrl'));
+      toast('Успешный вход', { type: 'success' });
+      navigate('/');
+    }
+  };
+
   return (
     <div className="login">
       <div className="login__wrapper">
         <img src={ManWithLaptopImage} alt="man with laptop" />
-        <form
-          className="login__form"
-          onSubmit={handleSubmit((d) => console.log(d))}
-        >
+        <form className="login__form" onSubmit={handleSubmit(onFormSend)}>
           <fieldset className="login__form-fieldset form__fieldset">
             <label>
               <input
@@ -54,10 +74,10 @@ const Login = () => {
             inputMode="email"
             placeholder="Почта"
             className="login__form-field form__field"
-            {...register('email')}
+            {...register('login')}
           />
-          {errors.email?.message && (
-            <p className="zod-error">{errors.email?.message}</p>
+          {errors.login?.message && (
+            <p className="zod-error">{errors.login?.message}</p>
           )}
           <PasswordField
             label=""
