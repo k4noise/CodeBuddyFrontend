@@ -4,14 +4,12 @@ import AvatarImage from '../../assets/mentor.png';
 import { ProfileType, RequestPopupType, RequestType } from '../../types';
 import './Request.css';
 import RequestPopup from '../../components/RequestPopup/RequestPopup';
-import { useState } from 'react';
-
-const REQUEST_STUDENT_DATA = {
-  profileType: ProfileType.STUDENT,
-  username: 'Петр Петров',
-  avatarUrl: AvatarImage,
-  about: 'У меня проблема такая',
-};
+import { useEffect, useState } from 'react';
+import { Request as RequestDto } from '../../actions/dto/request';
+import { getRequests } from '../../actions/request';
+import { handleError } from '../../actions/sendRequest';
+import { useNavigate } from 'react-router-dom';
+import { getProfileData } from '../../actions/profile';
 
 const REQUEST_MENTOR_DATA = {
   profileType: ProfileType.MENTOR,
@@ -19,21 +17,6 @@ const REQUEST_MENTOR_DATA = {
   avatarUrl: AvatarImage,
   status: RequestType.NEW,
   about: 'У меня проблема такая',
-};
-
-const ACCEPTED_REQUEST = {
-  ...REQUEST_STUDENT_DATA,
-  status: RequestType.ACCEPTED,
-};
-
-const REJECTED_REQUEST = {
-  ...REQUEST_STUDENT_DATA,
-  status: RequestType.REJECTED,
-};
-
-const SUBMITTED_REQUEST = {
-  ...REQUEST_STUDENT_DATA,
-  status: RequestType.SUBMITTED,
 };
 
 interface RequestsProps {
@@ -48,13 +31,43 @@ interface RequestsProps {
  */
 
 const Requests = ({ profileType }: RequestsProps) => {
+  const [requests, setRequests] = useState<RequestDto[]>([]);
   const [isShowingRequest, setShowingRequest] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState({});
+  const navigate = useNavigate();
 
   const handleCardClick = (card: any) => {
     setSelectedRequest(card);
     setShowingRequest(true);
   };
+
+  const getData = async () => {
+    const { data, error } = await getRequests(profileType);
+
+    if (error) handleError(error, navigate);
+    if (data) {
+      const requestsWithUserData = [];
+      for (let request of data) {
+        const { data: userData } = await getProfileData(
+          false,
+          ProfileType.MENTOR,
+          request.mentorId
+        );
+        requestsWithUserData.push({
+          requestState: request.requestState,
+          description: request.description,
+          firstName: userData?.firstName,
+          lastName: userData?.lastName,
+          photoUrl: userData?.photoUrl,
+        });
+      }
+      setRequests(requestsWithUserData);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <>
@@ -62,30 +75,13 @@ const Requests = ({ profileType }: RequestsProps) => {
         <h2 className="requests__header">Мои заявки</h2>
         {profileType == ProfileType.STUDENT ? (
           <div className="requests__wrapper">
-            <Request
-              {...ACCEPTED_REQUEST}
-              onClick={() => handleCardClick(ACCEPTED_REQUEST)}
-            />
-            <Request
-              {...REJECTED_REQUEST}
-              onClick={() => handleCardClick(REJECTED_REQUEST)}
-            />
-            <Request
-              {...SUBMITTED_REQUEST}
-              onClick={() => handleCardClick(ACCEPTED_REQUEST)}
-            />
-            <Request
-              {...ACCEPTED_REQUEST}
-              onClick={() => handleCardClick(ACCEPTED_REQUEST)}
-            />
-            <Request
-              {...REJECTED_REQUEST}
-              onClick={() => handleCardClick(REJECTED_REQUEST)}
-            />
-            <Request
-              {...SUBMITTED_REQUEST}
-              onClick={() => handleCardClick(SUBMITTED_REQUEST)}
-            />
+            {requests?.map((req) => (
+              <Request
+                {...req}
+                onClick={() => handleCardClick(req)}
+                profileType={ProfileType.STUDENT}
+              />
+            ))}
           </div>
         ) : (
           <div className="requests__wrapper">
@@ -128,7 +124,7 @@ const Requests = ({ profileType }: RequestsProps) => {
               ? RequestPopupType.STUDENT_VIEW
               : RequestPopupType.MENTOR_VIEW
           }
-          about={selectedRequest?.about}
+          about={selectedRequest?.description}
           close={() => setShowingRequest(false)}
         />
       )}

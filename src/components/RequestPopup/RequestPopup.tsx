@@ -21,7 +21,7 @@ interface RequestPopupProps {
   about?: string;
   /* parent callback to close popup */
   close: React.MouseEventHandler;
-  userId: number;
+  userId?: number;
 }
 
 /**

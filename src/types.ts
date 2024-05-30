@@ -21,6 +21,7 @@ export interface Mentor extends User {
 
 export enum RequestType {
   NEW = 'Новый запрос',
+  SEND = 'Ваш запрос отправлен',
   ACCEPTED = 'Ваш запрос принят',
   REJECTED = 'Ваш запрос отклонен',
   SUBMITTED = 'Ваш запрос отправлен',
@@ -29,5 +30,5 @@ export enum RequestType {
 export enum RequestPopupType {
   STUDENT_VIEW,
   MENTOR_VIEW,
-  CREATE_VIEW
+  CREATE_VIEW,
 }

@@ -85,7 +85,6 @@ const Profile: React.FC<ProfileProps> = ({
     return <div className="load-error">Ошибка загрузки данных профиля</div>;
 
   const handleSave = async (data: FieldValues) => {
-    console.log(data);
     if (newAvatar) {
       await updateAvatar(profileType, newAvatar);
       changeAvatar(newAvatar);
