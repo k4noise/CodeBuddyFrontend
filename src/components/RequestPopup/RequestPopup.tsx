@@ -1,7 +1,16 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RequestPopupType } from '../../types';
 import TextArea from '../TextArea/TextArea';
 import './RequestPopup.css';
+import { useForm } from 'react-hook-form';
+import { sendRequestToMentor } from '../../actions/request';
+import { toast } from 'react-toastify';
+
+enum PopupButtonType {
+  SEND,
+  REJECT,
+  ACCEPT,
+}
 
 interface RequestPopupProps {
   /* main popup header */
@@ -12,6 +21,7 @@ interface RequestPopupProps {
   about?: string;
   /* parent callback to close popup */
   close: React.MouseEventHandler;
+  userId: number;
 }
 
 /**
@@ -28,7 +38,9 @@ const RequestPopup = ({
   header,
   popupType,
   about,
+  userId,
 }: RequestPopupProps) => {
+  const [button, setButton] = useState<null | PopupButtonType>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const onClose = () => {
@@ -47,6 +59,8 @@ const RequestPopup = ({
     dialog?.showModal();
   }, [onClose]);
 
+  const { register, handleSubmit } = useForm();
+
   return (
     <dialog
       ref={dialogRef}
@@ -54,7 +68,24 @@ const RequestPopup = ({
       onClick={onOutsideClick}
       data-testid="dialog"
     >
-      <div className="request-popup">
+      <form
+        className="request-popup"
+        onSubmit={handleSubmit(async (d) => {
+          switch (button) {
+            case PopupButtonType.SEND:
+              const { error } = await sendRequestToMentor(userId, d);
+              if (!error) {
+                toast('Успешно отправлено', { type: 'success' });
+                onClose();
+              } else {
+                toast('Произошла ошибка при отправке, попробуйте еще раз', {
+                  type: 'error',
+                });
+              }
+              break;
+          }
+        })}
+      >
         <h3 className="request-popup__header">{header}</h3>
         <br />
         <p className="request-popup__subheader">Описание проблемы</p>
@@ -63,17 +94,27 @@ const RequestPopup = ({
           className="request-popup__textarea"
           readonly={popupType !== RequestPopupType.CREATE_VIEW}
           value={about}
+          validationOptions={register('description')}
         />
         {popupType === RequestPopupType.CREATE_VIEW && (
-          <button className="request-popup__send">Отправить</button>
+          <button
+            className="request-popup__send"
+            onClick={() => setButton(PopupButtonType.SEND)}
+          >
+            Отправить
+          </button>
         )}
         {popupType === RequestPopupType.MENTOR_VIEW && (
           <div className="request-popup__buttons-wrapper">
-            <button>Отклонить</button>
-            <button>Принять</button>
+            <button onClick={() => setButton(PopupButtonType.REJECT)}>
+              Отклонить
+            </button>
+            <button onClick={() => setButton(PopupButtonType.ACCEPT)}>
+              Принять
+            </button>
           </div>
         )}
-      </div>
+      </form>
     </dialog>
   );
 };
