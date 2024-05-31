@@ -15,6 +15,7 @@ const Mentors = () => {
   const navigate = useNavigate();
   const [mentors, setMentors] = useState<MentorData[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [selected, setSelected] = useState<number | null>(null);
   const [isShowingRequest, setIsShowingRequest] = useState(false);
 
   const handleCardClick = () => setIsShowingRequest(true);
@@ -58,7 +59,10 @@ const Mentors = () => {
               mentors?.map((mentor) => (
                 <MentorCard
                   {...mentor}
-                  onClick={() => handleCardClick()}
+                  onClick={() => {
+                    setSelected(mentor.id);
+                    handleCardClick();
+                  }}
                   key={mentor.id}
                 />
               ))
@@ -76,6 +80,7 @@ const Mentors = () => {
           header="Оставить заявку на ментора"
           popupType={RequestPopupType.CREATE_VIEW}
           close={() => setIsShowingRequest(false)}
+          userId={selected as number}
         />
       )}
       <Footer />

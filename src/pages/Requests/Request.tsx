@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom';
 import { ProfileType, RequestType } from '../../types';
+import { getAvatar } from '../../actions/util';
 
 interface RequestProps {
   /* student or mentor */
   profileType: ProfileType;
   /* display name */
-  username: string;
+  firstName: string;
+  lastName: string;
   /* avatar url */
-  avatarUrl: string;
+  photoUrl: string;
   /* request status */
-  status: RequestType;
+  requestState: RequestType;
   /* callback to call when modal closing */
   onClick: React.MouseEventHandler;
 }
@@ -27,25 +29,31 @@ interface RequestProps {
 
 const Request = ({
   profileType,
-  username,
-  avatarUrl,
-  status,
+  firstName,
+  lastName,
+  photoUrl,
+  requestState,
   onClick,
 }: RequestProps) => {
   return (
     <div className="request" onClick={onClick}>
       <img
-        src={avatarUrl}
-        alt={`${username} avatar`}
+        src={getAvatar(
+          photoUrl,
+          profileType == ProfileType.STUDENT
+            ? ProfileType.MENTOR
+            : ProfileType.STUDENT
+        )}
+        alt={`${firstName} avatar`}
         className="request__avatar"
       />
       <div>
-        <p className="request__username">{username}</p>
-        <p className="request__status">{status}</p>
+        <p className="request__username">{`${firstName} ${lastName}`}</p>
+        <p className="request__status">{RequestType[requestState]}</p>
       </div>
       {profileType == ProfileType.STUDENT ? (
         <div className="request__buttons">
-          {status === RequestType.ACCEPTED && (
+          {requestState === RequestType.ACCEPTED && (
             <Link
               to="/profile/123"
               className="request__link request__view"
