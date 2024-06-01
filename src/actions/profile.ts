@@ -13,11 +13,17 @@ import { AxiosMethod, sendRequest } from './sendRequest';
  */
 export const getProfileData = async (
   isMine: boolean,
+  fromRequest: boolean,
   profileType: ProfileType,
   id: number
 ) => {
   if (isMine) {
     return await getUserData(profileType);
+  }
+
+  if (fromRequest) {
+    const url = `${import.meta.env.VITE_API_BASE_URL}/students/mentors/${id}`;
+    return await sendRequest<UserData>(url, AxiosMethod.GET, true);
   }
 
   const profileUrl =

@@ -26,6 +26,7 @@ interface ProfileProps {
   isMine: boolean;
   /* profile type - student or mentor */
   profileType?: ProfileType;
+  fromRequest: boolean;
 }
 
 /**
@@ -51,6 +52,7 @@ interface ProfileProps {
 const Profile: React.FC<ProfileProps> = ({
   isMine,
   profileType,
+  fromRequest,
 }: ProfileProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -67,6 +69,7 @@ const Profile: React.FC<ProfileProps> = ({
   const getData = async () => {
     const { data, error } = await getProfileData(
       isMine,
+      fromRequest,
       profileType,
       Number(id)
     );
@@ -79,7 +82,7 @@ const Profile: React.FC<ProfileProps> = ({
 
   useEffect(() => {
     getData();
-  }, [id]);
+  }, [location.pathname]);
 
   if (!user)
     return <div className="load-error">Ошибка загрузки данных профиля</div>;

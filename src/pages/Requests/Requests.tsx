@@ -73,6 +73,7 @@ const Requests = () => {
         if (!userDataCache[userId]) {
           const { data: userData } = await getProfileData(
             false,
+            false,
             anotherProfileType,
             userId
           );
@@ -81,6 +82,7 @@ const Requests = () => {
 
         requestsWithUserData.push({
           id: request.id,
+          mentorId: userDataCache[userId]?.id,
           requestState: request.requestState,
           description: request.description,
           firstName: userDataCache[userId]?.firstName,

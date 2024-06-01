@@ -16,6 +16,7 @@ interface RequestProps {
   /* callback to call when modal closing */
   onClick: React.MouseEventHandler;
   changeRequestState: (id: number, newState: RequestState) => void;
+  mentorId?: number;
 }
 /**
  * Request component
@@ -38,6 +39,7 @@ const Request = ({
   requestState,
   onClick,
   changeRequestState,
+  mentorId,
 }: RequestProps) => {
   const handleClick = (event) => {
     if (!event.target.className.includes('request__button')) onClick();
@@ -68,15 +70,11 @@ const Request = ({
         <div className="request__buttons">
           {RequestState[requestState] == RequestState.ACCEPTED && (
             <Link
-              to={`/profile/mentor/${id}`}
+              to={`/profile/request/mentor/${mentorId}`}
               className="request__link request__view"
               data-testid="profileLink"
             ></Link>
           )}
-          {/* <button
-            className="request__button request__cancel"
-            data-testid="cancel"
-          ></button> */}
         </div>
       ) : (
         RequestState[requestState] == RequestState.SEND && (
