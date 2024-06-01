@@ -1,4 +1,4 @@
-import { ProfileType } from '../types';
+import { ProfileType, RequestState } from '../types';
 import { AxiosMethod, sendRequest } from './sendRequest';
 
 export const sendRequestToMentor = async (
@@ -22,4 +22,11 @@ export const getRequests = async (profileType: ProfileType) => {
       ? `${import.meta.env.VITE_API_BASE_URL}/students/requests`
       : `${import.meta.env.VITE_API_BASE_URL}/mentors/requests`;
   return await sendRequest<Request[]>(getRequestsUrl, AxiosMethod.GET, true);
+};
+
+export const respondToRequest = async (newState: string, id: number) => {
+  const respondToRequestUrl = `${
+    import.meta.env.VITE_API_BASE_URL
+  }/mentors/requests/${id}?request=${newState}`;
+  return await sendRequest<void>(respondToRequestUrl, AxiosMethod.PUT, true);
 };

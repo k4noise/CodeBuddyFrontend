@@ -51,11 +51,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/requests',
-        element: <Requests profileType={ProfileType.STUDENT} />,
-      },
-      {
-        path: '/requests/mentor',
-        element: <Requests profileType={ProfileType.MENTOR} />,
+        element: <Requests />,
       },
       {
         path: '/profile',

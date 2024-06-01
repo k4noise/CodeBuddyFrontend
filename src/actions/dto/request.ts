@@ -1,8 +1,8 @@
-import { RequestType } from '../../types';
+import { RequestState } from '../../types';
 
 export interface Request {
   id: number;
-  requestState: RequestType;
+  requestState: RequestState;
   mentorId: number;
   studentId: number;
   description: string;

@@ -48,7 +48,7 @@ const sendRequest = async <ResType>(
     if (axios.isAxiosError(err)) {
       const axiosError: AxiosError = err;
       console.error(axiosError);
-      error = Number(axiosError.response?.status);
+      error = Number(axiosError.response?.status ?? 500);
     }
   }
 

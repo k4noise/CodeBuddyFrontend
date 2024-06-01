@@ -1,40 +1,52 @@
 import Request from './Request';
 import Footer from '../../components/Footer/Footer';
-import AvatarImage from '../../assets/mentor.png';
-import { ProfileType, RequestPopupType, RequestType } from '../../types';
+import { ProfileType, RequestPopupType, RequestState } from '../../types';
 import './Request.css';
 import RequestPopup from '../../components/RequestPopup/RequestPopup';
 import { useEffect, useState } from 'react';
 import { Request as RequestDto } from '../../actions/dto/request';
-import { getRequests } from '../../actions/request';
+import { getRequests, respondToRequest } from '../../actions/request';
 import { handleError } from '../../actions/sendRequest';
 import { useNavigate } from 'react-router-dom';
 import { getProfileData } from '../../actions/profile';
 
-const REQUEST_MENTOR_DATA = {
-  profileType: ProfileType.MENTOR,
-  username: 'Петр Петров',
-  avatarUrl: AvatarImage,
-  status: RequestType.NEW,
-  about: 'У меня проблема такая',
-};
-
-interface RequestsProps {
-  /* student or mentor */
-  profileType: ProfileType;
-}
 /**
  * Requests component
  * Shows requests page (student or mentor)
- * @param {ProfileType} profileType look at interface
+ * @component
  * @returns {JSX.Element}
  */
 
-const Requests = ({ profileType }: RequestsProps) => {
+const Requests = () => {
+  let profileType: ProfileType = sessionStorage.getItem(
+    'profileType'
+  ) as ProfileType;
+  let userDataCache = {};
+
   const [requests, setRequests] = useState<RequestDto[]>([]);
   const [isShowingRequest, setShowingRequest] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState({});
   const navigate = useNavigate();
+
+  const updateRequestState = (id: number, newState: string) =>
+    setRequests((prevRequests) =>
+      prevRequests.map((request) =>
+        request.id === id ? { ...request, requestState: newState } : request
+      )
+    );
+
+  const changeRequestState = async (id: number, newState: RequestState) => {
+    switch (newState) {
+      case RequestState.ACCEPTED:
+        await respondToRequest('ACCEPTED', id);
+        updateRequestState(id, 'ACCEPTED');
+        break;
+      case RequestState.REJECTED:
+        await respondToRequest('REJECTED', id);
+        updateRequestState(id, 'REJECTED');
+        break;
+    }
+  };
 
   const handleCardClick = (card: any) => {
     setSelectedRequest(card);
@@ -42,26 +54,41 @@ const Requests = ({ profileType }: RequestsProps) => {
   };
 
   const getData = async () => {
+    profileType = sessionStorage.getItem('profileType') as ProfileType;
+    const anotherProfileType =
+      profileType == ProfileType.STUDENT
+        ? ProfileType.MENTOR
+        : ProfileType.STUDENT;
     const { data, error } = await getRequests(profileType);
 
     if (error) handleError(error, navigate);
     if (data) {
       const requestsWithUserData = [];
       for (let request of data) {
-        const { data: userData } = await getProfileData(
-          false,
-          ProfileType.MENTOR,
-          request.mentorId
-        );
+        const userId =
+          anotherProfileType == ProfileType.STUDENT
+            ? request.studentId
+            : request.mentorId;
+
+        if (!userDataCache[userId]) {
+          const { data: userData } = await getProfileData(
+            false,
+            anotherProfileType,
+            userId
+          );
+          userDataCache[userId] = userData;
+        }
+
         requestsWithUserData.push({
+          id: request.id,
           requestState: request.requestState,
           description: request.description,
-          firstName: userData?.firstName,
-          lastName: userData?.lastName,
-          photoUrl: userData?.photoUrl,
+          firstName: userDataCache[userId]?.firstName,
+          lastName: userDataCache[userId]?.lastName,
+          photoUrl: userDataCache[userId]?.photoUrl,
         });
       }
-      setRequests(requestsWithUserData);
+      setRequests(requestsWithUserData.reverse());
     }
   };
 
@@ -73,59 +100,39 @@ const Requests = ({ profileType }: RequestsProps) => {
     <>
       <div className="requests">
         <h2 className="requests__header">Мои заявки</h2>
-        {profileType == ProfileType.STUDENT ? (
-          <div className="requests__wrapper">
-            {requests?.map((req) => (
-              <Request
-                {...req}
-                onClick={() => handleCardClick(req)}
-                profileType={ProfileType.STUDENT}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="requests__wrapper">
+        <div className="requests__wrapper">
+          {requests?.map((req) => (
             <Request
-              {...REQUEST_MENTOR_DATA}
-              onClick={() => handleCardClick(REQUEST_MENTOR_DATA)}
+              key={req.id}
+              {...req}
+              onClick={() => handleCardClick(req)}
+              profileType={profileType}
+              changeRequestState={changeRequestState}
+              requestState={req.requestState}
             />
-            <Request
-              {...REQUEST_MENTOR_DATA}
-              onClick={() => handleCardClick(REQUEST_MENTOR_DATA)}
-            />
-            <Request
-              {...REQUEST_MENTOR_DATA}
-              onClick={() => handleCardClick(REQUEST_MENTOR_DATA)}
-            />
-            <Request
-              {...REQUEST_MENTOR_DATA}
-              onClick={() => handleCardClick(REQUEST_MENTOR_DATA)}
-            />
-            <Request
-              {...REQUEST_MENTOR_DATA}
-              onClick={() => handleCardClick(REQUEST_MENTOR_DATA)}
-            />
-            <Request
-              {...REQUEST_MENTOR_DATA}
-              onClick={() => handleCardClick(REQUEST_MENTOR_DATA)}
-            />
-          </div>
-        )}
+          ))}
+        </div>
       </div>
       {isShowingRequest && (
         <RequestPopup
+          id={selectedRequest?.id}
           header={
             profileType == ProfileType.STUDENT
               ? 'Моя заявка'
-              : `Заявка от ${selectedRequest?.username}`
+              : `Заявка от ${selectedRequest?.firstName ?? ''} ${
+                  selectedRequest?.lastName ?? ''
+                }`
           }
           popupType={
             profileType == ProfileType.STUDENT
               ? RequestPopupType.STUDENT_VIEW
-              : RequestPopupType.MENTOR_VIEW
+              : RequestState[selectedRequest.requestState] == RequestState.SEND
+              ? RequestPopupType.MENTOR_VIEW
+              : RequestPopupType.SHOW_VIEW
           }
           about={selectedRequest?.description}
           close={() => setShowingRequest(false)}
+          changeState={changeRequestState}
         />
       )}
       <Footer />

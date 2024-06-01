@@ -5,11 +5,13 @@ import HeartManImage from '../../assets/heart-man.png';
 import './Mentors.css';
 import RequestPopup from '../../components/RequestPopup/RequestPopup';
 import { useEffect, useState } from 'react';
-import { RequestPopupType } from '../../types';
+import { ProfileType, RequestPopupType, RequestState } from '../../types';
 import { MentorData } from '../../actions/dto/user';
 import { getMentors } from '../../actions/mentors';
 import { Link, useNavigate } from 'react-router-dom';
 import { handleError } from '../../actions/sendRequest';
+import { toast } from 'react-toastify';
+import { sendRequestToMentor } from '../../actions/request';
 
 const Mentors = () => {
   const navigate = useNavigate();
@@ -17,6 +19,27 @@ const Mentors = () => {
   const [keywords, setKeywords] = useState<string[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
   const [isShowingRequest, setIsShowingRequest] = useState(false);
+
+  const profileType: ProfileType = sessionStorage.getItem(
+    'profileType'
+  ) as ProfileType;
+
+  const changeRequestState = async (
+    id: number,
+    newState: RequestState,
+    description?: string
+  ) => {
+    if (newState == RequestState.SEND) {
+      const { error } = await sendRequestToMentor(selected, { description });
+      if (!error) {
+        toast('Успешно отправлено', { type: 'success' });
+      } else {
+        toast('Произошла ошибка при отправке, попробуйте еще раз', {
+          type: 'error',
+        });
+      }
+    }
+  };
 
   const handleCardClick = () => setIsShowingRequest(true);
   const getData = async () => {
@@ -64,6 +87,7 @@ const Mentors = () => {
                     handleCardClick();
                   }}
                   key={mentor.id}
+                  mentorView={profileType == ProfileType.MENTOR}
                 />
               ))
             ) : (
@@ -80,7 +104,7 @@ const Mentors = () => {
           header="Оставить заявку на ментора"
           popupType={RequestPopupType.CREATE_VIEW}
           close={() => setIsShowingRequest(false)}
-          userId={selected as number}
+          changeState={changeRequestState}
         />
       )}
       <Footer />

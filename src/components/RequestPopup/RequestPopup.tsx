@@ -1,18 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { RequestPopupType } from '../../types';
+import { RequestPopupType, RequestState } from '../../types';
 import TextArea from '../TextArea/TextArea';
 import './RequestPopup.css';
 import { useForm } from 'react-hook-form';
-import { sendRequestToMentor } from '../../actions/request';
-import { toast } from 'react-toastify';
-
-enum PopupButtonType {
-  SEND,
-  REJECT,
-  ACCEPT,
-}
 
 interface RequestPopupProps {
+  /* request id if present */
+  id?: number;
   /* main popup header */
   header: string;
   /* look at interface */
@@ -21,7 +15,11 @@ interface RequestPopupProps {
   about?: string;
   /* parent callback to close popup */
   close: React.MouseEventHandler;
-  userId?: number;
+  changeState: (
+    id: number,
+    newState: RequestState,
+    description?: string
+  ) => Promise<void>;
 }
 
 /**
@@ -34,15 +32,15 @@ interface RequestPopupProps {
  * @returns {JSX.Element}
  */
 const RequestPopup = ({
+  id,
   close,
   header,
   popupType,
   about,
-  userId,
+  changeState,
 }: RequestPopupProps) => {
-  const [button, setButton] = useState<null | PopupButtonType>(null);
+  const [newType, setNewType] = useState<null | RequestState>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
-
   const onClose = () => {
     close();
   };
@@ -71,19 +69,8 @@ const RequestPopup = ({
       <form
         className="request-popup"
         onSubmit={handleSubmit(async (d) => {
-          switch (button) {
-            case PopupButtonType.SEND:
-              const { error } = await sendRequestToMentor(userId, d);
-              if (!error) {
-                toast('Успешно отправлено', { type: 'success' });
-                onClose();
-              } else {
-                toast('Произошла ошибка при отправке, попробуйте еще раз', {
-                  type: 'error',
-                });
-              }
-              break;
-          }
+          await changeState(id, newType, d.description);
+          onClose();
         })}
       >
         <h3 className="request-popup__header">{header}</h3>
@@ -99,17 +86,17 @@ const RequestPopup = ({
         {popupType === RequestPopupType.CREATE_VIEW && (
           <button
             className="request-popup__send"
-            onClick={() => setButton(PopupButtonType.SEND)}
+            onClick={() => setNewType(RequestState.SEND)}
           >
             Отправить
           </button>
         )}
-        {popupType === RequestPopupType.MENTOR_VIEW && (
+        {popupType == RequestPopupType.MENTOR_VIEW && (
           <div className="request-popup__buttons-wrapper">
-            <button onClick={() => setButton(PopupButtonType.REJECT)}>
+            <button onClick={() => setNewType(RequestState.REJECTED)}>
               Отклонить
             </button>
-            <button onClick={() => setButton(PopupButtonType.ACCEPT)}>
+            <button onClick={() => setNewType(RequestState.ACCEPTED)}>
               Принять
             </button>
           </div>
