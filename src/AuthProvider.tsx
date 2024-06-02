@@ -26,7 +26,9 @@ export const AuthProvider = ({ children }) => {
   const logout = () => setAuth(false);
   const changeAvatar = (avatar: string) => setAvatar(avatar);
 
-  const value = { auth, login, logout, changeAvatar, avatar };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ auth, login, logout, changeAvatar, avatar }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

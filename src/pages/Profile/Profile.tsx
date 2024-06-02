@@ -18,8 +18,9 @@ import {
 import { handleError } from '../../actions/sendRequest';
 import { getAvatar } from '../../actions/util';
 import { FieldValues } from 'react-hook-form';
-import { useAuth } from '../../AuthProvider';
 import { loginUser, logoutUser } from '../../actions/auth';
+import { useAuth } from '../../AuthProvider';
+import { toast } from 'react-toastify';
 
 interface ProfileProps {
   /* Flag to show edit button */
@@ -56,15 +57,16 @@ const Profile: React.FC<ProfileProps> = ({
 }: ProfileProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { avatar, changeAvatar } = useAuth();
   const [user, setUser] = useState<UserData | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [newAvatar, setNewAvatar] = useState<string | null>(null);
+  const { changeAvatar } = useAuth();
   const location = useLocation();
   const isEdit = location.pathname.includes('/edit');
 
   if (!profileType)
     profileType = sessionStorage.getItem('profileType') as ProfileType;
-  let userAvatar = getAvatar(avatar, profileType);
+  let userAvatar = getAvatar(sessionStorage.getItem('avatarUrl'), profileType);
 
   const getData = async () => {
     const { data, error } = await getProfileData(
@@ -89,8 +91,9 @@ const Profile: React.FC<ProfileProps> = ({
 
   const handleSave = async (data: FieldValues) => {
     if (newAvatar) {
-      await updateAvatar(profileType, newAvatar);
-      changeAvatar(newAvatar);
+      toast('Идет загрузка аватара', { type: 'info' });
+      const newAvatarUrl = await updateAvatar(profileType, avatarFile);
+      if (newAvatarUrl) changeAvatar(data.photoUrl);
     }
     if (data.telegram || data.description) {
       const settingsData: UpdateSettingsData = {
@@ -127,6 +130,7 @@ const Profile: React.FC<ProfileProps> = ({
     // if (data.tags) {
     //   await addTags(data.tags.filter((tag) => tag.value));
     // }
+    toast('Данные изменены', { type: 'success' });
     navigate(-1);
   };
 
@@ -136,6 +140,7 @@ const Profile: React.FC<ProfileProps> = ({
 
   const handleChangeAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
+    setAvatarFile(file);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -143,7 +148,7 @@ const Profile: React.FC<ProfileProps> = ({
       };
       reader.readAsDataURL(file);
     }
-    setUser({ ...user, photoUrl: newAvatar as string });
+    setUser({ ...user, photoUrl: newAvatar });
   };
 
   return (

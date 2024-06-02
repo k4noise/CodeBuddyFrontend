@@ -69,22 +69,20 @@ export const updateSecurity = async (
 
 export const updateAvatar = async (
   profileType: ProfileType,
-  avatarBlob: string
+  avatarFile: File
 ) => {
-  const blob = base64ToBlob(avatarBlob);
   const formData = new FormData();
-  formData.append('image', blob, 'image.jpg');
+  formData.append('image', avatarFile, 'image.jpg');
   const profileUpdateUrl =
     profileType == ProfileType.STUDENT
       ? `${import.meta.env.VITE_API_BASE_URL}/students/accounts/photo`
       : `${import.meta.env.VITE_API_BASE_URL}/mentors/accounts/photo`;
-  sessionStorage.setItem('avatarUrl', avatarBlob);
-  return await sendRequest<void>(
-    profileUpdateUrl,
-    AxiosMethod.PUT,
-    true,
-    formData
-  );
+  await sendRequest<void>(profileUpdateUrl, AxiosMethod.PUT, true, formData);
+
+  const response = await getProfileData(true, false, profileType, 0);
+  if (response.data)
+    sessionStorage.setItem('avatarUrl', response.data.photoUrl);
+  return response.data?.photoUrl;
 };
 
 // todo тэги
@@ -92,15 +90,3 @@ export const updateAvatar = async (
 //   const addTagUrl = `${import.meta.env.VITE_API_BASE_URL}/keywords`;
 //   return await sendRequest<void>(addTagUrl, AxiosMethod.POST, true);
 // };
-
-const base64ToBlob = (base64String: string): Blob => {
-  const base64 = base64String.split(',')[1];
-  const arrayBuffer = new ArrayBuffer(base64.length);
-  const uint8Array = new Uint8Array(arrayBuffer);
-
-  for (let i = 0; i < base64.length; i++) {
-    uint8Array[i] = base64.charCodeAt(i);
-  }
-
-  return new Blob([uint8Array]);
-};

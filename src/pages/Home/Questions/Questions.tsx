@@ -10,7 +10,6 @@ import Question, { QuestionProps } from '../../../components/Question/Question';
 import TextArea from '../../../components/TextArea/TextArea';
 import { useState } from 'react';
 import ImageGallery from '../ImageGallery/ImageGallery';
-import { useAuth } from '../../../AuthProvider';
 
 const QUESTIONS: QuestionProps[] = [
   {
@@ -73,9 +72,8 @@ const QUESTIONS: QuestionProps[] = [
  * @returns {JSX.Element}
  */
 const Questions = (): JSX.Element => {
-  const { avatar } = useAuth();
   const [images, setImages] = useState([]);
-  let userAvatar = avatar;
+  let userAvatar = sessionStorage.getItem('avatarUrl');
   userAvatar =
     userAvatar !== null && userAvatar !== 'null' ? userAvatar : Avatar1Image;
 

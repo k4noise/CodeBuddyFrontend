@@ -25,7 +25,7 @@ const LoginSchema = zod.object({
  */
 const Login = () => {
   const navigate = useNavigate();
-  const { auth, login, changeAvatar } = useAuth();
+  const { auth, login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -48,7 +48,6 @@ const Login = () => {
       }
     } else {
       login();
-      changeAvatar(sessionStorage.getItem('avatarUrl'));
       toast('Успешный вход', { type: 'success' });
       navigate('/');
     }

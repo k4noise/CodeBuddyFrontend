@@ -44,7 +44,7 @@ const RegisterSchema = zod
 const Register = () => {
   const [isAgree, setIsAgree] = useState(false);
   const navigate = useNavigate();
-  const { auth, login, changeAvatar } = useAuth();
+  const { auth, login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -66,7 +66,6 @@ const Register = () => {
         toast('Произошла ошибка, попробуйте еще раз', { type: 'error' });
       } else {
         login();
-        changeAvatar(sessionStorage.getItem('avatarUrl') as string);
         toast('Успешная регистрация', { type: 'success' });
         navigate('/');
       }
@@ -150,7 +149,7 @@ const Register = () => {
             Я согласен с условиями политики конфиденциальности
           </label>
           <button className="register__form-send" disabled={!isAgree}>
-            Зарегестрироваться
+            Зарегистрироваться
           </button>
         </form>
       </div>
