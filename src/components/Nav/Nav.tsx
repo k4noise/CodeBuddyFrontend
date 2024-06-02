@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../Logo/Logo';
@@ -41,7 +41,10 @@ const Nav = ({ links, sublinks }: NavProps) => {
   const inHomePage = location.pathname === '/';
   const [isOpenSubnav, setIsOpenSubnav] = useState(false);
   const { auth, logout, avatar, changeAvatar } = useAuth();
-  if (!avatar) changeAvatar(sessionStorage.getItem('avatarUrl') as string);
+
+  useEffect(() => {
+    if (!avatar) changeAvatar(sessionStorage.getItem('avatarUrl') as string);
+  }, [avatar]);
 
   return (
     <nav className="nav">

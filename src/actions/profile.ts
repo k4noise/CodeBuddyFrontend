@@ -85,8 +85,25 @@ export const updateAvatar = async (
   return response.data?.photoUrl;
 };
 
-// todo тэги
-// const addTag = async (tag: string) => {
-//   const addTagUrl = `${import.meta.env.VITE_API_BASE_URL}/keywords`;
-//   return await sendRequest<void>(addTagUrl, AxiosMethod.POST, true);
-// };
+export const addTagsToMentor = async (oldTags: string[], tags: string[]) => {
+  const addTagsToMentorUrl = `${
+    import.meta.env.VITE_API_BASE_URL
+  }/mentors/accounts/keywords?keyword=`;
+  for (let tag of tags) {
+    await addTag(tag);
+  }
+  const allTags = [...oldTags, ...tags];
+
+  return await sendRequest<void>(
+    addTagsToMentorUrl + allTags,
+    AxiosMethod.PUT,
+    true
+  );
+};
+
+const addTag = async (tag: string) => {
+  const addTagUrl = `${import.meta.env.VITE_API_BASE_URL}/keywords`;
+  return await sendRequest<void>(addTagUrl, AxiosMethod.POST, true, {
+    keyword: tag,
+  });
+};

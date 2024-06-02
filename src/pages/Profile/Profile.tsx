@@ -8,7 +8,7 @@ import {
   updateAvatar,
   updateSecurity,
   updateProfile,
-  // addTags,
+  addTagsToMentor,
 } from '../../actions/profile';
 import {
   UpdateSecurityData,
@@ -60,13 +60,13 @@ const Profile: React.FC<ProfileProps> = ({
   const [user, setUser] = useState<UserData | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [newAvatar, setNewAvatar] = useState<string | null>(null);
-  const { changeAvatar } = useAuth();
+  const { avatar, changeAvatar } = useAuth();
   const location = useLocation();
   const isEdit = location.pathname.includes('/edit');
 
   if (!profileType)
     profileType = sessionStorage.getItem('profileType') as ProfileType;
-  let userAvatar = getAvatar(sessionStorage.getItem('avatarUrl'), profileType);
+  let userAvatar = getAvatar(avatar, profileType);
 
   const getData = async () => {
     const { data, error } = await getProfileData(
@@ -127,9 +127,15 @@ const Profile: React.FC<ProfileProps> = ({
       );
     }
 
-    // if (data.tags) {
-    //   await addTags(data.tags.filter((tag) => tag.value));
-    // }
+    if (data.tags) {
+      const oldTags = user?.keywords
+        ? user.keywords.map(({ keyword }) => keyword)
+        : [];
+      await addTagsToMentor(
+        oldTags,
+        data.tags.map((tag) => tag.value)
+      );
+    }
     toast('Данные изменены', { type: 'success' });
     navigate(-1);
   };

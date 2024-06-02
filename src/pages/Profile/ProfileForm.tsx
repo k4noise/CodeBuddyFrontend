@@ -228,7 +228,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
       {profileType == ProfileType.MENTOR && (
         <ProfileSection title="Ключевые слова :">
           <Tags
-            tags={userInfo?.tags ?? []}
+            tags={userInfo?.keywords ?? []}
             isEdit={isEdit}
             newTags={tags}
             setNewTags={setTags}
