@@ -7,11 +7,12 @@ import RequestPopup from '../../components/RequestPopup/RequestPopup';
 import { useEffect, useState } from 'react';
 import { ProfileType, RequestPopupType, RequestState } from '../../types';
 import { MentorData } from '../../actions/dto/user';
-import { getMentors } from '../../actions/mentors';
-import { Link, useNavigate } from 'react-router-dom';
+import { getMentors, getMentorsByTags } from '../../actions/mentors';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { handleError } from '../../actions/sendRequest';
 import { toast } from 'react-toastify';
 import { sendRequestToMentor } from '../../actions/request';
+import { useForm } from 'react-hook-form';
 
 const Mentors = () => {
   const navigate = useNavigate();
@@ -19,6 +20,9 @@ const Mentors = () => {
   const [keywords, setKeywords] = useState<string[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
   const [isShowingRequest, setIsShowingRequest] = useState(false);
+  const { handleSubmit, register } = useForm();
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword');
 
   const profileType: ProfileType = sessionStorage.getItem(
     'profileType'
@@ -43,18 +47,28 @@ const Mentors = () => {
 
   const handleCardClick = () => setIsShowingRequest(true);
   const getData = async () => {
-    const { data, error } = await getMentors();
-
-    if (error) handleError(error, navigate);
-    if (data) {
-      setMentors(data.mentors);
+    let mentorsWithKeywords, errors;
+    if (keyword) {
+      const keywords = keyword.split(' ');
+      const { data, error } = await getMentorsByTags(keywords);
+      mentorsWithKeywords = data;
+      errors = error;
+    } else {
+      const { data, error } = await getMentors();
+      mentorsWithKeywords = data;
+      errors = error;
     }
-    if (keywords) setKeywords(data?.keywords);
+
+    if (errors) handleError(errors, navigate);
+    if (mentorsWithKeywords) {
+      setMentors(mentorsWithKeywords.mentors);
+    }
+    if (keywords) setKeywords(mentorsWithKeywords?.keywords);
   };
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [keyword]);
 
   return (
     <>
@@ -62,15 +76,24 @@ const Mentors = () => {
         <section className="about-mentors">
           <div className="about-mentors__info">
             <h2 className="about-mentors__header">Наши менторы </h2>
-            <form className="about-mentors__search">
+            <form
+              className="about-mentors__search"
+              onSubmit={handleSubmit((data) =>
+                navigate(`/mentors?keyword=${data.keyword}`)
+              )}
+            >
               <button className="about-mentors__search-button"></button>
               <input
                 type="search"
+                {...register('keyword')}
                 className="about-mentors__search-input"
                 placeholder="Поиск по ключевому слову"
               />
             </form>
-            <Tags className="about-mentors__tags" tags={keywords} />
+            <Tags
+              className="about-mentors__tags"
+              tags={keywords.slice(0, 15)}
+            />
           </div>
           <div className="about-mentors__image">
             <img src={HeartManImage} alt="heart man" />

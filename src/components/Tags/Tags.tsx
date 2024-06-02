@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import Tag from './Tag';
 import './Tags.css';
 
@@ -49,7 +50,7 @@ const Tags = ({ tags, className, newTags, setNewTags, isEdit }: TagsProps) => {
             <Tag
               tag={tag?.keyword}
               color={color}
-              key={tag?.keyword}
+              key={useId()}
               isEdit={false}
             />
           );
@@ -61,7 +62,7 @@ const Tags = ({ tags, className, newTags, setNewTags, isEdit }: TagsProps) => {
             <Tag
               tag={tag.value}
               color={tag.color}
-              key={tag.value}
+              key={useId()}
               isEdit={tag.isEdit}
               onEnter={(tagValue) => handleTagEnter(tagValue, tag.color, index)}
             />
