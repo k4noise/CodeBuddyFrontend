@@ -39,23 +39,24 @@ const ImageGallery = ({
 
   return (
     <div className="gallery__images" data-testid="image-gallery">
-      {images.map((image, index) => (
-        <div className="gallery__image-wrapper" key={image}>
-          <img
-            src={image}
-            alt={`Image ${index + 1}`}
-            className="gallery__image"
-            onClick={() => onImageClick(image)}
-          />
-          {editMode && (
-            <button
-              type="button"
-              className="gallery__image-delete"
-              onClick={() => onDeleteClick(index)}
-            ></button>
-          )}
-        </div>
-      ))}
+      {images &&
+        images.map((image, index) => (
+          <div className="gallery__image-wrapper" key={image}>
+            <img
+              src={image}
+              alt={`Image ${index + 1}`}
+              className="gallery__image"
+              onClick={() => onImageClick(image)}
+            />
+            {editMode && (
+              <button
+                type="button"
+                className="gallery__image-delete"
+                onClick={() => onDeleteClick(index)}
+              ></button>
+            )}
+          </div>
+        ))}
       <dialog
         ref={dialogRef}
         className="gallery__dialog"

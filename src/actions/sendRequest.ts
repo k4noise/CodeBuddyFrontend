@@ -43,8 +43,6 @@ const sendRequest = async <ResType>(
     else response = await axios[method](url, body, config);
     data = response.data;
   } catch (err) {
-    if (err.response?.status === 401 && sessionStorage.getItem('profileType'))
-      logoutUser();
     if (axios.isAxiosError(err)) {
       const axiosError: AxiosError = err;
       console.error(axiosError);

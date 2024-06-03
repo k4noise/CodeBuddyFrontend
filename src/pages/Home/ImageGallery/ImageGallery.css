@@ -21,11 +21,13 @@
 }
 
 .gallery__image-wrapper:first-child .gallery__image {
-  border-radius: 20px 0px 0px 20px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
 }
 
 .gallery__image-wrapper:nth-last-child(2) .gallery__image {
-  border-radius: 0px 20px 20px 0px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .gallery__image-delete {

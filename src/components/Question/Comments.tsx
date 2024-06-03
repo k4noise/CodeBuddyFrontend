@@ -53,7 +53,7 @@ const Comment = ({ avatar, username, date, comment, isMine }: CommentData) => (
  * @param {CommentData[]} comments comments data, look at interface
  * @returns {JSX.Element} Comments component
  */
-const Comments = ({ comments }: { comments: CommentData[] }) => {
+const Comments = ({ comments }: { comments: Comment[] }) => {
   let userAvatar = sessionStorage.getItem('avatarUrl');
   userAvatar =
     userAvatar !== null && userAvatar !== 'null'
@@ -62,13 +62,13 @@ const Comments = ({ comments }: { comments: CommentData[] }) => {
   return (
     <>
       <div className="question__comments" data-testid="comments">
-        {comments.map((comment) => (
+        {comments?.map((comment) => (
           <Comment {...comment} key={useId()} />
         ))}
       </div>
-      <button className="question__comments-show">
+      {/* <button className="question__comments-show">
         Показать следующие пять
-      </button>
+      </button> */}
       <form className="question__comments-form" data-testid="sendComment">
         <div className="question__comments-form-user">
           <img

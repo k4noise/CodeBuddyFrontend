@@ -102,13 +102,17 @@ const Profile: React.FC<ProfileProps> = ({
       };
       await updateProfile(profileType, settingsData);
       await logoutUser();
-      await loginUser(
+      const { error } = await loginUser(
         {
           login: data.email,
           password: data.password,
         },
         profileType
       );
+      if (error) {
+        toast('Войдите в профиль заново', { type: 'error' });
+        navigate('/login');
+      }
     }
     if (data.newPassword) {
       const securityData: UpdateSecurityData = {
@@ -116,7 +120,8 @@ const Profile: React.FC<ProfileProps> = ({
         password: data.password,
         newPassword: data.newPassword,
       };
-      await updateSecurity(profileType, securityData);
+      const { error } = await updateSecurity(profileType, securityData);
+      if (error) toast('Неправильный пароль', { type: 'error' });
       await logoutUser();
       await loginUser(
         {
