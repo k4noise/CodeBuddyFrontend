@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 interface TagProps {
   /* quick mentor property */
   tag?: string;
@@ -25,7 +27,8 @@ const Tag = ({ tag, color, isEdit, onEnter }: TagProps) => {
       }}
     />
   ) : (
-    <span
+    <Link
+      to={`/mentors?keyword=${tag}`}
       key={tag}
       className="tag"
       style={{
@@ -34,7 +37,7 @@ const Tag = ({ tag, color, isEdit, onEnter }: TagProps) => {
       }}
     >
       {tag}
-    </span>
+    </Link>
   );
 };
 

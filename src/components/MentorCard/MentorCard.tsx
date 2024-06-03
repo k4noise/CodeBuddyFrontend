@@ -15,6 +15,7 @@ interface MentorCardProps {
   description: string;
   /* mentor quick words */
   keywords: string[];
+  mentorView: boolean;
   /* callback to call when modal closing */
   onClick: React.MouseEventHandler;
 }
@@ -37,6 +38,7 @@ const MentorCard = ({
   photoUrl,
   description,
   keywords: tags,
+  mentorView,
   onClick,
 }: MentorCardProps) => {
   const username = `${firstName} ${lastName}`;
@@ -57,9 +59,11 @@ const MentorCard = ({
           value={description}
         />
       </div>
-      <button className="mentor-card__submit" onClick={onClick}>
-        Оставить заявку
-      </button>
+      {!mentorView && (
+        <button className="mentor-card__submit" onClick={onClick}>
+          Оставить заявку
+        </button>
+      )}
       <Tags className="mentor-card__tags" tags={tags} />
     </div>
   );

@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { ProfileType, RequestType } from '../../types';
+import { ProfileType, RequestState } from '../../types';
 import { getAvatar } from '../../actions/util';
 
 interface RequestProps {
+  id: number;
   /* student or mentor */
   profileType: ProfileType;
   /* display name */
@@ -11,9 +12,11 @@ interface RequestProps {
   /* avatar url */
   photoUrl: string;
   /* request status */
-  requestState: RequestType;
+  requestState: RequestState;
   /* callback to call when modal closing */
   onClick: React.MouseEventHandler;
+  changeRequestState: (id: number, newState: RequestState) => void;
+  mentorId?: number;
 }
 /**
  * Request component
@@ -22,21 +25,28 @@ interface RequestProps {
  * @param {ProfileType} profileType look at interface
  * @param {string} username user display name
  * @param {string} avatarUrl avatar url
- * @param {RequestType} status request status
+ * @param {RequestState} status request status
  * @param {React.MouseEventHandler} onClick callback to call when modal closing
  * @returns {JSX.Element} Request component
  */
 
 const Request = ({
+  id,
   profileType,
   firstName,
   lastName,
   photoUrl,
   requestState,
   onClick,
+  changeRequestState,
+  mentorId,
 }: RequestProps) => {
+  const handleClick = (event) => {
+    if (!event.target.className.includes('request__button')) onClick();
+  };
+
   return (
-    <div className="request" onClick={onClick}>
+    <div className="request" onClick={handleClick}>
       <img
         src={getAvatar(
           photoUrl,
@@ -49,33 +59,38 @@ const Request = ({
       />
       <div>
         <p className="request__username">{`${firstName} ${lastName}`}</p>
-        <p className="request__status">{RequestType[requestState]}</p>
+        <p className="request__status">
+          {RequestState[requestState] == RequestState.SEND &&
+          profileType == ProfileType.MENTOR
+            ? RequestState.NEW
+            : RequestState[requestState]}
+        </p>
       </div>
       {profileType == ProfileType.STUDENT ? (
         <div className="request__buttons">
-          {requestState === RequestType.ACCEPTED && (
+          {RequestState[requestState] == RequestState.ACCEPTED && (
             <Link
-              to="/profile/123"
+              to={`/profile/request/mentor/${mentorId}`}
               className="request__link request__view"
               data-testid="profileLink"
             ></Link>
           )}
-          <button
-            className="request__button request__cancel"
-            data-testid="cancel"
-          ></button>
         </div>
       ) : (
-        <div className="request__buttons">
-          <button
-            className="request__button request__accept"
-            data-testid="accept"
-          ></button>
-          <button
-            className="request__button request__reject"
-            data-testid="reject"
-          ></button>
-        </div>
+        RequestState[requestState] == RequestState.SEND && (
+          <div className="request__buttons">
+            <button
+              className="request__button request__accept"
+              data-testid="accept"
+              onClick={() => changeRequestState(id, RequestState.ACCEPTED)}
+            ></button>
+            <button
+              className="request__button request__reject"
+              data-testid="reject"
+              onClick={() => changeRequestState(id, RequestState.REJECTED)}
+            ></button>
+          </div>
+        )
       )}
     </div>
   );

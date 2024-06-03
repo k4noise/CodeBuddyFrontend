@@ -15,6 +15,25 @@
   max-width: 1000px;
   box-shadow: 0px 4px 120px 0px #d9d9d9;
   border-radius: 20px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.questions__form-anonym {
+  width: 100%;
+  height: 100%;
+  background-color: #d9d9d9e0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 20px;
+  z-index: 5;
+  text-align: center;
+  line-height: 220px;
+}
+
+.questions__form-anonym a {
+  color: var(--accentColor);
 }
 
 .questions__form-wrapper {
@@ -72,6 +91,12 @@
   content: '';
   width: 35px;
   height: 33px;
+}
+
+.questions__form-images:disabled,
+.questions__form-buttons-upload:disabled {
+  cursor: not-allowed;
+  background-color: lightgray;
 }
 
 .questions__form-images {

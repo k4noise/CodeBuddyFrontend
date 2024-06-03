@@ -21,6 +21,7 @@ interface TextAreaProps {
   readonly?: boolean;
   /** text in textarea **/
   value?: string;
+  max?: number;
   validationOptions?: UseFormRegisterReturn;
 }
 
@@ -29,6 +30,7 @@ const TextArea = ({
   placeholder,
   readonly = false,
   value,
+  max,
   validationOptions,
 }: TextAreaProps) => {
   const resize = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -45,6 +47,7 @@ const TextArea = ({
       onInput={resize}
       readOnly={readonly}
       rows={1}
+      maxLength={max}
       defaultValue={value}
     ></textarea>
   );

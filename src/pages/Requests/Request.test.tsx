@@ -1,21 +1,21 @@
 import { render, screen } from '@testing-library/react';
 import { test, expect, describe } from 'vitest';
 import Request from './Request';
-import { ProfileType, RequestType } from '../../types';
+import { ProfileType, RequestState } from '../../types';
 import { MemoryRouter } from 'react-router-dom';
 
 const REQUEST_MENTOR_DATA = {
   profileType: ProfileType.MENTOR,
   username: 'Петр Петров',
   avatarUrl: '/avatar',
-  status: RequestType.NEW,
+  status: RequestState.NEW,
 };
 
 const REQUEST_STUDENT_DATA = {
   profileType: ProfileType.STUDENT,
   username: 'Петр Петров',
   avatarUrl: '/avatar',
-  status: RequestType.ACCEPTED,
+  status: RequestState.ACCEPTED,
 };
 
 describe('Test request', () => {

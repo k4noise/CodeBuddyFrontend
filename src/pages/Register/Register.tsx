@@ -4,7 +4,7 @@ import './Register.css';
 import { FieldValues, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PasswordField from '../../components/PasswordField/PasswordField';
 import { ProfileType } from '../../types';
 import { CreateUser } from '../../actions/dto/user';
@@ -44,7 +44,7 @@ const RegisterSchema = zod
 const Register = () => {
   const [isAgree, setIsAgree] = useState(false);
   const navigate = useNavigate();
-  const { login, changeAvatar } = useAuth();
+  const { auth, login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -52,6 +52,10 @@ const Register = () => {
   } = useForm<CreateUser>({
     resolver: zodResolver(RegisterSchema),
   });
+
+  useEffect(() => {
+    if (auth) navigate('/403');
+  }, []);
 
   const onFormSend = async (data: FieldValues) => {
     const profileType: ProfileType =
@@ -62,7 +66,6 @@ const Register = () => {
         toast('Произошла ошибка, попробуйте еще раз', { type: 'error' });
       } else {
         login();
-        changeAvatar(sessionStorage.getItem('avatarUrl') as string);
         toast('Успешная регистрация', { type: 'success' });
         navigate('/');
       }
@@ -146,7 +149,7 @@ const Register = () => {
             Я согласен с условиями политики конфиденциальности
           </label>
           <button className="register__form-send" disabled={!isAgree}>
-            Зарегестрироваться
+            Зарегистрироваться
           </button>
         </form>
       </div>

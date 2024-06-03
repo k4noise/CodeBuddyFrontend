@@ -51,27 +51,45 @@ const router = createBrowserRouter([
       },
       {
         path: '/requests',
-        element: <Requests profileType={ProfileType.STUDENT} />,
-      },
-      {
-        path: '/requests/mentor',
-        element: <Requests profileType={ProfileType.MENTOR} />,
+        element: <Requests />,
       },
       {
         path: '/profile',
-        element: <Profile isMine={true} />,
+        element: <Profile isMine={true} fromRequest={false} />,
       },
       {
         path: '/profile/edit',
-        element: <Profile isMine={true} />,
+        element: <Profile isMine={true} fromRequest={false} />,
       },
       {
         path: '/profile/student/:id',
-        element: <Profile isMine={false} profileType={ProfileType.STUDENT} />,
+        element: (
+          <Profile
+            isMine={false}
+            profileType={ProfileType.STUDENT}
+            fromRequest={false}
+          />
+        ),
       },
       {
         path: '/profile/mentor/:id',
-        element: <Profile isMine={false} profileType={ProfileType.MENTOR} />,
+        element: (
+          <Profile
+            isMine={false}
+            profileType={ProfileType.MENTOR}
+            fromRequest={false}
+          />
+        ),
+      },
+      {
+        path: '/profile/request/mentor/:id',
+        element: (
+          <Profile
+            isMine={false}
+            profileType={ProfileType.MENTOR}
+            fromRequest={true}
+          />
+        ),
       },
       {
         path: '/401',

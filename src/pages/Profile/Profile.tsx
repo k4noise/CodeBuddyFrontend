@@ -8,7 +8,7 @@ import {
   updateAvatar,
   updateSecurity,
   updateProfile,
-  // addTags,
+  addTagsToMentor,
 } from '../../actions/profile';
 import {
   UpdateSecurityData,
@@ -18,14 +18,16 @@ import {
 import { handleError } from '../../actions/sendRequest';
 import { getAvatar } from '../../actions/util';
 import { FieldValues } from 'react-hook-form';
-import { useAuth } from '../../AuthProvider';
 import { loginUser, logoutUser } from '../../actions/auth';
+import { useAuth } from '../../AuthProvider';
+import { toast } from 'react-toastify';
 
 interface ProfileProps {
   /* Flag to show edit button */
   isMine: boolean;
   /* profile type - student or mentor */
   profileType?: ProfileType;
+  fromRequest: boolean;
 }
 
 /**
@@ -51,12 +53,14 @@ interface ProfileProps {
 const Profile: React.FC<ProfileProps> = ({
   isMine,
   profileType,
+  fromRequest,
 }: ProfileProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { avatar, changeAvatar } = useAuth();
   const [user, setUser] = useState<UserData | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [newAvatar, setNewAvatar] = useState<string | null>(null);
+  const { avatar, changeAvatar } = useAuth();
   const location = useLocation();
   const isEdit = location.pathname.includes('/edit');
 
@@ -67,6 +71,7 @@ const Profile: React.FC<ProfileProps> = ({
   const getData = async () => {
     const { data, error } = await getProfileData(
       isMine,
+      fromRequest,
       profileType,
       Number(id)
     );
@@ -79,15 +84,16 @@ const Profile: React.FC<ProfileProps> = ({
 
   useEffect(() => {
     getData();
-  }, [id]);
+  }, [location.pathname]);
 
   if (!user)
     return <div className="load-error">Ошибка загрузки данных профиля</div>;
 
   const handleSave = async (data: FieldValues) => {
     if (newAvatar) {
-      await updateAvatar(profileType, newAvatar);
-      changeAvatar(newAvatar);
+      toast('Идет загрузка аватара', { type: 'info' });
+      const newAvatarUrl = await updateAvatar(profileType, avatarFile);
+      if (newAvatarUrl) changeAvatar(data.photoUrl);
     }
     if (data.telegram || data.description) {
       const settingsData: UpdateSettingsData = {
@@ -96,13 +102,17 @@ const Profile: React.FC<ProfileProps> = ({
       };
       await updateProfile(profileType, settingsData);
       await logoutUser();
-      await loginUser(
+      const { error } = await loginUser(
         {
           login: data.email,
           password: data.password,
         },
         profileType
       );
+      if (error) {
+        toast('Войдите в профиль заново', { type: 'error' });
+        navigate('/login');
+      }
     }
     if (data.newPassword) {
       const securityData: UpdateSecurityData = {
@@ -110,7 +120,8 @@ const Profile: React.FC<ProfileProps> = ({
         password: data.password,
         newPassword: data.newPassword,
       };
-      await updateSecurity(profileType, securityData);
+      const { error } = await updateSecurity(profileType, securityData);
+      if (error) toast('Неправильный пароль', { type: 'error' });
       await logoutUser();
       await loginUser(
         {
@@ -121,9 +132,16 @@ const Profile: React.FC<ProfileProps> = ({
       );
     }
 
-    // if (data.tags) {
-    //   await addTags(data.tags.filter((tag) => tag.value));
-    // }
+    if (data.tags) {
+      const oldTags = user?.keywords
+        ? user.keywords.map(({ keyword }) => keyword)
+        : [];
+      await addTagsToMentor(
+        oldTags,
+        data.tags.map((tag) => tag.value)
+      );
+    }
+    toast('Данные изменены', { type: 'success' });
     navigate(-1);
   };
 
@@ -133,6 +151,7 @@ const Profile: React.FC<ProfileProps> = ({
 
   const handleChangeAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
+    setAvatarFile(file);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -140,7 +159,7 @@ const Profile: React.FC<ProfileProps> = ({
       };
       reader.readAsDataURL(file);
     }
-    setUser({ ...user, photoUrl: newAvatar as string });
+    setUser({ ...user, photoUrl: newAvatar });
   };
 
   return (

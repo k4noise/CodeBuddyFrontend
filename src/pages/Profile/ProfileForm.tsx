@@ -155,7 +155,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           Почта :
           <input
             type="text"
-            defaultValue={isMine ? userInfo.email : 'Скрыта'}
+            defaultValue={userInfo.email ?? 'Скрыта'}
             className="profile__form-input"
             readOnly={!isEdit}
             {...register('email')}
@@ -168,7 +168,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           Телеграмм :
           <input
             type="text"
-            defaultValue={isMine ? userInfo?.telegram : 'Скрыт'}
+            defaultValue={userInfo?.telegram ?? isMine ? '' : 'Скрыт'}
             className="profile__form-input"
             readOnly={!isEdit}
             {...register('telegram')}
@@ -228,7 +228,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
       {profileType == ProfileType.MENTOR && (
         <ProfileSection title="Ключевые слова :">
           <Tags
-            tags={userInfo?.tags ?? []}
+            tags={userInfo?.keywords ?? []}
             isEdit={isEdit}
             newTags={tags}
             setNewTags={setTags}
