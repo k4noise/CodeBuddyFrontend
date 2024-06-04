@@ -1,5 +1,5 @@
 [[redirects]]
   from = "/*"
   to = "http://95.163.222.39:3020/"
-  status = 200
-  force = false
+  status = 302
+  force = true
