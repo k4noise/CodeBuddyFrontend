@@ -22,7 +22,10 @@ export const getProfileData = async (
   }
 
   if (fromRequest) {
-    const url = `${import.meta.env.VITE_API_BASE_URL}/students/mentors/${id}`;
+    const url =
+      profileType == ProfileType.STUDENT
+        ? `${import.meta.env.VITE_API_BASE_URL}/mentors/students/${id}`
+        : `${import.meta.env.VITE_API_BASE_URL}/students/mentors/${id}`;
     return await sendRequest<UserData>(url, AxiosMethod.GET, true);
   }
 

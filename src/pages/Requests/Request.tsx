@@ -17,6 +17,7 @@ interface RequestProps {
   onClick: React.MouseEventHandler;
   changeRequestState: (id: number, newState: RequestState) => void;
   mentorId?: number;
+  studentId?: number;
 }
 /**
  * Request component
@@ -40,6 +41,7 @@ const Request = ({
   onClick,
   changeRequestState,
   mentorId,
+  studentId,
 }: RequestProps) => {
   const handleClick = (event) => {
     if (!event.target.className.includes('request__button')) onClick();
@@ -66,32 +68,35 @@ const Request = ({
             : RequestState[requestState]}
         </p>
       </div>
-      {profileType == ProfileType.STUDENT ? (
-        <div className="request__buttons">
-          {RequestState[requestState] == RequestState.ACCEPTED && (
-            <Link
-              to={`/profile/request/mentor/${mentorId}`}
-              className="request__link request__view"
-              data-testid="profileLink"
-            ></Link>
+
+      <div className="request__buttons">
+        {RequestState[requestState] == RequestState.ACCEPTED && (
+          <Link
+            to={
+              profileType == ProfileType.STUDENT
+                ? `/profile/request/mentor/${mentorId}`
+                : `/profile/request/student/${studentId}`
+            }
+            className="request__link request__view"
+            data-testid="profileLink"
+          ></Link>
+        )}
+        {profileType == ProfileType.MENTOR &&
+          RequestState[requestState] == RequestState.SEND && (
+            <>
+              <button
+                className="request__button request__accept"
+                data-testid="accept"
+                onClick={() => changeRequestState(id, RequestState.ACCEPTED)}
+              ></button>
+              <button
+                className="request__button request__reject"
+                data-testid="reject"
+                onClick={() => changeRequestState(id, RequestState.REJECTED)}
+              ></button>
+            </>
           )}
-        </div>
-      ) : (
-        RequestState[requestState] == RequestState.SEND && (
-          <div className="request__buttons">
-            <button
-              className="request__button request__accept"
-              data-testid="accept"
-              onClick={() => changeRequestState(id, RequestState.ACCEPTED)}
-            ></button>
-            <button
-              className="request__button request__reject"
-              data-testid="reject"
-              onClick={() => changeRequestState(id, RequestState.REJECTED)}
-            ></button>
-          </div>
-        )
-      )}
+      </div>
     </div>
   );
 };

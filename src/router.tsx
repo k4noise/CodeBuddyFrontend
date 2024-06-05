@@ -92,6 +92,16 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: '/profile/request/student/:id',
+        element: (
+          <Profile
+            isMine={false}
+            profileType={ProfileType.STUDENT}
+            fromRequest={true}
+          />
+        ),
+      },
+      {
         path: '/401',
         element: <Page401 />,
       },

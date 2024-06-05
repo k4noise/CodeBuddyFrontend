@@ -82,7 +82,8 @@ const Requests = () => {
 
         requestsWithUserData.push({
           id: request.id,
-          mentorId: userDataCache[userId]?.id,
+          mentorId: request?.mentorId,
+          studentId: request?.studentId,
           requestState: request.requestState,
           description: request.description,
           firstName: userDataCache[userId]?.firstName,
