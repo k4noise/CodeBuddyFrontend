@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import Cookies from 'js-cookie';
 
 interface AuthContextType {
   auth: boolean;
@@ -19,7 +20,7 @@ export const useAuth = () => {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(!!sessionStorage.getItem('profileType'));
+  const [auth, setAuth] = useState(!!Cookies.get('profileType'));
   const [avatar, setAvatar] = useState<string | null>(null);
 
   const login = () => setAuth(true);

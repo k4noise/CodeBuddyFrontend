@@ -8,7 +8,7 @@ import { UserData } from '../../actions/dto/user';
 import * as zod from 'zod';
 import { FieldValues, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 interface ProfileFormProps {
   /* Flag to show edit button */
   isMine: boolean;
@@ -20,6 +20,7 @@ interface ProfileFormProps {
   onSave: (data: FieldValues) => void;
   /* Callback to save button click */
   onEditClick: () => void;
+  fromRequest?: boolean;
 }
 
 const ProfileSchema = zod
@@ -95,6 +96,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   userInfo,
   onSave,
   onEditClick,
+  fromRequest,
 }: ProfileFormProps) => {
   const location = useLocation();
   const isEdit = location.pathname.includes('/edit');
@@ -168,7 +170,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           Телеграмм :
           <input
             type="text"
-            defaultValue={userInfo?.telegram ?? isMine ? '' : 'Скрыт'}
+            defaultValue={
+              isMine
+                ? userInfo.telegram ?? ''
+                : fromRequest
+                ? userInfo.telegram ?? 'Не указан'
+                : 'Скрыт'
+              // isMine || fromRequest ? userInfo.telegram ?? '' : 'Скрыт'
+            }
             className="profile__form-input"
             readOnly={!isEdit}
             {...register('telegram')}

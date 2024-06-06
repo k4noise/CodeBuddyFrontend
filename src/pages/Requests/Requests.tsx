@@ -9,6 +9,7 @@ import { getRequests, respondToRequest } from '../../actions/request';
 import { handleError } from '../../actions/sendRequest';
 import { useNavigate } from 'react-router-dom';
 import { getProfileData } from '../../actions/profile';
+import Cookies from 'js-cookie';
 
 /**
  * Requests component
@@ -18,9 +19,7 @@ import { getProfileData } from '../../actions/profile';
  */
 
 const Requests = () => {
-  let profileType: ProfileType = sessionStorage.getItem(
-    'profileType'
-  ) as ProfileType;
+  let profileType: ProfileType = Cookies.get('profileType') as ProfileType;
   let userDataCache = {};
 
   const [requests, setRequests] = useState<RequestDto[]>([]);
@@ -54,7 +53,7 @@ const Requests = () => {
   };
 
   const getData = async () => {
-    profileType = sessionStorage.getItem('profileType') as ProfileType;
+    profileType = Cookies.get('profileType') as ProfileType;
     const anotherProfileType =
       profileType == ProfileType.STUDENT
         ? ProfileType.MENTOR

@@ -2,6 +2,7 @@ import { ProfileType } from '../types';
 import { getUserData } from './auth';
 import { UpdateSecurityData, UpdateSettingsData, UserData } from './dto/user';
 import { AxiosMethod, sendRequest } from './sendRequest';
+import Cookies from 'js-cookie';
 
 /**
  * Get profile data
@@ -62,12 +63,14 @@ export const updateSecurity = async (
     profileType == ProfileType.STUDENT
       ? `${import.meta.env.VITE_API_BASE_URL}/students/accounts/security`
       : `${import.meta.env.VITE_API_BASE_URL}/mentors/accounts/security`;
-  return await sendRequest<void>(
+  const data = await sendRequest<void>(
     profileUpdateUrl,
     AxiosMethod.PUT,
     true,
     updateData
   );
+  Cookies.set('email', updateData.email);
+  return data;
 };
 
 export const updateAvatar = async (
@@ -83,8 +86,7 @@ export const updateAvatar = async (
   await sendRequest<void>(profileUpdateUrl, AxiosMethod.PUT, true, formData);
 
   const response = await getProfileData(true, false, profileType, 0);
-  if (response.data)
-    sessionStorage.setItem('avatarUrl', response.data.photoUrl);
+  if (response.data) Cookies.set('avatarUrl', response.data.photoUrl);
   return response.data?.photoUrl;
 };
 

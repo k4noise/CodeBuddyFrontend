@@ -10,59 +10,9 @@ import { ProfileType } from '../../../types';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { createPost, getPostById, getPosts } from '../../../actions/post';
-import { Post } from '../../../actions/dto/post';
+import Cookies from 'js-cookie';
 
 const MAX_IMAGE_COUNT = 3;
-
-// const QUESTIONS: QuestionProps[] = [
-//   {
-//     avatar: Avatar2Image,
-//     authorName: 'Мария Иванова',
-//     question: `У меня возник вопрос, как выполнить такую задачу
-// не могу решить такую проблему, подскажите пути решения?`,
-//     images: [Pic1Image, Pic2Image, Pic3Image],
-//     likes: 2,
-//     comments: [
-//       {
-//         avatar: Avatar3Image,
-//         username: 'Сергей Иванов',
-//         date: '23.03.24',
-//         comment: 'Это задача решается таким образом ',
-//       },
-//       {
-//         avatar: Avatar1Image,
-//         username: 'Иван Иванов',
-//         date: '23.03.24',
-//         comment: 'Это задача решается таким образом ',
-//         isMine: true,
-//       },
-//     ],
-//   },
-//   {
-//     avatar: Avatar2Image,
-//     authorName: 'Мария Иванова',
-//     question: `У меня возник вопрос, как выполнить такую задачу
-// не могу решить такую проблему, подскажите пути решения?`,
-//     images: [Pic4Image, Pic1Image, Pic3Image],
-//     likes: 2,
-//     comments: [
-//       {
-//         avatar: Avatar3Image,
-//         username: 'Сергей Иванов',
-//         date: '23.03.24',
-//         comment: 'Это задача решается таким образом ',
-//       },
-//       {
-//         avatar: Avatar1Image,
-//         username: 'Иван Иванов',
-//         date: '23.03.24',
-//         comment: 'Это задача решается таким образом ',
-//         isMine: true,
-//       },
-//     ],
-//   },
-// ];
-
 /**
  * Questions component
  * Shows questions (Question component) with form to upload new question
@@ -83,9 +33,7 @@ const Questions = (): JSX.Element => {
   let userAvatar = avatar;
   userAvatar =
     userAvatar !== null && userAvatar !== 'null' ? userAvatar : Avatar1Image;
-  const profileType: ProfileType = sessionStorage.getItem(
-    'profileType'
-  ) as ProfileType;
+  const profileType: ProfileType = Cookies.get('profileType') as ProfileType;
 
   const getQuestions = async () => {
     const { error, data } = await getPosts();

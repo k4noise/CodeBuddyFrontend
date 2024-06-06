@@ -1,6 +1,7 @@
 import TextArea from '../TextArea/TextArea';
 import { useId } from 'react';
 import defaultAvatarImage from '../../assets/avatar1.png';
+import Cookies from 'js-cookie';
 
 interface CommentData {
   /** commentator avatar **/
@@ -54,7 +55,7 @@ const Comment = ({ avatar, username, date, comment, isMine }: CommentData) => (
  * @returns {JSX.Element} Comments component
  */
 const Comments = ({ comments }: { comments: Comment[] }) => {
-  let userAvatar = sessionStorage.getItem('avatarUrl');
+  let userAvatar = Cookise.get('avatarUrl');
   userAvatar =
     userAvatar !== null && userAvatar !== 'null'
       ? userAvatar
@@ -77,10 +78,10 @@ const Comments = ({ comments }: { comments: Comment[] }) => {
             className="question__comments-form-avatar"
           />
           <span className="question__comments-form-name">
-            {sessionStorage.getItem('firstName')
-              ? `${sessionStorage.getItem(
+            {Cookies.get('firstName')
+              ? `${Cookies.get(
                   'firstName'
-                )} ${sessionStorage.getItem('lastName')}`
+                )} ${Cookies.get('lastName')}`
               : 'Иван Иванов'}
           </span>
         </div>

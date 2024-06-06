@@ -13,6 +13,7 @@ import { handleError } from '../../actions/sendRequest';
 import { toast } from 'react-toastify';
 import { sendRequestToMentor } from '../../actions/request';
 import { useForm } from 'react-hook-form';
+import Cookies from 'js-cookie';
 
 const Mentors = () => {
   const navigate = useNavigate();
@@ -24,9 +25,7 @@ const Mentors = () => {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword');
 
-  const profileType: ProfileType = sessionStorage.getItem(
-    'profileType'
-  ) as ProfileType;
+  const profileType: ProfileType = Cookies.get('profileType') as ProfileType;
 
   const changeRequestState = async (
     id: number,
