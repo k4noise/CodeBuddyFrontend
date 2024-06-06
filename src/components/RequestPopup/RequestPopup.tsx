@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { RequestPopupType, RequestState } from '../../types';
+import {
+  MentorRequestState,
+  RequestPopupType,
+  RequestState,
+  StudentRequestState,
+} from '../../types';
 import TextArea from '../TextArea/TextArea';
 import './RequestPopup.css';
 import { useForm } from 'react-hook-form';
@@ -17,7 +22,7 @@ interface RequestPopupProps {
   close: React.MouseEventHandler;
   changeState: (
     id: number,
-    newState: RequestState,
+    newState: StudentRequestState,
     description?: string
   ) => Promise<void>;
 }
@@ -86,17 +91,17 @@ const RequestPopup = ({
         {popupType === RequestPopupType.CREATE_VIEW && (
           <button
             className="request-popup__send"
-            onClick={() => setNewType(RequestState.SEND)}
+            onClick={() => setNewType(StudentRequestState.SEND)}
           >
             Отправить
           </button>
         )}
         {popupType == RequestPopupType.MENTOR_VIEW && (
           <div className="request-popup__buttons-wrapper">
-            <button onClick={() => setNewType(RequestState.REJECTED)}>
+            <button onClick={() => setNewType(MentorRequestState.REJECTED)}>
               Отклонить
             </button>
-            <button onClick={() => setNewType(RequestState.ACCEPTED)}>
+            <button onClick={() => setNewType(MentorRequestState.ACCEPTED)}>
               Принять
             </button>
           </div>

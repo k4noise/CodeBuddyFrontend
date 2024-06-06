@@ -1,4 +1,4 @@
-import { ProfileType, RequestState } from '../types';
+import { ProfileType } from '../types';
 import { AxiosMethod, sendRequest } from './sendRequest';
 
 export const sendRequestToMentor = async (

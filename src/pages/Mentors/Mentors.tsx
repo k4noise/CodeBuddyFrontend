@@ -5,7 +5,12 @@ import HeartManImage from '../../assets/heart-man.png';
 import './Mentors.css';
 import RequestPopup from '../../components/RequestPopup/RequestPopup';
 import { useEffect, useState } from 'react';
-import { ProfileType, RequestPopupType, RequestState } from '../../types';
+import {
+  ProfileType,
+  RequestPopupType,
+  RequestState,
+  StudentRequestState,
+} from '../../types';
 import { MentorData } from '../../actions/dto/user';
 import { getMentors, getMentorsByTags } from '../../actions/mentors';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -32,12 +37,12 @@ const Mentors = () => {
     newState: RequestState,
     description?: string
   ) => {
-    if (newState == RequestState.SEND) {
+    if (newState == StudentRequestState.SEND) {
       const { error } = await sendRequestToMentor(selected, { description });
       if (!error) {
-        toast('Успешно отправлено', { type: 'success' });
+        toast('Заявка отправлена успешно', { type: 'success' });
       } else {
-        toast('Произошла ошибка при отправке, попробуйте еще раз', {
+        toast('Произошла ошибка при отправке заявки, попробуйте еще раз', {
           type: 'error',
         });
       }

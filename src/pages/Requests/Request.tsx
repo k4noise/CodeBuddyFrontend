@@ -1,5 +1,10 @@
 import { Link } from 'react-router-dom';
-import { ProfileType, RequestState } from '../../types';
+import {
+  MentorRequestState,
+  ProfileType,
+  StudentRequestState,
+  RequestState,
+} from '../../types';
 import { getAvatar } from '../../actions/util';
 
 interface RequestProps {
@@ -62,15 +67,14 @@ const Request = ({
       <div>
         <p className="request__username">{`${firstName} ${lastName}`}</p>
         <p className="request__status">
-          {RequestState[requestState] == RequestState.SEND &&
-          profileType == ProfileType.MENTOR
-            ? RequestState.NEW
-            : RequestState[requestState]}
+          {profileType == ProfileType.STUDENT
+            ? StudentRequestState[requestState]
+            : MentorRequestState[requestState]}
         </p>
       </div>
 
       <div className="request__buttons">
-        {RequestState[requestState] == RequestState.ACCEPTED && (
+        {StudentRequestState[requestState] == StudentRequestState.ACCEPTED && (
           <Link
             to={
               profileType == ProfileType.STUDENT
@@ -82,17 +86,21 @@ const Request = ({
           ></Link>
         )}
         {profileType == ProfileType.MENTOR &&
-          RequestState[requestState] == RequestState.SEND && (
+          MentorRequestState[requestState] == MentorRequestState.SEND && (
             <>
               <button
                 className="request__button request__accept"
                 data-testid="accept"
-                onClick={() => changeRequestState(id, RequestState.ACCEPTED)}
+                onClick={() =>
+                  changeRequestState(id, StudentRequestState.ACCEPTED)
+                }
               ></button>
               <button
                 className="request__button request__reject"
                 data-testid="reject"
-                onClick={() => changeRequestState(id, RequestState.REJECTED)}
+                onClick={() =>
+                  changeRequestState(id, StudentRequestState.REJECTED)
+                }
               ></button>
             </>
           )}
