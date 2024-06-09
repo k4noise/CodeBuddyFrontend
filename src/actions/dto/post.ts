@@ -1,4 +1,5 @@
 export interface Post {
+  id?: number;
   description: string;
   countOfLikes: number;
   localDateTime: Date;

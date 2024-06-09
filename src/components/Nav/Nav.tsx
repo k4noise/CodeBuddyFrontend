@@ -8,7 +8,6 @@ import { ProfileType } from '../../types';
 import { getAvatar } from '../../actions/util';
 import Cookies from 'js-cookie';
 
-
 /**
  * Nav component
  * Shows logo, links and buttons for auth if is required
@@ -74,10 +73,7 @@ const Nav = ({ links, sublinks }: NavProps) => {
         <div className="subnav-wrapper">
           <Link to="profile" className="subnav__avatar-wrapper">
             <img
-              src={getAvatar(
-                avatar,
-                Cookies.get('profileType') as ProfileType
-              )}
+              src={getAvatar(avatar, Cookies.get('profileType') as ProfileType)}
               alt="Avatar"
               className="subnav__avatar"
             />

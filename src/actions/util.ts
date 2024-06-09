@@ -18,3 +18,7 @@ export const getAvatar = (
 
   return isStudent ? defaultStudentAvatarImage : defaultMentorAvatarImage;
 };
+
+export const extractDate = (date: string) => {
+  return date.slice(0, 10).split('-').reverse().join('.');
+};

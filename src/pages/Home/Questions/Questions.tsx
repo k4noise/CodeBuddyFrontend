@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { createPost, getPostById, getPosts } from '../../../actions/post';
 import Cookies from 'js-cookie';
+import { getAvatar } from '../../../actions/util';
 
 const MAX_IMAGE_COUNT = 3;
 /**
@@ -93,7 +94,7 @@ const Questions = (): JSX.Element => {
           )}
           <div className="questions__form-wrapper">
             <img
-              src={userAvatar}
+              src={getAvatar(userAvatar, ProfileType.STUDENT)}
               alt="user avatar"
               className="questions__form-avatar"
             />

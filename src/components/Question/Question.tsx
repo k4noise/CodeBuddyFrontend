@@ -3,13 +3,14 @@ import CommentIcon from '../../assets/comment.svg';
 import LikeIcon from '../../assets/like.svg';
 import Comments, { CommentData } from './Comments';
 import ImageGallery from '../../pages/Home/ImageGallery/ImageGallery';
-import { Post } from '../../actions/dto/post';
+import { Comment, Post } from '../../actions/dto/post';
 import { useEffect, useState } from 'react';
 import { UserData } from '../../actions/dto/user';
 import { getUserData } from '../../actions/auth';
 import { ProfileType } from '../../types';
 import { getProfileData } from '../../actions/profile';
 import { getAvatar } from '../../actions/util';
+import { getCommentsByPost } from '../../actions/post';
 
 /**
  * Question component
@@ -49,6 +50,10 @@ interface QuestionProps {
 
 const Question = (props: Post) => {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [commentsCount, setCommentCount] = useState(0);
+  const [comments, setComments] = useState(props.comments);
+  const [commentsPageCount, setCommentPageCount] = useState(0);
+  const [page, setPage] = useState(1);
   const getAuthorData = async () => {
     const { data } = await getProfileData(
       false,
@@ -59,8 +64,31 @@ const Question = (props: Post) => {
     setUserData(data);
   };
 
+  const getTotalCommentCount = async () => {
+    const { data } = await getCommentsByPost(props.id);
+    setCommentCount(data.totalElements);
+    setCommentPageCount(data.totalPages);
+  };
+
+  const loadComments = async (all: boolean = false) => {
+    if (all) {
+      const comments: CommentData = [];
+      for (let i = 0; i <= commentsPageCount; i++) {
+        const { data } = await getCommentsByPost(props.id, i);
+        comments.push(...data.content);
+      }
+      setComments(comments);
+      setPage(commentsPageCount);
+    } else {
+      const { data } = await getCommentsByPost(props.id, page);
+      setComments((prev) => [...prev, ...data.content]);
+      setPage((prev) => ++prev);
+    }
+  };
+
   useEffect(() => {
     getAuthorData();
+    getTotalCommentCount();
   }, []);
 
   return (
@@ -80,14 +108,18 @@ const Question = (props: Post) => {
       <div className="question__reactions">
         <span className="question__reactions-comments">
           <img src={CommentIcon} alt="comments count" />
-          {props?.comments?.length}
+          {commentsCount}
         </span>
         <span className="question__reactions-likes">
           <img src={LikeIcon} alt="likes count" />
           {+props.countOfLikes}
         </span>
       </div>
-      <Comments comments={props.comments} />
+      <Comments
+        comments={comments}
+        loadComments={loadComments}
+        moreComments={page !== commentsPageCount}
+      />
     </div>
   );
 };
