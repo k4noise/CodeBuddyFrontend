@@ -24,7 +24,7 @@ export const getPostById = async (id: number) => {
 
 export const getCommentsByPost = async (
   id: number,
-  page: number = 1,
+  page: number = 0,
   offset: number = 3
 ) => {
   const getCommentsUrl = `${

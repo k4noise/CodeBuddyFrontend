@@ -3,14 +3,13 @@ import CommentIcon from '../../assets/comment.svg';
 import LikeIcon from '../../assets/like.svg';
 import Comments, { CommentData } from './Comments';
 import ImageGallery from '../../pages/Home/ImageGallery/ImageGallery';
-import { Comment, Post } from '../../actions/dto/post';
+import { Post } from '../../actions/dto/post';
 import { useEffect, useState } from 'react';
 import { UserData } from '../../actions/dto/user';
-import { getUserData } from '../../actions/auth';
 import { ProfileType } from '../../types';
 import { getProfileData } from '../../actions/profile';
 import { getAvatar } from '../../actions/util';
-import { getCommentsByPost } from '../../actions/post';
+import { commentPost, getCommentsByPost } from '../../actions/post';
 
 /**
  * Question component
@@ -46,13 +45,14 @@ interface QuestionProps {
   comments: CommentData[];
   /** question images, put empty if no images **/
   images: string[];
+  id: number;
 }
 
 const Question = (props: Post) => {
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [commentsCount, setCommentCount] = useState(0);
-  const [comments, setComments] = useState(props.comments);
-  const [commentsPageCount, setCommentPageCount] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [commentCount, setCommentCount] = useState(0);
+  const [commentsPageCount, setCommentsPageCount] = useState(0);
   const [page, setPage] = useState(1);
   const getAuthorData = async () => {
     const { data } = await getProfileData(
@@ -64,10 +64,11 @@ const Question = (props: Post) => {
     setUserData(data);
   };
 
-  const getTotalCommentCount = async () => {
+  const getComments = async () => {
     const { data } = await getCommentsByPost(props.id);
+    setComments(data?.content);
     setCommentCount(data.totalElements);
-    setCommentPageCount(data.totalPages);
+    setCommentsPageCount(data.totalPages);
   };
 
   const loadComments = async (all: boolean = false) => {
@@ -82,14 +83,20 @@ const Question = (props: Post) => {
     } else {
       const { data } = await getCommentsByPost(props.id, page);
       setComments((prev) => [...prev, ...data.content]);
-      setPage((prev) => ++prev);
+      if (data.totalPages) setPage((prev) => ++prev);
     }
+  };
+
+  const addComment = async (comment: string) => {
+    await commentPost(props.id, comment);
+    setCommentCount((prev) => ++prev);
+    loadComments(true);
   };
 
   useEffect(() => {
     getAuthorData();
-    getTotalCommentCount();
-  }, []);
+    getComments();
+  }, [props.id]);
 
   return (
     <div className="question" data-testid="question">
@@ -108,7 +115,7 @@ const Question = (props: Post) => {
       <div className="question__reactions">
         <span className="question__reactions-comments">
           <img src={CommentIcon} alt="comments count" />
-          {commentsCount}
+          {commentCount}
         </span>
         <span className="question__reactions-likes">
           <img src={LikeIcon} alt="likes count" />
@@ -118,7 +125,8 @@ const Question = (props: Post) => {
       <Comments
         comments={comments}
         loadComments={loadComments}
-        moreComments={page !== commentsPageCount}
+        moreComments={page !== commentsPageCount && commentCount !== 0}
+        addComment={addComment}
       />
     </div>
   );

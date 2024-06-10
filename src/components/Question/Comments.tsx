@@ -88,6 +88,7 @@ const Comment = ({
 interface CommentsProps {
   comments: CommentType[];
   loadComments: (all?: boolean) => CommentType[];
+  addComment: (comment: string) => void;
   moreComments: boolean;
 }
 
@@ -97,7 +98,12 @@ interface CommentsProps {
  * @param {CommentData[]} comments comments data, look at interface
  * @returns {JSX.Element} Comments component
  */
-const Comments = ({ comments, loadComments, moreComments }: CommentsProps) => {
+const Comments = ({
+  comments,
+  addComment,
+  loadComments,
+  moreComments,
+}: CommentsProps) => {
   let userAvatar = Cookies.get('avatarUrl');
   const idPrefix = useId();
   const { handleSubmit, register, reset } = useForm();
@@ -122,8 +128,7 @@ const Comments = ({ comments, loadComments, moreComments }: CommentsProps) => {
         className="question__comments-form"
         data-testid="sendComment"
         onSubmit={handleSubmit(async (d) => {
-          await commentPost(1, d.comment);
-          loadComments(true);
+          addComment(d.comment);
           reset();
         })}
       >
