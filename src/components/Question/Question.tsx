@@ -9,7 +9,7 @@ import { UserData } from '../../actions/dto/user';
 import { ProfileType } from '../../types';
 import { getProfileData } from '../../actions/profile';
 import { getAvatar } from '../../actions/util';
-import { commentPost, getCommentsByPost } from '../../actions/post';
+import { commentPost, getCommentsByPost, likePost } from '../../actions/post';
 
 /**
  * Question component
@@ -50,6 +50,7 @@ interface QuestionProps {
 
 const Question = (props: Post) => {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [likes, setLikes] = useState(+props.countOfLikes);
   const [comments, setComments] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
   const [commentsPageCount, setCommentsPageCount] = useState(0);
@@ -93,6 +94,11 @@ const Question = (props: Post) => {
     loadComments(true);
   };
 
+  const addLike = async () => {
+    await likePost(props.id);
+    setLikes((prev) => ++prev);
+  };
+
   useEffect(() => {
     getAuthorData();
     getComments();
@@ -117,9 +123,9 @@ const Question = (props: Post) => {
           <img src={CommentIcon} alt="comments count" />
           {commentCount}
         </span>
-        <span className="question__reactions-likes">
+        <span className="question__reactions-likes" onClick={addLike}>
           <img src={LikeIcon} alt="likes count" />
-          {+props.countOfLikes}
+          {likes}
         </span>
       </div>
       <Comments

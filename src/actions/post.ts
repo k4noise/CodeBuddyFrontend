@@ -41,3 +41,8 @@ export const commentPost = async (id: number, comment: string) => {
     comment,
   });
 };
+
+export const likePost = async (id: number) => {
+  const likePostUrl = `${import.meta.env.VITE_API_BASE_URL}/posts/${id}`;
+  return await sendRequest<void>(likePostUrl, AxiosMethod.PUT, true);
+};

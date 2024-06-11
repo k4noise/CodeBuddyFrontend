@@ -9,6 +9,7 @@ import { ProfileType } from '../../types';
 import { UserData } from '../../actions/dto/user';
 import { getProfileData } from '../../actions/profile';
 import { Comment as CommentType } from '../../actions/dto/post';
+import { toast } from 'react-toastify';
 
 interface CommentData {
   /** commentator avatar **/
@@ -128,8 +129,12 @@ const Comments = ({
         className="question__comments-form"
         data-testid="sendComment"
         onSubmit={handleSubmit(async (d) => {
-          addComment(d.comment);
-          reset();
+          if (d.comment.length === 0)
+            toast('Комментарий не может быть пустым', { type: 'error' });
+          else {
+            addComment(d.comment);
+            reset();
+          }
         })}
       >
         <div className="question__comments-form-user">

@@ -61,13 +61,17 @@ const Questions = (): JSX.Element => {
   };
 
   const handleFormSubmit = async (d) => {
-    const { data } = await createPost(d.description, files);
-    const { data: postData } = await getPostById(data.postId);
-    setQuestions((prev) => [postData, ...prev]);
-    setFiles([]);
-    setImages([]);
-    reset();
-    toast('Вопрос опубликован', { type: 'success' });
+    if (d.description.length === 0)
+      toast('Вопрос не может быть пустым', { type: 'error' });
+    else {
+      const { data } = await createPost(d.description, files);
+      const { data: postData } = await getPostById(data.postId);
+      setQuestions((prev) => [postData, ...prev]);
+      setFiles([]);
+      setImages([]);
+      reset();
+      toast('Вопрос опубликован', { type: 'success' });
+    }
   };
 
   const handleDeleteImage = (imageId: number) => {
