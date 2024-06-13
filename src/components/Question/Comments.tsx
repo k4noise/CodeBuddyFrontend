@@ -68,7 +68,7 @@ const Comment = ({
         {isMine && <button className="question__comments-delete" />}
         <img
           src={getAvatar(
-            photoUrl,
+            userData?.photoUrl,
             mentor ? ProfileType.MENTOR : ProfileType.STUDENT
           )}
           alt={`${student} avatar`}

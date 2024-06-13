@@ -66,7 +66,6 @@ const Profile: React.FC<ProfileProps> = ({
   const isEdit = location.pathname.includes('/edit');
 
   if (!profileType) profileType = Cookies.get('profileType') as ProfileType;
-  let userAvatar = getAvatar(avatar, profileType);
 
   const getData = async () => {
     const { data, error } = await getProfileData(
@@ -159,7 +158,7 @@ const Profile: React.FC<ProfileProps> = ({
     <section className="profile">
       <div className="profile__avatar-wrapper">
         <img
-          src={newAvatar ?? userAvatar}
+          src={newAvatar ?? user.photoUrl}
           alt="avatar"
           className="profile__avatar"
         />
