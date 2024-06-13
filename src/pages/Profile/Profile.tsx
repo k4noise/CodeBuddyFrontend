@@ -90,6 +90,27 @@ const Profile: React.FC<ProfileProps> = ({
     return <div className="load-error">Ошибка загрузки данных профиля</div>;
 
   const handleSave = async (data: FieldValues) => {
+    if (data.existingEmail !== data.email || data.newPassword) {
+      const securityData: UpdateSecurityData = {
+        email: data.email,
+        password: data.password,
+        newPassword: data.newPassword,
+      };
+      const { error } = await updateSecurity(profileType, securityData);
+      if (error) {
+        toast('Неправильный пароль', { type: 'error' });
+        return;
+      }
+      await logoutUser();
+      await loginUser(
+        {
+          login: data.email,
+          password: data.newPassword ?? data.password,
+        },
+        profileType
+      );
+    }
+
     if (newAvatar) {
       toast('Идет загрузка аватара', { type: 'info' });
       const newAvatarUrl = await updateAvatar(profileType, avatarFile);
@@ -102,24 +123,6 @@ const Profile: React.FC<ProfileProps> = ({
         description: data.about,
       };
       await updateProfile(profileType, settingsData);
-    }
-
-    if (data.newPassword) {
-      const securityData: UpdateSecurityData = {
-        email: data.email,
-        password: data.password,
-        newPassword: data.newPassword,
-      };
-      const { error } = await updateSecurity(profileType, securityData);
-      if (error) toast('Неправильный пароль', { type: 'error' });
-      await logoutUser();
-      await loginUser(
-        {
-          login: data.email,
-          password: data.newPassword ?? data.password,
-        },
-        profileType
-      );
     }
 
     if (data.tags.length) {

@@ -23,45 +23,48 @@ interface ProfileFormProps {
   fromRequest?: boolean;
 }
 
-const ProfileSchema = zod
-  .object({
-    email: zod.string().email('Некорректный email'),
-    telegram: zod
-      .string()
-      .startsWith('@', 'Укажите короткое имя вместе с @')
-      .or(zod.literal('')),
-    password: zod
-      .string()
-      .min(8, 'Укажите пароль для изменения данных')
-      .refine(
-        (value) =>
-          /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$/.test(
-            value ?? ''
-          ),
-        'Пароль должен содержать минимум одну цифру, одну большую и маленькую буквы и один спецсимвол'
-      ),
-    newPassword: zod
-      .string()
-      .min(8, 'Не менее 8 символов')
-      .refine(
-        (value) =>
-          /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$/.test(
-            value ?? ''
-          ),
-        'Пароль должен содержать минимум одну цифру, одну большую и маленькую буквы и один спецсимвол'
-      )
-      .or(zod.literal('')),
-    about: zod.string(),
-  })
-  .refine(
-    (data) =>
-      (data.newPassword === '' && data.password === '') ||
-      data.newPassword !== data.password,
-    {
-      message: 'Пароли должны быть разными',
-      path: ['newPassword'],
-    }
-  );
+const createProfileSchema = (existingEmail) =>
+  zod
+    .object({
+      email: zod.string().email('Некорректный email'),
+      telegram: zod
+        .string()
+        .startsWith('@', 'Укажите короткое имя вместе с @')
+        .or(zod.literal('')),
+      password: zod.string().optional(),
+      newPassword: zod
+        .string()
+        .min(8, 'Не менее 8 символов')
+        .refine(
+          (value) =>
+            /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$/.test(
+              value ?? ''
+            ),
+          'Пароль должен содержать минимум одну цифру, одну большую и маленькую буквы и один спецсимвол'
+        )
+        .or(zod.literal('')),
+      about: zod.string(),
+      existingEmail: zod.string().default(existingEmail),
+    })
+    .refine(
+      (data) => {
+        if (data.email !== data.existingEmail || data.newPassword !== '') {
+          return !!data.password && data.password.length >= 8;
+        }
+        return true;
+      },
+      {
+        message: 'Укажите пароль для изменения данных',
+        path: ['password'],
+      }
+    )
+    .refine(
+      (data) => data.newPassword === '' || data.newPassword !== data.password,
+      {
+        message: 'Пароли должны быть разными',
+        path: ['newPassword'],
+      }
+    );
 
 /**
  * Profile form component
@@ -104,14 +107,16 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(ProfileSchema),
+    resolver: zodResolver(createProfileSchema(userInfo.email)),
   });
   const [tags, setTags] = useState([]);
 
   const sendForm = (data: FieldValues) => {
     onSave({ ...data, tags });
+    reset();
   };
 
   return (
