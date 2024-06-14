@@ -119,6 +119,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
     reset();
   };
 
+  useEffect(() => {
+    reset({
+      email: userInfo.email,
+      telegram: userInfo.telegram,
+      description: userInfo.description,
+    });
+  }, [userInfo, reset]);
+
   return (
     <form
       className="profile__form"
@@ -154,7 +162,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <input
             type="text"
             readOnly
-            defaultValue={profileType}
+            value={profileType}
             className="profile__form-input"
           />
         </label>
@@ -162,7 +170,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           Почта :
           <input
             type="text"
-            defaultValue={userInfo.email ?? 'Скрыта'}
+            value={userInfo.email ?? 'Скрыта'}
             className="profile__form-input"
             readOnly={!isEdit}
             {...register('email')}
@@ -175,13 +183,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           Телеграмм :
           <input
             type="text"
-            defaultValue={
+            value={
               isMine
                 ? userInfo.telegram ?? ''
                 : fromRequest
                 ? userInfo.telegram ?? 'Не указан'
                 : 'Скрыт'
-              // isMine || fromRequest ? userInfo.telegram ?? '' : 'Скрыт'
             }
             className="profile__form-input"
             readOnly={!isEdit}
@@ -200,7 +207,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
             <input
               type="email"
               readOnly
-              defaultValue={userInfo?.email}
+              value={userInfo?.email}
               className="profile__form-input"
             />
           </label>

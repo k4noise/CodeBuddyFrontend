@@ -158,7 +158,7 @@ const Profile: React.FC<ProfileProps> = ({
     <section className="profile">
       <div className="profile__avatar-wrapper">
         <img
-          src={newAvatar ?? user.photoUrl}
+          src={newAvatar ?? getAvatar(user.photoUrl, profileType)}
           alt="avatar"
           className="profile__avatar"
         />
