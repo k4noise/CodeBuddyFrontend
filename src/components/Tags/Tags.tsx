@@ -10,7 +10,9 @@ interface TagsProps {
   /* flag is component in edit mode */
   isEdit: boolean;
   newTags: { value: string; color: string; isEdit: boolean }[];
-  setNewTags: (tag: object) => void;
+  setNewTags: (
+    tags: { value: string; color: string; isEdit: boolean }[]
+  ) => void;
   /* class name for container */
   className?: string;
 }
@@ -25,18 +27,23 @@ interface TagsProps {
  */
 const Tags = ({ tags, className, newTags, setNewTags, isEdit }: TagsProps) => {
   const colorGetter = randomColorGetter(TAG_COLORS);
-  const handleAddTagClick = () => {
-    const color = colorGetter();
-    if (newTags[newTags.length - 1]?.isEdit !== true)
-      setNewTags((prev) => [...prev, { value: '', isEdit: true, color }]);
-  };
+  const id = useId();
 
-  const handleTagEnter = (tagValue: string, color: string, index: number) => {
-    setNewTags((prev) => {
-      const updatedTags = [...prev];
-      updatedTags[index] = { value: tagValue, isEdit: false, color: color };
-      return updatedTags;
-    });
+  const handleAddOrSaveTagClick = () => {
+    const lastTag = newTags[newTags.length - 1];
+    if (lastTag && lastTag.isEdit) {
+      setNewTags((prev) => {
+        const updatedTags = [...prev];
+        updatedTags[updatedTags.length - 1] = {
+          ...updatedTags[updatedTags.length - 1],
+          isEdit: false,
+        };
+        return updatedTags;
+      });
+    } else {
+      const color = colorGetter();
+      setNewTags((prev) => [...prev, { value: '', isEdit: true, color }]);
+    }
   };
 
   return (
@@ -44,13 +51,13 @@ const Tags = ({ tags, className, newTags, setNewTags, isEdit }: TagsProps) => {
       {!tags.length && !isEdit ? (
         <span className="message">Ключевые слова не добавлены</span>
       ) : (
-        tags?.map((tag) => {
+        tags?.map((tag, index) => {
           const color = colorGetter();
           return (
             <Tag
-              tag={tag?.keyword}
+              key={`${id}-${index}`}
+              tag={tag.keyword}
               color={color}
-              key={useId()}
               isEdit={false}
             />
           );
@@ -60,11 +67,20 @@ const Tags = ({ tags, className, newTags, setNewTags, isEdit }: TagsProps) => {
         newTags?.map((tag, index) => {
           return (
             <Tag
+              key={`${id}-new-${index}`}
               tag={tag.value}
               color={tag.color}
-              key={useId()}
               isEdit={tag.isEdit}
-              onEnter={(tagValue) => handleTagEnter(tagValue, tag.color, index)}
+              onSave={(tagValue) => {
+                setNewTags((prev) => {
+                  const updatedTags = [...prev];
+                  updatedTags[index] = {
+                    ...updatedTags[index],
+                    value: tagValue,
+                  };
+                  return updatedTags;
+                });
+              }}
             />
           );
         })}
@@ -72,9 +88,11 @@ const Tags = ({ tags, className, newTags, setNewTags, isEdit }: TagsProps) => {
         <button
           type="button"
           className="tags__button"
-          onClick={handleAddTagClick}
+          onClick={handleAddOrSaveTagClick}
         >
-          Добавить
+          {newTags.length === 0 || !newTags[newTags.length - 1].isEdit
+            ? 'Добавить'
+            : 'Сохранить'}
         </button>
       )}
     </div>
@@ -83,14 +101,17 @@ const Tags = ({ tags, className, newTags, setNewTags, isEdit }: TagsProps) => {
 
 const randomColorGetter = (colors: string[]) => {
   let availableColors = [...colors];
+  let usedColors: string[] = [];
 
   return () => {
     if (availableColors.length === 0) {
-      availableColors = [...colors];
+      availableColors = [...usedColors];
+      usedColors = [];
     }
 
     const randomIndex = Math.floor(Math.random() * availableColors.length);
     const randomColor = availableColors[randomIndex];
+    usedColors.push(randomColor);
     availableColors.splice(randomIndex, 1);
 
     return randomColor;

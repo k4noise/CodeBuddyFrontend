@@ -117,9 +117,14 @@ const Profile: React.FC<ProfileProps> = ({
     }
 
     if (data.telegram || data.about) {
+      const oldTags = user?.keywords
+        ? user.keywords.map(({ keyword }) => keyword)
+        : [];
+      const tags = [...oldTags, ...data.tags.map((tag) => tag.value)];
       const settingsData: UpdateSettingsData = {
         telegram: data.telegram,
         description: data.about,
+        keywords: tags,
       };
       await updateProfile(profileType, settingsData);
     }

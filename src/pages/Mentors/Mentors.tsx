@@ -13,7 +13,7 @@ import {
 } from '../../types';
 import { MentorData } from '../../actions/dto/user';
 import { getMentors, getMentorsByTags } from '../../actions/mentors';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { handleError } from '../../actions/sendRequest';
 import { toast } from 'react-toastify';
 import { sendRequestToMentor } from '../../actions/request';
@@ -119,8 +119,7 @@ const Mentors = () => {
               ))
             ) : (
               <span className="message">
-                Менторов еще пока нет, но вы <Link to="/register">можете</Link>{' '}
-                стать первым!
+                Менторов по заданным критериям нет
               </span>
             )}
           </div>

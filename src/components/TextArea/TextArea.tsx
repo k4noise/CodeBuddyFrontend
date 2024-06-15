@@ -46,7 +46,6 @@ const TextArea = ({
       placeholder={placeholder}
       onInput={resize}
       readOnly={readonly}
-      rows={1}
       maxLength={max}
       defaultValue={value}
     ></textarea>

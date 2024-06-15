@@ -33,6 +33,7 @@ export interface MentorData {
 export interface UpdateSettingsData {
   telegram?: string;
   description?: string;
+  keywords: string[];
 }
 
 export interface UpdateSecurityData {

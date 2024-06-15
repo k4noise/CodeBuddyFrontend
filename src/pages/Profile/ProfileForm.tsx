@@ -23,7 +23,7 @@ interface ProfileFormProps {
   fromRequest?: boolean;
 }
 
-const createProfileSchema = (existingEmail) =>
+const createProfileSchema = (existingEmail: string) =>
   zod
     .object({
       email: zod.string().email('Некорректный email'),
@@ -43,7 +43,7 @@ const createProfileSchema = (existingEmail) =>
           'Пароль должен содержать минимум одну цифру, одну большую и маленькую буквы и один спецсимвол'
         )
         .or(zod.literal('')),
-      about: zod.string(),
+      about: zod.string().optional(),
       existingEmail: zod.string().default(existingEmail),
     })
     .refine(
@@ -183,7 +183,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           Телеграмм :
           <input
             type="text"
-            value={
+            defaultValue={
               isMine
                 ? userInfo.telegram ?? ''
                 : fromRequest
@@ -239,10 +239,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
       <ProfileSection title="О себе :">
         <TextArea
           className="profile__form-textarea"
-          placeholder={hasEdit ? 'Введите текст' : ''}
+          placeholder={hasEdit ? 'Введите текст (не более 255 символов)' : ''}
           readonly={!hasEdit}
           value={userInfo?.description ?? ''}
           validationOptions={register('about')}
+          max={255}
         />
       </ProfileSection>
 
