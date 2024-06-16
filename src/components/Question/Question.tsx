@@ -10,6 +10,7 @@ import { ProfileType } from '../../types';
 import { getProfileData } from '../../actions/profile';
 import { getAvatar } from '../../actions/util';
 import { commentPost, getCommentsByPost, likePost } from '../../actions/post';
+import { useAuth } from '../../AuthProvider';
 
 /**
  * Question component
@@ -55,6 +56,8 @@ const Question = (props: Post) => {
   const [commentCount, setCommentCount] = useState(0);
   const [commentsPageCount, setCommentsPageCount] = useState(0);
   const [page, setPage] = useState(1);
+  const { auth } = useAuth();
+
   const getAuthorData = async () => {
     const { data } = await getProfileData(
       false,
@@ -104,6 +107,8 @@ const Question = (props: Post) => {
     getComments();
   }, [props.id]);
 
+  console.log(props);
+
   return (
     <div className="question" data-testid="question">
       <div className="question__author">
@@ -112,28 +117,34 @@ const Question = (props: Post) => {
           alt={`${userData?.firstName} avatar`}
           className="question__author-avatar"
         />
-        <span className="question__author-name">{`${
-          userData?.firstName ?? ''
-        } ${userData?.lastName ?? ''}`}</span>
+        <span className="question__author-name">
+          {userData?.firstName
+            ? `${userData?.firstName ?? ''} ${userData?.lastName ?? ''}`
+            : 'Неизвестный'}
+        </span>
       </div>
       <p className="question__text">{props.description}</p>
       <ImageGallery images={props.urlPhoto} editMode={false} />
       <div className="question__reactions">
         <span className="question__reactions-comments">
           <img src={CommentIcon} alt="comments count" />
-          {commentCount}
+          {props.comments.length}
         </span>
         <span className="question__reactions-likes" onClick={addLike}>
           <img src={LikeIcon} alt="likes count" />
           {likes}
         </span>
       </div>
-      <Comments
-        comments={comments}
-        loadComments={loadComments}
-        moreComments={page !== commentsPageCount && commentCount !== 0}
-        addComment={addComment}
-      />
+      {auth ? (
+        <Comments
+          comments={comments}
+          loadComments={loadComments}
+          moreComments={page !== commentsPageCount && commentCount !== 0}
+          addComment={addComment}
+        />
+      ) : (
+        <p>Войдите для просмотра комментариев</p>
+      )}
     </div>
   );
 };
