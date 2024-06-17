@@ -38,6 +38,12 @@ export const getProfileData = async (
   return await sendRequest<UserData>(profileUrl, AxiosMethod.GET, true);
 };
 
+/**
+ * Update profile settings
+ * @param {ProfileType} profileType student or mentor
+ * @param {UpdateSettingsData} updateData new settings data, look at interface
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const updateProfile = async (
   profileType: ProfileType,
   updateData: UpdateSettingsData
@@ -55,6 +61,12 @@ export const updateProfile = async (
   );
 };
 
+/**
+ * Update security settings
+ * @param {ProfileType} profileType student or mentor
+ * @param {UpdateSecurityData} updateData new security data
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const updateSecurity = async (
   profileType: ProfileType,
   updateData: UpdateSecurityData
@@ -73,6 +85,12 @@ export const updateSecurity = async (
   return data;
 };
 
+/**
+ * Update user avatar
+ * @param {ProfileType} profileType student or mentor
+ * @param {File} avatarFile image file
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const updateAvatar = async (
   profileType: ProfileType,
   avatarFile: File
@@ -90,6 +108,12 @@ export const updateAvatar = async (
   return response.data?.photoUrl;
 };
 
+/**
+ * Add keywords to mentor profile
+ * @param {string[]} oldTags existing keywords
+ * @param {string[]} tags new keywords
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const addTagsToMentor = async (oldTags: string[], tags: string[]) => {
   const addTagsToMentorUrl = `${
     import.meta.env.VITE_API_BASE_URL
@@ -106,6 +130,11 @@ export const addTagsToMentor = async (oldTags: string[], tags: string[]) => {
   );
 };
 
+/**
+ * Add a single tag to the database
+ * @param {string} tag keyword text
+ * @returns {Promise<{error: number, data: null}>}
+ */
 const addTag = async (tag: string) => {
   const addTagUrl = `${import.meta.env.VITE_API_BASE_URL}/keywords`;
   return await sendRequest<void>(addTagUrl, AxiosMethod.POST, true, {

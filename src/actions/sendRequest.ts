@@ -1,14 +1,25 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { NavigateFunction } from 'react-router-dom';
-import { logoutUser } from './auth';
 
+/**
+ * An array of HTTP status codes that indicate an error page should be displayed
+ */
 const ERROR_PAGES = [401, 403, 404];
 
+/**
+ * Represents the data from successful request
+ * @template T data type
+ * @property {T | null} data data
+ * @property {number | null} error error HTTP status code
+ */
 interface ResponseData<T> {
   data: T | null;
   error: number | null;
 }
 
+/**
+ * An enumeration of HTTP methods that can be used with the `sendRequest` function
+ */
 enum AxiosMethod {
   GET = 'get',
   POST = 'post',
@@ -19,6 +30,15 @@ enum AxiosMethod {
   OPTIONS = 'options',
 }
 
+/**
+ * Sends an HTTP request to the specified URL using the specified method and options
+ * @template ResType data return type
+ * @param {string} url url
+ * @param {AxiosMethod} method HTTP method, look at enum
+ * @param {boolean} needAuth flag need use withCredintals or not
+ * @param {Object} [body] request payload
+ * @returns {Promise<ResponseData<ResType>>}
+ */
 const sendRequest = async <ResType>(
   url: string,
   method: AxiosMethod,
@@ -53,6 +73,11 @@ const sendRequest = async <ResType>(
   return { data, error };
 };
 
+/**
+ * Handles errors by redirecting to specific error pages.
+ * @param {number} error HTTP status code [4xx]
+ * @param {NavigateFunction} navigate react callback to redirect
+ */
 const handleError = (error: number, navigate: NavigateFunction) => {
   if (ERROR_PAGES.includes(error)) {
     navigate(`/${error}`);
