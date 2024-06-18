@@ -20,6 +20,11 @@ import { sendRequestToMentor } from '../../actions/request';
 import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 
+/**
+ * Mentors page
+ * Shows mentors cards with mentors credintals
+ * @returns {JSX.Element}
+ */
 const Mentors = () => {
   const navigate = useNavigate();
   const [mentors, setMentors] = useState<MentorData[]>([]);

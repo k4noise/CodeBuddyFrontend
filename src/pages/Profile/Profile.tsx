@@ -28,6 +28,7 @@ interface ProfileProps {
   isMine: boolean;
   /* profile type - student or mentor */
   profileType?: ProfileType;
+  /* flag for try get data with contact data */
   fromRequest: boolean;
 }
 
@@ -35,20 +36,9 @@ interface ProfileProps {
  * Profile page
  * Shows all user data with avatar
  * @component
- * @example
- * ```
- * <Profile isMine={true} userInfo={{
- *  type: ProfileType.STUDENT,
-      login: 'john@mail.com',
-      username: 'John Doe',
-      email: 'john@mail.com',
-      avatar: 'avatar.png',
-      tgId: '@id'
- *   }}
- * />
- * ```
  * @param {boolean} isMine Flag to show edit button
- * @param {UserData} userInfo User information
+ * @param {UserData} profileType student or mentor
+ * @param {boolean} fromRequest get data with contact dcata or not
  * @returns {React.FC} Profile component
  */
 const Profile: React.FC<ProfileProps> = ({

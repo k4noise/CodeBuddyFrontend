@@ -20,6 +20,7 @@ interface RequestPopupProps {
   about?: string;
   /* parent callback to close popup */
   close: React.MouseEventHandler;
+  /* callback to reply a request */
   changeState: (
     id: number,
     newState: StudentRequestState,

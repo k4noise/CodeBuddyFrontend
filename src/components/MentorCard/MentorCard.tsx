@@ -15,6 +15,7 @@ interface MentorCardProps {
   description: string;
   /* mentor quick words */
   keywords: string[];
+  /* has send and reject buttons on showing request or not*/
   mentorView: boolean;
   /* callback to call when modal closing */
   onClick: React.MouseEventHandler;

@@ -12,15 +12,15 @@ import { Comment as CommentType } from '../../actions/dto/post';
 import { toast } from 'react-toastify';
 
 interface CommentData {
-  /** commentator avatar **/
-  photoUrl: string;
   /** comment date (default dd.mm.yy) **/
   date: string;
   /** comment text **/
   content: string;
   /** flag for correct comment show **/
   isMine?: boolean;
+  /* mentor id if present */
   mentor: number;
+  /* student id if present */
   student: number;
 }
 
@@ -28,15 +28,14 @@ interface CommentData {
  * Comment component
  * Shows one comment
  * @component
- * @param {string} avatar
- * @param {string} username
- * @param {string} date
- * @param {string} comment
- * @param {boolean} isMine
+ * @param {string} date comment date
+ * @param {string} content comment text
+ * @param {boolean} isMine flag is mine comment
+ * @param {number} mentor mentor id
+ * @param {number} student student id
  * @returns {JSX.Element} Comment component
  */
 const Comment = ({
-  photoUrl,
   date,
   content,
   isMine,
@@ -87,16 +86,20 @@ const Comment = ({
 };
 
 interface CommentsProps {
+  /* comments data */
   comments: CommentType[];
+  /* callback for load comments */
   loadComments: (all?: boolean) => CommentType[];
+  /* callback to add comments */
   addComment: (comment: string) => void;
+  /* flag has more comments */
   moreComments: boolean;
 }
 
 /**
  * Comments component
  * Shows group of comments with form to comment
- * @param {CommentData[]} comments comments data, look at interface
+ * @param {CommentsProps} props
  * @returns {JSX.Element} Comments component
  */
 const Comments = ({

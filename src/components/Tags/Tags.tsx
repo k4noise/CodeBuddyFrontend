@@ -9,7 +9,9 @@ interface TagsProps {
   tags: string[];
   /* flag is component in edit mode */
   isEdit: boolean;
+  /* added tags */
   newTags: { value: string; color: string; isEdit: boolean }[];
+  /* callback for adding tags */
   setNewTags: (
     tags: { value: string; color: string; isEdit: boolean }[]
   ) => void;
@@ -21,8 +23,7 @@ interface TagsProps {
  * Tags component
  * Shows tags in custom container
  * @component
- * @param {string[]} tags words for quick mentor search
- * @param {string} classNameTagsProps class name for container
+ * @param {TagsProps} props 
  * @returns {JSX.Element} Tags component
  */
 const Tags = ({ tags, className, newTags, setNewTags, isEdit }: TagsProps) => {

@@ -21,7 +21,9 @@ interface TextAreaProps {
   readonly?: boolean;
   /** text in textarea **/
   value?: string;
+  /* max length */
   max?: number;
+  /* register(...) option */
   validationOptions?: UseFormRegisterReturn;
 }
 

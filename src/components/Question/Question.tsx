@@ -16,19 +16,6 @@ import { useAuth } from '../../AuthProvider';
  * Question component
  * Shows question block with comments
  * @component
- * @example
- * ```
- * <Question
- *  avatar: 'user-avatar.jpg',
- *   authorName: 'John Doe',
- *   question: 'Sample question',
- *   images: ['image1.jpg', 'image2.jpg'],
- *   likes: 5,
- *   comments: [
- *     { avatar: 'avatar1.jpg', username: 'Alice', date: '2024-04-13', comment: 'Comment 1' },
- *     { avatar: 'avatar2.jpg', username: 'Bob', date: '2024-04-14', comment: 'Comment 2' }
- *  ]
- * ```
  * @param {QuestionProps} props question data (look interface)
  * @returns {JSX.Element}
  */
@@ -46,6 +33,7 @@ interface QuestionProps {
   comments: CommentData[];
   /** question images, put empty if no images **/
   images: string[];
+  /* question id */
   id: number;
 }
 

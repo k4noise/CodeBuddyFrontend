@@ -20,6 +20,7 @@ interface ProfileFormProps {
   onSave: (data: FieldValues) => void;
   /* Callback to save button click */
   onEditClick: () => void;
+  /* flag for try get data with contact data */
   fromRequest?: boolean;
 }
 
@@ -70,27 +71,12 @@ const createProfileSchema = (existingEmail: string) =>
  * Profile form component
  * Shows all information about user and allow change it
  * @component
- * @example
- * ```
- * <ProfileForm
- *  type=ProfileType.STUDENT
- *  isMine={false}
- *  userInfo={{
- *    login: 'ivan.ivanov@mail.ru',
- *    username: 'Иван Иванов',
- *    avatar: AvatarImage,
- *    email: 'ivan.ivanov@mail.ru',
- *    telegram: '@ivan_ivanov',
- *  }}
- *  onSave=() => console.log('save')
- *  onEdit=() => console.log('edit')
- * />
- * ```
  * @param {boolean} isMine Flag to show edit button
  * @param {boolean} isEdit Flag to show save button
  * @param {UserData} userInfo User information
  * @param {function} onSave Callback to save button click
- * @param {function} onEditClick Callback to edit button click
+ * @param {function} onEditClick Callback to edit button click\
+ * @param {boolean} fromRequest get data with contact dcata or not
  * @returns {React.FC} Profile form component
  */
 const ProfileForm: React.FC<ProfileFormProps> = ({

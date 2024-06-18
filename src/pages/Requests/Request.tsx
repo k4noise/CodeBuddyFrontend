@@ -11,8 +11,9 @@ interface RequestProps {
   id: number;
   /* student or mentor */
   profileType: ProfileType;
-  /* display name */
+  /* name */
   firstName: string;
+  /* surname */
   lastName: string;
   /* avatar url */
   photoUrl: string;
@@ -20,19 +21,18 @@ interface RequestProps {
   requestState: RequestState;
   /* callback to call when modal closing */
   onClick: React.MouseEventHandler;
+  /* callback for change request state */
   changeRequestState: (id: number, newState: RequestState) => void;
+  /* mentor id */
   mentorId?: number;
+  /* student id */
   studentId?: number;
 }
 /**
  * Request component
  * Shows request card - info about student/mentor, status and actions
  * @component
- * @param {ProfileType} profileType look at interface
- * @param {string} username user display name
- * @param {string} avatarUrl avatar url
- * @param {RequestState} status request status
- * @param {React.MouseEventHandler} onClick callback to call when modal closing
+ * @param {RequestProps} props
  * @returns {JSX.Element} Request component
  */
 
