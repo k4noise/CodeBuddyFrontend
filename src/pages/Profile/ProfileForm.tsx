@@ -8,7 +8,7 @@ import { UserData } from '../../actions/dto/user';
 import * as zod from 'zod';
 import { FieldValues, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 interface ProfileFormProps {
   /* Flag to show edit button */
   isMine: boolean;
@@ -20,73 +20,63 @@ interface ProfileFormProps {
   onSave: (data: FieldValues) => void;
   /* Callback to save button click */
   onEditClick: () => void;
+  /* flag for try get data with contact data */
+  fromRequest?: boolean;
 }
 
-const ProfileSchema = zod
-  .object({
-    email: zod.string().email('Некорректный email'),
-    telegram: zod
-      .string()
-      .startsWith('@', 'Укажите короткое имя вместе с @')
-      .or(zod.literal('')),
-    password: zod
-      .string()
-      .min(8, 'Укажите пароль для изменения данных')
-      .refine(
-        (value) =>
-          /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$/.test(
-            value ?? ''
-          ),
-        'Пароль должен содержать минимум одну цифру, одну большую и маленькую буквы и один спецсимвол'
-      ),
-    newPassword: zod
-      .string()
-      .min(8, 'Не менее 8 символов')
-      .refine(
-        (value) =>
-          /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$/.test(
-            value ?? ''
-          ),
-        'Пароль должен содержать минимум одну цифру, одну большую и маленькую буквы и один спецсимвол'
-      )
-      .or(zod.literal('')),
-    about: zod.string(),
-  })
-  .refine(
-    (data) =>
-      (data.newPassword === '' && data.password === '') ||
-      data.newPassword !== data.password,
-    {
-      message: 'Пароли должны быть разными',
-      path: ['newPassword'],
-    }
-  );
+const createProfileSchema = (existingEmail: string) =>
+  zod
+    .object({
+      email: zod.string().email('Некорректный email'),
+      telegram: zod
+        .string()
+        .startsWith('@', 'Укажите короткое имя вместе с @')
+        .or(zod.literal('')),
+      password: zod.string().optional(),
+      newPassword: zod
+        .string()
+        .min(8, 'Не менее 8 символов')
+        .refine(
+          (value) =>
+            /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$/.test(
+              value ?? ''
+            ),
+          'Пароль должен содержать минимум одну цифру, одну большую и маленькую буквы и один спецсимвол'
+        )
+        .or(zod.literal('')),
+      about: zod.string().optional(),
+      existingEmail: zod.string().default(existingEmail),
+    })
+    .refine(
+      (data) => {
+        if (data.email !== data.existingEmail || data.newPassword !== '') {
+          return !!data.password && data.password.length >= 8;
+        }
+        return true;
+      },
+      {
+        message: 'Укажите пароль для изменения данных',
+        path: ['password'],
+      }
+    )
+    .refine(
+      (data) => data.newPassword === '' || data.newPassword !== data.password,
+      {
+        message: 'Пароли должны быть разными',
+        path: ['newPassword'],
+      }
+    );
 
 /**
  * Profile form component
  * Shows all information about user and allow change it
  * @component
- * @example
- * ```
- * <ProfileForm
- *  type=ProfileType.STUDENT
- *  isMine={false}
- *  userInfo={{
- *    login: 'ivan.ivanov@mail.ru',
- *    username: 'Иван Иванов',
- *    avatar: AvatarImage,
- *    email: 'ivan.ivanov@mail.ru',
- *    telegram: '@ivan_ivanov',
- *  }}
- *  onSave=() => console.log('save')
- *  onEdit=() => console.log('edit')
- * />
- * ```
  * @param {boolean} isMine Flag to show edit button
  * @param {boolean} isEdit Flag to show save button
  * @param {UserData} userInfo User information
  * @param {function} onSave Callback to save button click
- * @param {function} onEditClick Callback to edit button click
+ * @param {function} onEditClick Callback to edit button click\
+ * @param {boolean} fromRequest get data with contact dcata or not
  * @returns {React.FC} Profile form component
  */
 const ProfileForm: React.FC<ProfileFormProps> = ({
@@ -95,6 +85,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   userInfo,
   onSave,
   onEditClick,
+  fromRequest,
 }: ProfileFormProps) => {
   const location = useLocation();
   const isEdit = location.pathname.includes('/edit');
@@ -102,15 +93,25 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(ProfileSchema),
+    resolver: zodResolver(createProfileSchema(userInfo.email)),
   });
   const [tags, setTags] = useState([]);
 
   const sendForm = (data: FieldValues) => {
     onSave({ ...data, tags });
+    reset();
   };
+
+  useEffect(() => {
+    reset({
+      email: userInfo.email,
+      telegram: userInfo.telegram,
+      description: userInfo.description,
+    });
+  }, [userInfo, reset]);
 
   return (
     <form
@@ -147,7 +148,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           <input
             type="text"
             readOnly
-            defaultValue={profileType}
+            value={profileType}
             className="profile__form-input"
           />
         </label>
@@ -155,7 +156,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           Почта :
           <input
             type="text"
-            defaultValue={userInfo.email ?? 'Скрыта'}
+            value={userInfo.email ?? 'Скрыта'}
             className="profile__form-input"
             readOnly={!isEdit}
             {...register('email')}
@@ -168,7 +169,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
           Телеграмм :
           <input
             type="text"
-            defaultValue={userInfo?.telegram ?? isMine ? '' : 'Скрыт'}
+            defaultValue={
+              isMine
+                ? userInfo.telegram ?? ''
+                : fromRequest
+                ? userInfo.telegram ?? 'Не указан'
+                : 'Скрыт'
+            }
             className="profile__form-input"
             readOnly={!isEdit}
             {...register('telegram')}
@@ -186,7 +193,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
             <input
               type="email"
               readOnly
-              defaultValue={userInfo?.email}
+              value={userInfo?.email}
               className="profile__form-input"
             />
           </label>
@@ -218,10 +225,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
       <ProfileSection title="О себе :">
         <TextArea
           className="profile__form-textarea"
-          placeholder={hasEdit ? 'Введите текст' : ''}
+          placeholder={hasEdit ? 'Введите текст (не более 255 символов)' : ''}
           readonly={!hasEdit}
           value={userInfo?.description ?? ''}
           validationOptions={register('about')}
+          max={255}
         />
       </ProfileSection>
 

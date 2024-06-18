@@ -1,93 +1,163 @@
 import TextArea from '../TextArea/TextArea';
-import { useId } from 'react';
+import { useEffect, useId, useState } from 'react';
 import defaultAvatarImage from '../../assets/avatar1.png';
+import Cookies from 'js-cookie';
+import { useForm } from 'react-hook-form';
+import { commentPost } from '../../actions/post';
+import { extractDate, getAvatar } from '../../actions/util';
+import { ProfileType } from '../../types';
+import { UserData } from '../../actions/dto/user';
+import { getProfileData } from '../../actions/profile';
+import { Comment as CommentType } from '../../actions/dto/post';
+import { toast } from 'react-toastify';
 
 interface CommentData {
-  /** commentator avatar **/
-  avatar: string;
-  /** commentator name **/
-  username: string;
   /** comment date (default dd.mm.yy) **/
   date: string;
   /** comment text **/
-  comment: string;
+  content: string;
   /** flag for correct comment show **/
   isMine?: boolean;
+  /* mentor id if present */
+  mentor: number;
+  /* student id if present */
+  student: number;
 }
 
 /**
  * Comment component
  * Shows one comment
  * @component
- * @param {string} avatar
- * @param {string} username
- * @param {string} date
- * @param {string} comment
- * @param {boolean} isMine
+ * @param {string} date comment date
+ * @param {string} content comment text
+ * @param {boolean} isMine flag is mine comment
+ * @param {number} mentor mentor id
+ * @param {number} student student id
  * @returns {JSX.Element} Comment component
  */
-const Comment = ({ avatar, username, date, comment, isMine }: CommentData) => (
-  <div
-    className={`question__comments-comment${
-      isMine ? ' question__comments-mine' : ''
-    }`}
-    data-testid="comment"
-  >
-    <div className="question__comments-user">
-      {isMine && <button className="question__comments-delete" />}
-      <img
-        src={avatar}
-        alt={`${username} avatar`}
-        className="question__comments-user-avatar"
-      />
-      <span className="question__comments-user-name">{username}</span>
-      <span className="question__comments-user-date">{date}</span>
+const Comment = ({
+  date,
+  content,
+  isMine,
+  mentor,
+  student,
+}: CommentData): JSX.Element => {
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const getUserData = async () => {
+    const { data } = await getProfileData(
+      false,
+      false,
+      student ? ProfileType.STUDENT : ProfileType.MENTOR,
+      student ?? mentor
+    );
+    setUserData(data);
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+  return (
+    <div
+      className={`question__comments-comment${
+        isMine ? ' question__comments-mine' : ''
+      }`}
+      data-testid="comment"
+    >
+      <div className="question__comments-user">
+        {isMine && <button className="question__comments-delete" />}
+        <img
+          src={getAvatar(
+            userData?.photoUrl,
+            mentor ? ProfileType.MENTOR : ProfileType.STUDENT
+          )}
+          alt={`${student} avatar`}
+          className="question__comments-user-avatar"
+        />
+        <span className="question__comments-user-name">{`${
+          userData?.firstName ?? ''
+        } ${userData?.lastName ?? ''}`}</span>
+        <span className="question__comments-user-date">
+          {extractDate(date)}
+        </span>
+      </div>
+      <p className="question__comments-text">{content}</p>
     </div>
-    <p className="question__comments-text">{comment}</p>
-  </div>
-);
+  );
+};
+
+interface CommentsProps {
+  /* comments data */
+  comments: CommentType[];
+  /* callback for load comments */
+  loadComments: (all?: boolean) => CommentType[];
+  /* callback to add comments */
+  addComment: (comment: string) => void;
+  /* flag has more comments */
+  moreComments: boolean;
+}
 
 /**
  * Comments component
  * Shows group of comments with form to comment
- * @param {CommentData[]} comments comments data, look at interface
+ * @param {CommentsProps} props
  * @returns {JSX.Element} Comments component
  */
-const Comments = ({ comments }: { comments: Comment[] }) => {
-  let userAvatar = sessionStorage.getItem('avatarUrl');
-  userAvatar =
-    userAvatar !== null && userAvatar !== 'null'
-      ? userAvatar
-      : defaultAvatarImage;
+const Comments = ({
+  comments,
+  addComment,
+  loadComments,
+  moreComments,
+}: CommentsProps) => {
+  let userAvatar = Cookies.get('avatarUrl');
+  const idPrefix = useId();
+  const { handleSubmit, register, reset } = useForm();
+  const profileType: ProfileType = Cookies.get('profileType');
   return (
     <>
       <div className="question__comments" data-testid="comments">
-        {comments?.map((comment) => (
-          <Comment {...comment} key={useId()} />
+        {comments?.map((comment, index) => (
+          <Comment {...comment} key={`${idPrefix}-${index}`} />
         ))}
       </div>
-      {/* <button className="question__comments-show">
-        Показать следующие пять
-      </button> */}
-      <form className="question__comments-form" data-testid="sendComment">
+      {moreComments && (
+        <button
+          type="button"
+          className="question__comments-show"
+          onClick={loadComments}
+        >
+          Показать следующие пять
+        </button>
+      )}
+      <form
+        className="question__comments-form"
+        data-testid="sendComment"
+        onSubmit={handleSubmit(async (d) => {
+          if (d.comment.length === 0)
+            toast('Комментарий не может быть пустым', { type: 'error' });
+          else {
+            addComment(d.comment);
+            reset();
+          }
+        })}
+      >
         <div className="question__comments-form-user">
           <img
-            src={userAvatar}
+            src={getAvatar(userAvatar, profileType)}
             alt="avatar"
             className="question__comments-form-avatar"
           />
           <span className="question__comments-form-name">
-            {sessionStorage.getItem('firstName')
-              ? `${sessionStorage.getItem(
-                  'firstName'
-                )} ${sessionStorage.getItem('lastName')}`
+            {Cookies.get('firstName')
+              ? `${Cookies.get('firstName')} ${Cookies.get('lastName')}`
               : 'Иван Иванов'}
           </span>
         </div>
         <TextArea
           placeholder="Напишите комментарий"
           className="question__comments-form-comment"
+          validationOptions={register('comment')}
         />
+        <button className="question__comments-send">Отправить</button>
       </form>
     </>
   );

@@ -18,3 +18,12 @@ export const getAvatar = (
 
   return isStudent ? defaultStudentAvatarImage : defaultMentorAvatarImage;
 };
+
+/**
+ * Extracts the date portion of a date string and formats it as DD.MM.YYYY
+ * @param {string} date - The date string to extract the date from
+ * @returns {string} - The extracted date in DD.MM.YYYY format
+ */
+export const extractDate = (date: string) => {
+  return date.slice(0, 10).split('-').reverse().join('.');
+};

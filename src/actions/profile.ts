@@ -2,6 +2,7 @@ import { ProfileType } from '../types';
 import { getUserData } from './auth';
 import { UpdateSecurityData, UpdateSettingsData, UserData } from './dto/user';
 import { AxiosMethod, sendRequest } from './sendRequest';
+import Cookies from 'js-cookie';
 
 /**
  * Get profile data
@@ -22,7 +23,10 @@ export const getProfileData = async (
   }
 
   if (fromRequest) {
-    const url = `${import.meta.env.VITE_API_BASE_URL}/students/mentors/${id}`;
+    const url =
+      profileType == ProfileType.STUDENT
+        ? `${import.meta.env.VITE_API_BASE_URL}/mentors/students/${id}`
+        : `${import.meta.env.VITE_API_BASE_URL}/students/mentors/${id}`;
     return await sendRequest<UserData>(url, AxiosMethod.GET, true);
   }
 
@@ -34,6 +38,12 @@ export const getProfileData = async (
   return await sendRequest<UserData>(profileUrl, AxiosMethod.GET, true);
 };
 
+/**
+ * Update profile settings
+ * @param {ProfileType} profileType student or mentor
+ * @param {UpdateSettingsData} updateData new settings data, look at interface
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const updateProfile = async (
   profileType: ProfileType,
   updateData: UpdateSettingsData
@@ -51,6 +61,12 @@ export const updateProfile = async (
   );
 };
 
+/**
+ * Update security settings
+ * @param {ProfileType} profileType student or mentor
+ * @param {UpdateSecurityData} updateData new security data
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const updateSecurity = async (
   profileType: ProfileType,
   updateData: UpdateSecurityData
@@ -59,14 +75,22 @@ export const updateSecurity = async (
     profileType == ProfileType.STUDENT
       ? `${import.meta.env.VITE_API_BASE_URL}/students/accounts/security`
       : `${import.meta.env.VITE_API_BASE_URL}/mentors/accounts/security`;
-  return await sendRequest<void>(
+  const data = await sendRequest<void>(
     profileUpdateUrl,
     AxiosMethod.PUT,
     true,
     updateData
   );
+  Cookies.set('email', updateData.email);
+  return data;
 };
 
+/**
+ * Update user avatar
+ * @param {ProfileType} profileType student or mentor
+ * @param {File} avatarFile image file
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const updateAvatar = async (
   profileType: ProfileType,
   avatarFile: File
@@ -80,11 +104,16 @@ export const updateAvatar = async (
   await sendRequest<void>(profileUpdateUrl, AxiosMethod.PUT, true, formData);
 
   const response = await getProfileData(true, false, profileType, 0);
-  if (response.data)
-    sessionStorage.setItem('avatarUrl', response.data.photoUrl);
+  if (response.data) Cookies.set('avatarUrl', response.data.photoUrl);
   return response.data?.photoUrl;
 };
 
+/**
+ * Add keywords to mentor profile
+ * @param {string[]} oldTags existing keywords
+ * @param {string[]} tags new keywords
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const addTagsToMentor = async (oldTags: string[], tags: string[]) => {
   const addTagsToMentorUrl = `${
     import.meta.env.VITE_API_BASE_URL
@@ -101,6 +130,11 @@ export const addTagsToMentor = async (oldTags: string[], tags: string[]) => {
   );
 };
 
+/**
+ * Add a single tag to the database
+ * @param {string} tag keyword text
+ * @returns {Promise<{error: number, data: null}>}
+ */
 const addTag = async (tag: string) => {
   const addTagUrl = `${import.meta.env.VITE_API_BASE_URL}/keywords`;
   return await sendRequest<void>(addTagUrl, AxiosMethod.POST, true, {

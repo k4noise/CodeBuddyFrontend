@@ -1,6 +1,12 @@
-import { ProfileType, RequestState } from '../types';
+import { ProfileType } from '../types';
 import { AxiosMethod, sendRequest } from './sendRequest';
 
+/**
+ * Send request to mentor
+ * @param {number} id mentor id
+ * @param {string} requestDto.description request text
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const sendRequestToMentor = async (
   id: number,
   requestDto: { description: string }
@@ -16,6 +22,11 @@ export const sendRequestToMentor = async (
   );
 };
 
+/**
+ * Get requests for a user
+ * @param {ProfileType} profileType student or mentor
+ * @returns {Promise<{error: number, data: Request[]}>}
+ */
 export const getRequests = async (profileType: ProfileType) => {
   const getRequestsUrl =
     profileType == ProfileType.STUDENT
@@ -24,6 +35,12 @@ export const getRequests = async (profileType: ProfileType) => {
   return await sendRequest<Request[]>(getRequestsUrl, AxiosMethod.GET, true);
 };
 
+/**
+ * Respond to a request
+ * @param {string} newState new request state: accepted|rejected
+ * @param {number} id request id
+ * @returns {Promise<{error: number, data: null}>}
+ */
 export const respondToRequest = async (newState: string, id: number) => {
   const respondToRequestUrl = `${
     import.meta.env.VITE_API_BASE_URL

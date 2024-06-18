@@ -1,6 +1,7 @@
 import { ProfileType } from '../types';
 import { CreateUser, LoginUser, UserData } from './dto/user';
 import { AxiosMethod, sendRequest } from './sendRequest';
+import Cookies from 'js-cookie';
 
 /**
  * Register user to server
@@ -35,7 +36,7 @@ export const registerUser = async (
 
 /**
  * Login user to server
- * If success, save user data to sessionStorage and receive JSESSIONID cookie from server
+ * If success, save user data to session cookies and receive JSESSIONID cookie from server
  * @param {LoginUser} loginDto login and password
  * @param {ProfileType} profileType mentor or student
  * @returns {ResponseData<UserData>}
@@ -65,7 +66,7 @@ export const loginUser = async (
 
 /**
  * Logout user
- * Remove all user data from sessionStorage and remove cookie
+ * Remove all user data from cookies and remove httpOnly cookie
  * @returns {ResponseData<void>}
  */
 export const logoutUser = async () => {
@@ -88,25 +89,25 @@ export const getUserData = async (profileType: ProfileType) => {
 };
 
 /**
- * Save data to sessionStorage
+ * Save data to session cookie
  * @param {UserData} data data to save
  * @param {ProfileType} profileType mentor or student
  * @returns {void}
  */
 const saveUserData = (data: UserData, profileType: ProfileType) => {
-  sessionStorage.setItem('profileType', profileType);
-  sessionStorage.setItem('firstName', data.firstName);
-  sessionStorage.setItem('lastName', data.lastName);
-  sessionStorage.setItem('avatarUrl', data.photoUrl);
+  Cookies.set('profileType', profileType);
+  Cookies.set('firstName', data.firstName);
+  Cookies.set('lastName', data.lastName);
+  Cookies.set('avatarUrl', data.photoUrl);
 };
 
 /**
- * Remove data from sessionStorage
+ * Remove data from cookies
  * @returns {void}
  */
 const deleteUserData = () => {
-  sessionStorage.removeItem('profileType');
-  sessionStorage.removeItem('firstName');
-  sessionStorage.removeItem('lastName');
-  sessionStorage.removeItem('avatarUrl');
+  Cookies.remove('profileType');
+  Cookies.remove('firstName');
+  Cookies.remove('lastName');
+  Cookies.remove('avatarUrl');
 };

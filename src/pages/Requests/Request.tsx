@@ -1,13 +1,19 @@
 import { Link } from 'react-router-dom';
-import { ProfileType, RequestState } from '../../types';
+import {
+  MentorRequestState,
+  ProfileType,
+  StudentRequestState,
+  RequestState,
+} from '../../types';
 import { getAvatar } from '../../actions/util';
 
 interface RequestProps {
   id: number;
   /* student or mentor */
   profileType: ProfileType;
-  /* display name */
+  /* name */
   firstName: string;
+  /* surname */
   lastName: string;
   /* avatar url */
   photoUrl: string;
@@ -15,18 +21,18 @@ interface RequestProps {
   requestState: RequestState;
   /* callback to call when modal closing */
   onClick: React.MouseEventHandler;
+  /* callback for change request state */
   changeRequestState: (id: number, newState: RequestState) => void;
+  /* mentor id */
   mentorId?: number;
+  /* student id */
+  studentId?: number;
 }
 /**
  * Request component
  * Shows request card - info about student/mentor, status and actions
  * @component
- * @param {ProfileType} profileType look at interface
- * @param {string} username user display name
- * @param {string} avatarUrl avatar url
- * @param {RequestState} status request status
- * @param {React.MouseEventHandler} onClick callback to call when modal closing
+ * @param {RequestProps} props
  * @returns {JSX.Element} Request component
  */
 
@@ -40,6 +46,7 @@ const Request = ({
   onClick,
   changeRequestState,
   mentorId,
+  studentId,
 }: RequestProps) => {
   const handleClick = (event) => {
     if (!event.target.className.includes('request__button')) onClick();
@@ -60,38 +67,44 @@ const Request = ({
       <div>
         <p className="request__username">{`${firstName} ${lastName}`}</p>
         <p className="request__status">
-          {RequestState[requestState] == RequestState.SEND &&
-          profileType == ProfileType.MENTOR
-            ? RequestState.NEW
-            : RequestState[requestState]}
+          {profileType == ProfileType.STUDENT
+            ? StudentRequestState[requestState]
+            : MentorRequestState[requestState]}
         </p>
       </div>
-      {profileType == ProfileType.STUDENT ? (
-        <div className="request__buttons">
-          {RequestState[requestState] == RequestState.ACCEPTED && (
-            <Link
-              to={`/profile/request/mentor/${mentorId}`}
-              className="request__link request__view"
-              data-testid="profileLink"
-            ></Link>
+
+      <div className="request__buttons">
+        {StudentRequestState[requestState] == StudentRequestState.ACCEPTED && (
+          <Link
+            to={
+              profileType == ProfileType.STUDENT
+                ? `/profile/request/mentor/${mentorId}`
+                : `/profile/request/student/${studentId}`
+            }
+            className="request__link request__view"
+            data-testid="profileLink"
+          ></Link>
+        )}
+        {profileType == ProfileType.MENTOR &&
+          MentorRequestState[requestState] == MentorRequestState.SEND && (
+            <>
+              <button
+                className="request__button request__accept"
+                data-testid="accept"
+                onClick={() =>
+                  changeRequestState(id, StudentRequestState.ACCEPTED)
+                }
+              ></button>
+              <button
+                className="request__button request__reject"
+                data-testid="reject"
+                onClick={() =>
+                  changeRequestState(id, StudentRequestState.REJECTED)
+                }
+              ></button>
+            </>
           )}
-        </div>
-      ) : (
-        RequestState[requestState] == RequestState.SEND && (
-          <div className="request__buttons">
-            <button
-              className="request__button request__accept"
-              data-testid="accept"
-              onClick={() => changeRequestState(id, RequestState.ACCEPTED)}
-            ></button>
-            <button
-              className="request__button request__reject"
-              data-testid="reject"
-              onClick={() => changeRequestState(id, RequestState.REJECTED)}
-            ></button>
-          </div>
-        )
-      )}
+      </div>
     </div>
   );
 };

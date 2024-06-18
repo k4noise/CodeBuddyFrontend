@@ -5,15 +5,26 @@ import HeartManImage from '../../assets/heart-man.png';
 import './Mentors.css';
 import RequestPopup from '../../components/RequestPopup/RequestPopup';
 import { useEffect, useState } from 'react';
-import { ProfileType, RequestPopupType, RequestState } from '../../types';
+import {
+  ProfileType,
+  RequestPopupType,
+  RequestState,
+  StudentRequestState,
+} from '../../types';
 import { MentorData } from '../../actions/dto/user';
 import { getMentors, getMentorsByTags } from '../../actions/mentors';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { handleError } from '../../actions/sendRequest';
 import { toast } from 'react-toastify';
 import { sendRequestToMentor } from '../../actions/request';
 import { useForm } from 'react-hook-form';
+import Cookies from 'js-cookie';
 
+/**
+ * Mentors page
+ * Shows mentors cards with mentors credintals
+ * @returns {JSX.Element}
+ */
 const Mentors = () => {
   const navigate = useNavigate();
   const [mentors, setMentors] = useState<MentorData[]>([]);
@@ -24,21 +35,19 @@ const Mentors = () => {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword');
 
-  const profileType: ProfileType = sessionStorage.getItem(
-    'profileType'
-  ) as ProfileType;
+  const profileType: ProfileType = Cookies.get('profileType') as ProfileType;
 
   const changeRequestState = async (
     id: number,
     newState: RequestState,
     description?: string
   ) => {
-    if (newState == RequestState.SEND) {
+    if (newState == StudentRequestState.SEND) {
       const { error } = await sendRequestToMentor(selected, { description });
       if (!error) {
-        toast('Успешно отправлено', { type: 'success' });
+        toast('Заявка отправлена успешно', { type: 'success' });
       } else {
-        toast('Произошла ошибка при отправке, попробуйте еще раз', {
+        toast('Произошла ошибка при отправке заявки, попробуйте еще раз', {
           type: 'error',
         });
       }
@@ -115,8 +124,7 @@ const Mentors = () => {
               ))
             ) : (
               <span className="message">
-                Менторов еще пока нет, но вы <Link to="/register">можете</Link>{' '}
-                стать первым!
+                Менторов по заданным критериям нет
               </span>
             )}
           </div>

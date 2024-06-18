@@ -6,6 +6,7 @@ import './Nav.css';
 import { logoutUser } from '../../actions/auth';
 import { ProfileType } from '../../types';
 import { getAvatar } from '../../actions/util';
+import Cookies from 'js-cookie';
 
 /**
  * Nav component
@@ -43,7 +44,7 @@ const Nav = ({ links, sublinks }: NavProps) => {
   const { auth, logout, avatar, changeAvatar } = useAuth();
 
   useEffect(() => {
-    if (!avatar) changeAvatar(sessionStorage.getItem('avatarUrl') as string);
+    if (!avatar) changeAvatar(Cookies.get('avatarUrl') as string);
   }, [avatar]);
 
   return (
@@ -72,10 +73,7 @@ const Nav = ({ links, sublinks }: NavProps) => {
         <div className="subnav-wrapper">
           <Link to="profile" className="subnav__avatar-wrapper">
             <img
-              src={getAvatar(
-                avatar,
-                sessionStorage.getItem('profileType') as ProfileType
-              )}
+              src={getAvatar(avatar, Cookies.get('profileType') as ProfileType)}
               alt="Avatar"
               className="subnav__avatar"
             />

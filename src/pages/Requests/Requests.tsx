@@ -1,6 +1,10 @@
 import Request from './Request';
 import Footer from '../../components/Footer/Footer';
-import { ProfileType, RequestPopupType, RequestState } from '../../types';
+import {
+  ProfileType,
+  RequestPopupType,
+  StudentRequestState,
+} from '../../types';
 import './Request.css';
 import RequestPopup from '../../components/RequestPopup/RequestPopup';
 import { useEffect, useState } from 'react';
@@ -9,6 +13,7 @@ import { getRequests, respondToRequest } from '../../actions/request';
 import { handleError } from '../../actions/sendRequest';
 import { useNavigate } from 'react-router-dom';
 import { getProfileData } from '../../actions/profile';
+import Cookies from 'js-cookie';
 
 /**
  * Requests component
@@ -18,9 +23,7 @@ import { getProfileData } from '../../actions/profile';
  */
 
 const Requests = () => {
-  let profileType: ProfileType = sessionStorage.getItem(
-    'profileType'
-  ) as ProfileType;
+  let profileType: ProfileType = Cookies.get('profileType') as ProfileType;
   let userDataCache = {};
 
   const [requests, setRequests] = useState<RequestDto[]>([]);
@@ -35,13 +38,16 @@ const Requests = () => {
       )
     );
 
-  const changeRequestState = async (id: number, newState: RequestState) => {
+  const changeRequestState = async (
+    id: number,
+    newState: StudentRequestState
+  ) => {
     switch (newState) {
-      case RequestState.ACCEPTED:
+      case StudentRequestState.ACCEPTED:
         await respondToRequest('ACCEPTED', id);
         updateRequestState(id, 'ACCEPTED');
         break;
-      case RequestState.REJECTED:
+      case StudentRequestState.REJECTED:
         await respondToRequest('REJECTED', id);
         updateRequestState(id, 'REJECTED');
         break;
@@ -54,7 +60,7 @@ const Requests = () => {
   };
 
   const getData = async () => {
-    profileType = sessionStorage.getItem('profileType') as ProfileType;
+    profileType = Cookies.get('profileType') as ProfileType;
     const anotherProfileType =
       profileType == ProfileType.STUDENT
         ? ProfileType.MENTOR
@@ -82,7 +88,8 @@ const Requests = () => {
 
         requestsWithUserData.push({
           id: request.id,
-          mentorId: userDataCache[userId]?.id,
+          mentorId: request?.mentorId,
+          studentId: request?.studentId,
           requestState: request.requestState,
           description: request.description,
           firstName: userDataCache[userId]?.firstName,
@@ -103,16 +110,20 @@ const Requests = () => {
       <div className="requests">
         <h2 className="requests__header">Мои заявки</h2>
         <div className="requests__wrapper">
-          {requests?.map((req) => (
-            <Request
-              key={req.id}
-              {...req}
-              onClick={() => handleCardClick(req)}
-              profileType={profileType}
-              changeRequestState={changeRequestState}
-              requestState={req.requestState}
-            />
-          ))}
+          {requests.length ? (
+            requests.map((req) => (
+              <Request
+                key={req.id}
+                {...req}
+                onClick={() => handleCardClick(req)}
+                profileType={profileType}
+                changeRequestState={changeRequestState}
+                requestState={req.requestState}
+              />
+            ))
+          ) : (
+            <div>Нет заявок</div>
+          )}
         </div>
       </div>
       {isShowingRequest && (
@@ -128,7 +139,8 @@ const Requests = () => {
           popupType={
             profileType == ProfileType.STUDENT
               ? RequestPopupType.STUDENT_VIEW
-              : RequestState[selectedRequest.requestState] == RequestState.SEND
+              : StudentRequestState[selectedRequest.requestState] ==
+                StudentRequestState.SEND
               ? RequestPopupType.MENTOR_VIEW
               : RequestPopupType.SHOW_VIEW
           }

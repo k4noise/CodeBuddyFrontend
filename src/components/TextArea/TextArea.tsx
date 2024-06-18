@@ -21,7 +21,9 @@ interface TextAreaProps {
   readonly?: boolean;
   /** text in textarea **/
   value?: string;
+  /* max length */
   max?: number;
+  /* register(...) option */
   validationOptions?: UseFormRegisterReturn;
 }
 
@@ -46,7 +48,6 @@ const TextArea = ({
       placeholder={placeholder}
       onInput={resize}
       readOnly={readonly}
-      rows={1}
       maxLength={max}
       defaultValue={value}
     ></textarea>

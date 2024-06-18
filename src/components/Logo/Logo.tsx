@@ -13,9 +13,11 @@ import LogoIcon from '../../assets/Logo.svg';
  */
 const Logo = (): JSX.Element => {
   return (
-    <Link to="/" className="logo" data-testid="logo">
-      <img src={LogoIcon} alt="logo" />
-    </Link>
+    <div className="logo__wrapper">
+      <Link to="/" className="logo" data-testid="logo">
+        <img src={LogoIcon} alt="logo" />
+      </Link>
+    </div>
   );
 };
 

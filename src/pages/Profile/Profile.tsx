@@ -21,12 +21,14 @@ import { FieldValues } from 'react-hook-form';
 import { loginUser, logoutUser } from '../../actions/auth';
 import { useAuth } from '../../AuthProvider';
 import { toast } from 'react-toastify';
+import Cookies from 'js-cookie';
 
 interface ProfileProps {
   /* Flag to show edit button */
   isMine: boolean;
   /* profile type - student or mentor */
   profileType?: ProfileType;
+  /* flag for try get data with contact data */
   fromRequest: boolean;
 }
 
@@ -34,20 +36,9 @@ interface ProfileProps {
  * Profile page
  * Shows all user data with avatar
  * @component
- * @example
- * ```
- * <Profile isMine={true} userInfo={{
- *  type: ProfileType.STUDENT,
-      login: 'john@mail.com',
-      username: 'John Doe',
-      email: 'john@mail.com',
-      avatar: 'avatar.png',
-      tgId: '@id'
- *   }}
- * />
- * ```
  * @param {boolean} isMine Flag to show edit button
- * @param {UserData} userInfo User information
+ * @param {UserData} profileType student or mentor
+ * @param {boolean} fromRequest get data with contact dcata or not
  * @returns {React.FC} Profile component
  */
 const Profile: React.FC<ProfileProps> = ({
@@ -64,9 +55,7 @@ const Profile: React.FC<ProfileProps> = ({
   const location = useLocation();
   const isEdit = location.pathname.includes('/edit');
 
-  if (!profileType)
-    profileType = sessionStorage.getItem('profileType') as ProfileType;
-  let userAvatar = getAvatar(avatar, profileType);
+  if (!profileType) profileType = Cookies.get('profileType') as ProfileType;
 
   const getData = async () => {
     const { data, error } = await getProfileData(
@@ -90,38 +79,17 @@ const Profile: React.FC<ProfileProps> = ({
     return <div className="load-error">Ошибка загрузки данных профиля</div>;
 
   const handleSave = async (data: FieldValues) => {
-    if (newAvatar) {
-      toast('Идет загрузка аватара', { type: 'info' });
-      const newAvatarUrl = await updateAvatar(profileType, avatarFile);
-      if (newAvatarUrl) changeAvatar(data.photoUrl);
-    }
-    if (data.telegram || data.description) {
-      const settingsData: UpdateSettingsData = {
-        telegram: data.telegram,
-        description: data.description,
-      };
-      await updateProfile(profileType, settingsData);
-      await logoutUser();
-      const { error } = await loginUser(
-        {
-          login: data.email,
-          password: data.password,
-        },
-        profileType
-      );
-      if (error) {
-        toast('Войдите в профиль заново', { type: 'error' });
-        navigate('/login');
-      }
-    }
-    if (data.newPassword) {
+    if (data.existingEmail !== data.email || data.newPassword) {
       const securityData: UpdateSecurityData = {
         email: data.email,
         password: data.password,
         newPassword: data.newPassword,
       };
       const { error } = await updateSecurity(profileType, securityData);
-      if (error) toast('Неправильный пароль', { type: 'error' });
+      if (error) {
+        toast('Неправильный пароль', { type: 'error' });
+        return;
+      }
       await logoutUser();
       await loginUser(
         {
@@ -132,7 +100,26 @@ const Profile: React.FC<ProfileProps> = ({
       );
     }
 
-    if (data.tags) {
+    if (newAvatar) {
+      toast('Идет загрузка аватара', { type: 'info' });
+      const newAvatarUrl = await updateAvatar(profileType, avatarFile);
+      if (newAvatarUrl) changeAvatar(data.photoUrl);
+    }
+
+    if (data.telegram || data.about) {
+      const oldTags = user?.keywords
+        ? user.keywords.map(({ keyword }) => keyword)
+        : [];
+      const tags = [...oldTags, ...data.tags.map((tag) => tag.value)];
+      const settingsData: UpdateSettingsData = {
+        telegram: data.telegram,
+        description: data.about,
+        keywords: tags,
+      };
+      await updateProfile(profileType, settingsData);
+    }
+
+    if (data.tags.length) {
       const oldTags = user?.keywords
         ? user.keywords.map(({ keyword }) => keyword)
         : [];
@@ -166,7 +153,7 @@ const Profile: React.FC<ProfileProps> = ({
     <section className="profile">
       <div className="profile__avatar-wrapper">
         <img
-          src={newAvatar ?? userAvatar}
+          src={newAvatar ?? getAvatar(user.photoUrl, profileType)}
           alt="avatar"
           className="profile__avatar"
         />
@@ -190,6 +177,7 @@ const Profile: React.FC<ProfileProps> = ({
           userInfo={user}
           onSave={handleSave}
           onEditClick={handleEditClick}
+          fromRequest={fromRequest}
         />
       </div>
     </section>

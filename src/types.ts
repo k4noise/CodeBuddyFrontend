@@ -19,13 +19,18 @@ export interface Mentor extends User {
   tags: string[];
 }
 
-export enum RequestState {
-  NEW = 'Новый запрос',
+export enum StudentRequestState {
   SEND = 'Ваш запрос отправлен',
   ACCEPTED = 'Ваш запрос принят',
   REJECTED = 'Ваш запрос отклонен',
-  SUBMITTED = 'Ваш запрос отправлен',
 }
+
+export enum MentorRequestState {
+  SEND = 'Новый запрос',
+  ACCEPTED = 'Вы приняли запрос',
+  REJECTED = 'Вы отклонили запрос',
+}
+export type RequestState = StudentRequestState | MentorRequestState;
 
 export enum RequestPopupType {
   STUDENT_VIEW,
